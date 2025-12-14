@@ -3,1116 +3,647 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معهد الرسول الأعظم (ص) التقني</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>نور الولاية </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
-        
         body {
             font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
         
-        .file-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .islamic-pattern {
+            background-color: #0d9488;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231976d2' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         
-        .sidebar {
+        .calendar-card {
             transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                left: -100%;
-                top: 0;
-                z-index: 50;
-                height: 100vh;
-                width: 80%;
-            }
-            
-            .sidebar.open {
-                left: 0;
-            }
-            
-            .overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 40;
-                display: none;
-            }
-            
-            .overlay.open {
-                display: block;
-            }
+        .calendar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
         
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .arabic-date {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
         
-        .animate-fadeIn {
-            animation: fadeIn 0.8s ease-out forwards;
+        .hijri-month-name {
+            color: #0d9488;
+            font-weight: 700;
         }
         
-        .delay-100 {
-            animation-delay: 0.1s;
+        .works-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 1.5rem;
+            line-height: 1.8;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-height: 300px;
+            overflow-y: auto;
         }
         
-        .delay-200 {
-            animation-delay: 0.2s;
-        }
-        
-        /* Hover animations */
-        .hover-grow {
-            transition: transform 0.3s ease;
-        }
-        
-        .hover-grow:hover {
-            transform: scale(1.03);
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
+        .works-content::-webkit-scrollbar {
             width: 8px;
         }
         
-        ::-webkit-scrollbar-track {
+        .works-content::-webkit-scrollbar-track {
             background: #f1f1f1;
+            border-radius: 10px;
         }
         
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
+        .works-content::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            border-radius: 10px;
         }
         
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .no-works {
+            background: rgba(255, 243, 205, 0.8);
+            border-right: 4px solid #ffc107;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .day-highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: bold;
+            color: #0d9488;
+        }
+        
+        .month-selector {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .arabic-date {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50">
-    <!-- Main Index Page -->
-    <div id="index-page" class="min-h-screen flex flex-col">
-        <!-- Header -->
-        <header class="bg-blue-800 text-white py-6 shadow-lg">
-            <div class="container mx-auto px-4 text-center">
-                <h1 class="text-3xl font-bold animate-fadeIn">مرحباً بكم في معهد الرسول الأعظم (ص)</h1>
-                <p class="mt-2 animate-fadeIn delay-100">نظام إدارة المحتوى التعليمي</p>
-            </div>
+<body class="py-8 px-4">
+    <div class="container mx-auto max-w-4xl">
+        <!-- العنوان الرئيسي -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-gray-800 mb-3">
+                <i class="fas fa-mosque text-teal-600 mr-2"></i>نور الولاية
+            </h1>
+            <p class="text-gray-600 text-lg">اعرف أعمال وفضائل اليوم حسب التقويم الهجري الإسلامي</p>
         </header>
         
-        <!-- Main Content -->
-        <main class="flex-grow flex items-center justify-center py-12">
-            <div class="container mx-auto px-4">
-                <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="p-8">
-                        <div class="text-center mb-8">
-                                                        <h2 class="mt-4 text-2xl font-bold text-gray-800">اختر طريقة الدخول</h2>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Student Login Card -->
-                            <div class="bg-blue-50 rounded-lg p-6 border border-blue-200 hover:border-blue-400 transition-all cursor-pointer hover-grow shadow-lg hover:shadow-xl" onclick="navigateToStudent()">
-                                <div class="text-center">
-                                    <i class="fas fa-user-graduate text-5xl text-blue-600 mb-4"></i>
-                                    <h3 class="text-xl font-semibold text-gray-800">الدخول كطالب</h3>
-                                    <p class="mt-2 text-gray-600">تصفح المواد التعليمية بدون الحاجة لتسجيل الدخول</p>
-                                    <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                                        الدخول الآن
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Teacher Login Card -->
-                            <div class="bg-green-50 rounded-lg p-6 border border-green-200 hover:border-green-400 transition-all cursor-pointer hover-grow shadow-lg hover:shadow-xl" onclick="showTeacherLogin()">
-                                <div class="text-center">
-                                    <i class="fas fa-chalkboard-teacher text-5xl text-green-600 mb-4"></i>
-                                    <h3 class="text-xl font-semibold text-gray-800">الدخول كأستاذ</h3>
-                                    <p class="mt-2 text-gray-600">إدارة المحتوى التعليمي لطلابك</p>
-                                    <button class="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
-                                        الدخول الآن
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-        
-        <!-- Teacher Login Modal -->
-        <div id="teacher-login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-gray-800">تسجيل دخول الأستاذ</h3>
-                    <button onclick="hideTeacherLogin()" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
+        <!-- بطاقة التاريخ الهجري -->
+        <div class="calendar-card bg-white rounded-2xl overflow-hidden mb-10">
+            <div class="islamic-pattern py-8 px-6 text-center">
+                <div class="text-white mb-2">
+                    <i class="fas fa-calendar-alt text-2xl"></i>
+                    <span class="mr-2 text-xl">التاريخ الهجري</span>
                 </div>
                 
-                <form id="teacher-login-form" class="space-y-4">
-                    <div>
-                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1">اسم المستخدم</label>
-                        <input type="text" id="username" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور</label>
-                        <input type="password" id="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    
-                    <div class="pt-2">
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
-                            تسجيل الدخول
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white py-6">
-            <div class="container mx-auto px-4 text-center">
-                <p>© 2025 معاهد المهدي. جميع الحقوق محفوظة.</p>
-            </div>
-        </footer>
-    </div>
-    
-    <!-- Student Page -->
-    <div id="student-page" class="min-h-screen hidden">
-        <!-- Header -->
-        <header class="bg-blue-800 text-white py-4 shadow-lg">
-            <div class="container mx-auto px-4 flex justify-between items-center">
-                <button onclick="navigateToIndex()" class="flex items-center text-white hover:text-blue-200 transition-colors">
-                    <i class="fas fa-arrow-right ml-2"></i>
-                    <span>العودة للصفحة الرئيسية</span>
-                </button>
-                <h1 class="text-xl font-bold">واجهة الطالب</h1>
-            </div>
-        </header>
-        
-        <!-- Main Content -->
-        <main class="container mx-auto px-4 py-8">
-            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-                <div class="p-6">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">اختر المادة التعليمية</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Specialization Dropdown -->
-                        <div>
-                            <label for="student-specialization" class="block text-sm font-medium text-gray-700 mb-1">الاختصاص</label>
-                            <select id="student-specialization" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">اختر الاختصاص</option>
-                                <option value="nursing">العناية التمريضية</option>
-                                <option value="accounting">المحاسبة والمعلوماتية</option>
-                                <option value="advertising">فنون الإعلان</option>
-                                <option value="education">التربية الحضانية</option>
-                                <option value="special-education">التربية الحضانية المختصة</option>
-                                <option value="it">تكنولوجيا المعلوماتية</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Grade Dropdown -->
-                        <div>
-                            <label for="student-grade" class="block text-sm font-medium text-gray-700 mb-1">الصف</label>
-                            <select id="student-grade" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
-                                <option value="">اختر الصف</option>
-                                <option value="bt1">BT1</option>
-                                <option value="bt2">BT2</option>
-                                <option value="bt3">BT3</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Subject Dropdown -->
-                        <div>
-                            <label for="student-subject" class="block text-sm font-medium text-gray-700 mb-1">المادة</label>
-                            <select id="student-subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" disabled>
-                                <option value="">اختر المادة</option>
-                            </select>
-                        </div>
-                    </div>
+                <div id="hijriDateContainer" class="text-white arabic-date">
+                    <!-- سيتم ملء التاريخ هنا جافاسكريبت -->
+                </div>
+                
+                <div id="gregorianDate" class="text-white opacity-90 mt-2 text-lg">
+                    <!-- التاريخ الميلادي -->
                 </div>
             </div>
             
-            <!-- Files Section -->
-            <div id="student-files-section" class="hidden">
-                <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-                    <div class="p-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">الملفات التعليمية</h2>
-                        
-                        <!-- Images Section -->
-                        <div class="mb-8">
-                            <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2 flex items-center">
-                                <i class="fas fa-images ml-2 text-blue-500"></i>
-                                الصور
-                            </h3>
-                            <div id="student-images-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                <!-- Images will be loaded here -->
-                            </div>
-                        </div>
-                        
-                        <!-- Files Section -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2 flex items-center">
-                                <i class="fas fa-file-alt ml-2 text-green-500"></i>
-                                الملفات
-                            </h3>
-                            <div id="student-files-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <!-- Files will be loaded here -->
-                            </div>
-                        </div>
+            <div class="p-6">
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <div class="text-center">
+                        <div class="text-gray-500 mb-1">اليوم</div>
+                        <div id="hijriDay" class="day-highlight">--</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-gray-500 mb-1">الشهر</div>
+                        <div id="hijriMonth" class="day-highlight">--</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-gray-500 mb-1">السنة</div>
+                        <div id="hijriYear" class="day-highlight">--</div>
                     </div>
                 </div>
+                
+                <div class="text-center mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-tasks text-teal-600 mr-2"></i>أعمال اليوم
+                    </h2>
+                </div>
+                
+                <!-- عرض الأعمال -->
+                <div id="worksContainer" class="works-content">
+                    <!-- سيتم ملء الأعمال هنا جافاسكريبت -->
+                    <div class="text-center py-8">
+                        <div class="spinner-border text-teal-600" role="status">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                        </div>
+                        <p class="mt-3 text-gray-600">جاري تحميل أعمال اليوم...</p>
+                    </div>
+                </div>
+                
+                <!-- ملاحظة -->
+                <div class="mt-6 text-center text-gray-500 text-sm">
+                                 </div>
             </div>
-        </main>
-        
-        <!-- Footer -->
-        <footer class="bg-gray-800 text-white py-6">
-            <div class="container mx-auto px-4 text-center">
-                <p>© 2023 معاهد المهدي. جميع الحقوق محفوظة.</p>
-            </div>
-        </footer>
-    </div>
-    
-    <!-- Teacher Page -->
-    <div id="teacher-page" class="min-h-screen hidden">
-        <!-- Mobile Sidebar Toggle -->
-        <div class="md:hidden fixed top-4 left-4 z-30">
-            <button id="sidebar-toggle" class="bg-blue-600 text-white p-2 rounded-lg shadow-lg">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
         
-        <!-- Sidebar -->
-        <div id="sidebar" class="sidebar bg-blue-800 text-white w-64 fixed h-full overflow-y-auto">
-            <div class="p-4 flex items-center justify-between border-b border-blue-700">
-                <h2 class="text-xl font-bold">لوحة التحكم</h2>
-                <button id="sidebar-close" class="md:hidden text-white">
-                    <i class="fas fa-times"></i>
+        <!-- اختيار الشهر يدويًا -->
+        <div class="month-selector mb-10">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                <i class="fas fa-calendar-day text-teal-600 mr-2"></i>استعرض أعمال شهر آخر
+            </h3>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-6">
+                <div>
+                    <label for="monthSelect" class="block text-gray-700 mb-2">اختر الشهر الهجري:</label>
+                    <select id="monthSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                        <option value="1">محرم</option>
+                        <option value="2">صفر</option>
+                        <option value="3">ربيع الأول</option>
+                        <option value="4">ربيع الثاني</option>
+                        <option value="5">جمادى الأولى</option>
+                        <option value="6">جمادى الآخرة</option>
+                        <option value="7">رجب</option>
+                        <option value="8">شعبان</option>
+                        <option value="9">رمضان</option>
+                        <option value="10">شوال</option>
+                        <option value="11">ذو القعدة</option>
+                        <option value="12">ذو الحجة</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="daySelect" class="block text-gray-700 mb-2">اختر اليوم:</label>
+                    <select id="daySelect" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                        <!-- سيتم ملء الأيام جافاسكريبت -->
+                    </select>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button id="viewWorksBtn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-eye mr-2"></i>عرض الأعمال
                 </button>
             </div>
-            
-            <div class="p-4">
-                <div class="mb-8">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-user-circle text-2xl ml-2"></i>
-                        <span>الأستاذ</span>
-                    </div>
-                    <button onclick="logoutTeacher()" class="w-full flex items-center justify-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
-                        <i class="fas fa-sign-out-alt ml-2"></i>
-                        تسجيل الخروج
-                    </button>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-2 flex items-center">
-                        <i class="fas fa-book ml-2"></i>
-                        الاختصاص
-                    </h3>
-                    <select id="teacher-specialization" class="w-full px-4 py-2 bg-blue-700 border border-blue-600 rounded-lg text-white">
-                        <option value="">اختر الاختصاص</option>
-                        <option value="nursing">العناية التمريضية</option>
-                        <option value="accounting">المحاسبة والمعلوماتية</option>
-                        <option value="advertising">فنون الإعلان</option>
-                        <option value="education">التربية الحضانية</option>
-                        <option value="special-education">التربية الحضانية المختصة</option>
-                        <option value="it">تكنولوجيا المعلوماتية</option>
-                    </select>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-2 flex items-center">
-                        <i class="fas fa-users ml-2"></i>
-                        الصف
-                    </h3>
-                    <select id="teacher-grade" class="w-full px-4 py-2 bg-blue-700 border border-blue-600 rounded-lg text-white" disabled>
-                        <option value="">اختر الصف</option>
-                        <option value="bt1">BT1</option>
-                        <option value="bt2">BT2</option>
-                        <option value="bt3">BT3</option>
-                    </select>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-2 flex items-center">
-                        <i class="fas fa-book-open ml-2"></i>
-                        المادة
-                    </h3>
-                    <select id="teacher-subject" class="w-full px-4 py-2 bg-blue-700 border border-blue-600 rounded-lg text-white" disabled>
-                        <option value="">اختر المادة</option>
-                    </select>
-                </div>
-                
-                <div class="mt-8">
-                    <button onclick="navigateToIndex()" class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                        <i class="fas fa-home ml-2"></i>
-                        الصفحة الرئيسية
-                    </button>
-                </div>
-            </div>
         </div>
         
-        <!-- Overlay for mobile sidebar -->
-        <div id="overlay" class="overlay"></div>
-        
-        <!-- Main Content -->
-        <div class="md:mr-64">
-            <!-- Header -->
-            <header class="bg-blue-700 text-white py-4 shadow-lg">
-                <div class="container mx-auto px-4">
-                    <h1 class="text-xl font-bold">واجهة الأستاذ</h1>
-                </div>
-            </header>
-            
-            <!-- Main Content -->
-            <main class="container mx-auto px-4 py-8">
-                <!-- Upload Section -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-                    <div class="p-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">رفع الملفات</h2>
-                        
-                        <div id="teacher-upload-section" class="hidden">
-                            <!-- Upload Images -->
-                            <div class="mb-8">
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2 flex items-center">
-                                    <i class="fas fa-images ml-2 text-blue-500"></i>
-                                    رفع الصور
-                                </h3>
-                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                                    <input type="file" id="image-upload" class="hidden" accept="image/*" multiple>
-                                    <label for="image-upload" class="cursor-pointer">
-                                        <i class="fas fa-cloud-upload-alt text-4xl text-blue-500 mb-2"></i>
-                                        <p class="text-gray-600">اسحب وأسقط الصور هنا أو انقر للاختيار</p>
-                                        <p class="text-sm text-gray-500 mt-1">يسمح بملفات الصور (JPG, PNG, GIF)</p>
-                                    </label>
-                                </div>
-                                <div id="image-preview" class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                    <!-- Preview of selected images will appear here -->
-                                </div>
-                                <button id="upload-images-btn" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors hidden">
-                                    <i class="fas fa-upload ml-2"></i>
-                                    رفع الصور
-                                </button>
-                            </div>
-                            
-                            <!-- Upload Files -->
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2 flex items-center">
-                                    <i class="fas fa-file-alt ml-2 text-green-500"></i>
-                                    رفع الملفات
-                                </h3>
-                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                                    <input type="file" id="file-upload" class="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" multiple>
-                                    <label for="file-upload" class="cursor-pointer">
-                                        <i class="fas fa-file-upload text-4xl text-green-500 mb-2"></i>
-                                        <p class="text-gray-600">اسحب وأسقط الملفات هنا أو انقر للاختيار</p>
-                                        <p class="text-sm text-gray-500 mt-1">يسمح بملفات PDF, Word, PowerPoint, Excel</p>
-                                    </label>
-                                </div>
-                                <div id="file-preview" class="mt-4">
-                                    <!-- Preview of selected files will appear here -->
-                                </div>
-                                <button id="upload-files-btn" class="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors hidden">
-                                    <i class="fas fa-upload ml-2"></i>
-                                    رفع الملفات
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div id="teacher-select-message" class="text-center py-8 text-gray-500">
-                            <i class="fas fa-info-circle text-3xl mb-4"></i>
-                            <p>الرجاء اختيار الاختصاص والصف والمادة لتمكين رفع الملفات</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Files Section -->
-                <div id="teacher-files-section" class="hidden">
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                        <div class="p-6">
-                            <h2 class="text-xl font-bold text-gray-800 mb-4">الملفات المرفوعة</h2>
-                            
-                            <!-- Images Section -->
-                            <div class="mb-8">
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2 flex items-center">
-                                    <i class="fas fa-images ml-2 text-blue-500"></i>
-                                    الصور
-                                </h3>
-                                <div id="teacher-images-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                    <!-- Images will be loaded here -->
-                                </div>
-                            </div>
-                            
-                            <!-- Files Section -->
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2 flex items-center">
-                                    <i class="fas fa-file-alt ml-2 text-green-500"></i>
-                                    الملفات
-                                </h3>
-                                <div id="teacher-files-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    <!-- Files will be loaded here -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-            
-            <!-- Footer -->
-            <footer class="bg-gray-800 text-white py-6">
-                <div class="container mx-auto px-4 text-center">
-                    <p>© 2023 معاهد المهدي. جميع الحقوق محفوظة.</p>
-                </div>
-            </footer>
-        </div>
-    </div>
-    
+        <!-- معلومات التطبيق -->
+           </div>
+
     <script>
-        // Teacher credentials
-        const teacherUser = "Admin.yasser";
-        const teacherPass = "@dmin.y@sser";
+        // كائن يحتوي على أعمال كل شهر هجري
+        const hijriWorks = {
+            // شهر محرم
+            1: {
+                name: "محرم",
+                1: "اليوم الأول من محرم (رأس السنة الهجرية)<br><br>• صيام هذا اليوم مستحب.<br>• الإكثار من الصلاة على النبي محمد صلى الله عليه وسلم.<br>• الدعاء بالخير والبركة في العام الجديد.<br>• تذكر هجرة النبي صلى الله عليه وسلم والاعتبار بها.",
+                2: "اليوم الثاني من محرم<br><br>• الاجتهاد في العبادة والإكثار من الذكر.<br>• صيام هذا اليوم مستحب.<br>• قراءة القرآن والتقرب إلى الله بالطاعات.",
+                3: "اليوم الثالث من محرم<br><br>• الإكثار من الاستغفار.<br>• صلاة ركعتين بنية قضاء الحوائج.<br>• الدعاء بأدعية أول الشهر.",
+                7: "اليوم السابع من محرم<br><br>• صيام هذا اليوم مستحب.<br>• الإكثار من الصلاة على النبي محمد صلى الله عليه وسلم.<br>• قراءة سورة يس بنية دفع البلاء.",
+                9: "يوم التاسع من محرم (تاسوعاء)<br><br>• صيام هذا اليوم مستحب.<br>• زيارة الحسين عليه السلام أو قراءة الزيارة.<br>• الإكثار من الدعاء والاستغفار.",
+                10: "اليوم العاشر من محرم (عاشوراء)<br><br>• صيام هذا اليوم له فضل كبير.<br>• قراءة زيارة عاشوراء.<br>• الدعاء بدعاء العشرات.<br>• الصدقة والإحسان إلى الفقراء.",
+                15: "اليوم الخامس عشر من محرم<br><br>• صيام هذا اليوم مستحب.<br>• قراءة سورة الحمد وسورة التوحيد 100 مرة.<br>• الدعاء بدعاء اليوم الخامس عشر."
+            },
+            
+            // شهر صفر
+            2: {
+                name: "صفر",
+                1: "اليوم الأول من صفر<br><br>• قراءة سورة التوحيد 100 مرة.<br>• الصيام مستحب.<br>• الدعاء بدعاء أول الشهر.",
+                7: "اليوم السابع من صفر<br><br>• الإكثار من الصلاة على النبي محمد صلى الله عليه وسلم.<br>• قراءة القرآن والتسبيح.<br>• صيام هذا اليوم مستحب.",
+                20: "اليوم العشرون من صفر (أربعين الإمام الحسين)<br><br>• زيارة الإمام الحسين عليه السلام أو قراءة زيارة الأربعين.<br>• صيام هذا اليوم مستحب.<br>• الإكثار من الصلاة على النبي محمد صلى الله عليه وسلم وآله.",
+                28: "اليوم الثامن والعشرون من صفر (وفاة النبي محمد صلى الله عليه وسلم)<br><br>• قراءة القرآن والصلاة على النبي.<br>• الإكثار من الاستغفار.<br>• صيام هذا اليوم مستحب."
+            },
+            
+            // شهر ربيع الأول
+            3: {
+                name: "ربيع الأول",
+                8: "اليوم الثامن من ربيع الأول (وفاة الإمام الحسن العسكري)<br><br>• زيارة الإمام الحسن العسكري عليه السلام.<br>• قراءة القرآن بنية راحة روحه.<br>• الصدقة عنه.",
+                12: "اليوم الثاني عشر من ربيع الأول (المولد النبوي الشريف)<br><br>• الصيام مستحب.<br>• الإكثار من الصلاة على النبي محمد صلى الله عليه وسلم.<br>• قراءة سيرة النبي.<br>• إطعام الطعام والصدقة.",
+                17: "اليوم السابع عشر من ربيع الأول (مولد النبي محمد صلى الله عليه وسلم)<br><br>• الصيام مستحب جداً.<br>• الإكثار من الصلاة على النبي وآله.<br>• إحياء الليل بالعبادة.<br>• إطعام المؤمنين والتصدق."
+            },
+            
+            // شهر ربيع الثاني
+            4: {
+                name: "ربيع الثاني",
+                10: "اليوم العاشر من ربيع الثاني<br><br>• صيام هذا اليوم مستحب.<br>• قراءة سورة القدر 7 مرات.<br>• الدعاء بدعاء اليوم العاشر.",
+                15: "اليوم الخامس عشر من ربيع الثاني<br><br>• صيام هذا اليوم مستحب.<br>• قراءة سورة يس والصلاة على النبي.<br>• الدعاء بدعاء اليوم الخامس عشر."
+            },
+            
+            // شهر جمادى الأولى
+            5: {
+                name: "جمادى الأولى",
+                5: "اليوم الخامس من جمادى الأولى (مولد السيدة زينب عليها السلام)<br><br>• الصيام مستحب.<br>• زيارة السيدة زينب أو قراءة زيارتها.<br>• الإكثار من الصلاة على النبي وآله.",
+                13: "اليوم الثالث عشر من جمادى الأولى (وفاة السيدة فاطمة الزهراء عليها السلام)<br><br>• قراءة القرآن بنية راحة روحها.<br>• الصيام مستحب.<br>• زيارة السيدة فاطمة الزهراء أو قراءة زيارتها."
+            },
+            
+            // شهر جمادى الآخرة
+            6: {
+                name: "جمادى الآخرة",
+                3: "اليوم الثالث من جمادى الآخرة (شهادة السيدة فاطمة الزهراء عليها السلام)<br><br>• قراءة زيارة فاطمية.<br>• الصيام مستحب.<br>• الإكثار من الاستغفار والصلاة على النبي وآله.",
+                20: "اليوم العشرون من جمادى الآخرة (مولد السيدة فاطمة الزهراء عليها السلام)<br><br>• الصيام مستحب.<br>• زيارة السيدة فاطمة الزهراء أو قراءة زيارتها.<br>• الإكثار من الصلاة على النبي وآله."
+            },
+            
+            // شهر رجب
+            7: {
+                name: "رجب",
+{
+ 2:"<br><b>قال الإمام الصادق (ع):<br>«رجب شهر عظيم، يُضاعف الله فيه الحسنات، ويمحو فيه السيئات».<br>📚 المصدر:<br>الكافي – ج 4 – ص 66",
+  3: "<br><b>قال الإمام موسى الكاظم (ع):<br>«رجب نهر في الجنة، أبيض من اللبن، وأحلى من العسل».<br>📚 المصدر:<br>الكافي – ج 4 – ص 67",
+  4: "<br><b>قال الإمام الصادق (ع):<br>«من صام يومًا من رجب تباعدت عنه النار مسيرة سنة».<br>📚 المصدر:<br>من لا يحضره الفقيه – الشيخ الصدوق – ج 2 – ص 93",
+  5: "<br><b>قال رسول الله ﷺ:<br>«من صام ثلاثة أيام من رجب وجبت له الجنة».<br>📚 المصدر:<br>ثواب الأعمال – الشيخ الصدوق – ص 53",
+  6: "<br><b>قال الإمام الباقر (ع):<br>«رجب شهر الاستغفار، فأكثروا فيه الاستغفار».<br>📚 المصدر:<br>الكافي – ج 2 – ص 504 – كتاب الدعاء",
+  7: "<br><b>قال الإمام الصادق (ع):<br>«من قال في رجب: أستغفر الله وأتوب إليه، غفر الله له».<br>📚 المصدر:<br>الكافي – ج 2 – ص 504",
+  8: "<br><b>قال رسول الله ﷺ:<br>«رجب شهر حرام، الدعاء فيه مستجاب».<br>📚 المصدر:<br>الأمالي – الشيخ الصدوق – المجلس 28 – ص 138",
+  9: "<br><b>قال الإمام علي (ع):<br>«اغتنموا شهر رجب، فإنه شهر التوبة والإنابة».<br>📚 المصدر:<br>غرر الحكم – الآمدي – ح 2891",
+  10: "<br><b>قال الإمام الصادق (ع):<br>«من صام أول يوم من رجب وجبت له الجنة».<br>📚 المصدر:<br>ثواب الأعمال – ص 52",
+  11: "<br><b>قال رسول الله ﷺ:<br>«رجب شهر عظيم، يكرم الله فيه عباده المؤمنين».<br>📚 المصدر:<br>الأمالي – الشيخ الطوسي – المجلس 19 – ص 554",
+  12: "<br><b>قال الإمام الباقر (ع):<br>«إذا دخل رجب نادى منادٍ: طوبى للذاكرين».<br>📚 المصدر:<br>وسائل الشيعة – الحر العاملي – ج 10 – ص 321 (نقلًا عن الكافي)",
+  13: "<br><b>قال الإمام الصادق (ع):<br>«الصيام في رجب يورث نورًا في القلب».<br>📚 المصدر:<br>مصباح المتهجد – الشيخ الطوسي – ص 704",
+  14: "<br><b>قال رسول الله ﷺ:<br>«من أحيا ليلة من رجب غفر الله له».<br>📚 المصدر:<br>ثواب الأعمال – ص 54",
+  15: "<br><b>قال الإمام الصادق (ع):<br>«الدعاء في رجب لا يُرد».<br>📚 المصدر:<br>الكافي – ج 2 – ص 349",
+  16: "<br><b>قال الإمام علي (ع):<br>«رجب شهر التهيؤ للقاء الله».<br>📚 المصدر:<br>نهج البلاغة – الحكمة 301 (بالمعنى)",
+  17: "<br><b>قال رسول الله ﷺ:<br>«من صام يومًا من رجب كُتب له أجر شهر صيامًا».<br>📚 المصدر:<br>ثواب الأعمال – ص 52",
+  18: "<br><b>قال الإمام الصادق (ع):<br>«من لم يقدر على الصيام في رجب فليكثر الذكر».<br>📚 المصدر:<br>الكافي – ج 2 – ص 505",
+  19: "<br><b>قال الإمام الباقر (ع):<br>«الاستغفار في رجب يمحو الذنوب العظام».<br>📚 المصدر:<br>الأمالي – الشيخ الصدوق – المجلس 30",
+  20: "<br><b>قال رسول الله ﷺ:<br>«رجب شهر الله الأصم».<br>📚 المصدر:<br>من لا يحضره الفقيه – ج 2 – ص 92",
+  21: "<br><b>قال الإمام الصادق (ع):<br>«من أكثر في رجب الصلاة على محمد وآل محمد زاد الله في رزقه».<br>📚 المصدر:<br>الكافي – ج 2 – ص 492",
+  22: "<br><b>قال الإمام علي (ع):<br>«ما من عبد يُقبل على الله في رجب إلا أقبل الله عليه».<br>📚 المصدر:<br>غرر الحكم – ح 8243",
+  23: "<br><b>قال رسول الله ﷺ:<br>«رجب شهر عظيم، أجر العمل فيه مضاعف».<br>📚 المصدر:<br>الأمالي – الشيخ الطوسي – ص 680",
+  24: "<br><b>قال الإمام الصادق (ع):<br>«رجب باب من أبواب الرحمة».<br>📚 المصدر:<br>وسائل الشيعة – ج 10 – ص 321",
+  25: "<br><b>قال الإمام الباقر (ع):<br>«من صام رجب إيمانًا واحتسابًا وجبت له المغفرة».<br>📚 المصدر:<br>ثواب الأعمال – ص 53",
+  26: "<br><b>قال رسول الله ﷺ:<br>«أكثروا في رجب من قول: أستغفر الله وأسأله التوبة».<br>📚 المصدر:<br>الكافي – ج 2 – ص 504",
+  27: "<br><b>قال الإمام الصادق (ع):<br>«العمل الصالح في رجب يُضاعف سبعين ضعفًا».<br>📚 المصدر:<br>مصباح المتهجد – ص 703",
+  28: "<br><b>قال الإمام علي (ع):<br>«رجب شهر تزكية النفوس».<br>📚 المصدر:<br>غرر الحكم – ح 4567",
+  29: "<br><b>قال الإمام الصادق (ع):<br>«من عظّم رجب عظّم الله أمره يوم القيامة».<br>📚 المصدر:<br>وسائل الشيعة – ج 10 – ص 322",
+  30: "<br><b>قال رسول الله ﷺ:<br>«رجب بداية طريق القرب من الله».<br>📚 المصدر:<br>الأمالي – الشيخ الصدوق – المجلس 27",
+},
+
         
-        // Subjects data
-        const subjectsData = {
-            nursing: {
-                bt1: ["الأحياء", "الكيمياء", "العلوم التمريضية", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt2: ["الأحياء", "الكيمياء", "العلوم التمريضية", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt3: ["الأحياء", "الكيمياء", "العلوم التمريضية", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"]
+            // شهر شعبان
+            8: {
+                name: "شعبان",
+                1: "اليوم الأول من شعبان<br><br>• الصيام مستحب.<br>• زيارة الإمام الحسين عليه السلام.<br>• قراءة دعاء أول شعبان.",
+                3: "اليوم الثالث من شعبان (مولد الإمام الحسين عليه السلام)<br><br>• الصيام مستحب.<br>• غسل الاستحباب.<br>• زيارة الإمام الحسين عليه السلام.<br>• إطعام المؤمنين.",
+                4: "اليوم الرابع من شعبان (مولد الإمام زين العابدين عليه السلام)<br><br>• الصيام مستحب.<br>• زيارة الإمام زين العابدين عليه السلام.<br>• قراءة القرآن.",
+                5: "اليوم الخامس من شعبان (مولد الإمام علي بن الحسين عليه السلام)<br><br>• الصيام مستحب.<br>• زيارة الإمام علي بن الحسين عليه السلام.<br>• الإكثار من الصلاة على النبي وآله.",
+                15: "اليوم الخامس عشر من شعبان (مولد الإمام المهدي عجل الله فرجه)<br><br>• غسل الاستحباب.<br>• إحياء الليل بالعبادة.<br>• زيارة الإمام الحسين عليه السلام.<br>• قراءة دعاء كميل.<br>• الصيام نهاره مستحب جداً.",
+                20: "اليوم العشرون من شعبان<br><br>• الصيام مستحب.<br>• قراءة سورة يس.<br>• الدعاء بدعاء العشرين من شعبان."
             },
-            accounting: {
-                bt1: ["المحاسبة", "المعلوماتية", "الاقتصاد", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt2: ["المحاسبة", "المعلوماتية", "الاقتصاد", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt3: ["المحاسبة", "المعلوماتية", "الاقتصاد", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"]
+            
+            // شهر رمضان
+            9: {
+                name: "رمضان",
+                1: "اليوم الأول من رمضان<br><br>• نية صيام الشهر كاملاً.<br>• قراءة دعاء الافتتاح.<br>• الإكثار من الاستغفار والتسبيح.<br>• صلاة التراويح.",
+                2: "اليوم الثاني من رمضان<br><br>• الإكثار من قراءة القرآن.<br>• الدعاء بدعاء اليوم الثاني.<br>• الصدقة ولو بالقليل.",
+                3: "اليوم الثالث من رمضان<br><br>• قراءة سورة الأنعام.<br>• الدعاء بدعاء اليوم الثالث.<br>• صلاة الليل.",
+                10: "اليوم العاشر من رمضان<br><br>• الإكثار من الصلاة على النبي وآله.<br>• قراءة سورة التكوير.<br>• الدعاء بدعاء أبي حمزة الثمالي.",
+                13: "اليوم الثالث عشر من رمضان (أول أيام البيض)<br><br>• صيام هذا اليوم مستحب.<br>• قراءة سورة يس.<br>• الإكثار من الذكر والاستغفار.",
+                14: "اليوم الرابع عشر من رمضان (ثاني أيام البيض)<br><br>• صيام هذا اليوم مستحب.<br>• قراءة سورة الدخان.<br>• الدعاء بدعاء اليوم الرابع عشر.",
+                15: "اليوم الخامس عشر من رمضان (ثالث أيام البيض)<br><br>• صيام هذا اليوم مستحب.<br>• غسل الاستحباب.<br>• زيارة الإمام الحسين عليه السلام.<br>• قراءة سورة الحمد وسورة التوحيد 100 مرة.",
+                19: "اليوم التاسع عشر من رمضان (ليلة القدر الأولى)<br><br>• إحياء الليل بالعبادة.<br>• قراءة دعاء الجوشن الكبير.<br>• قراءة سورة العنكبوت والروم والدخان.<br>• الصلاة 100 ركعة.",
+                20: "اليوم العشرون من رمضان<br><br>• الإكثار من الاستغفار.<br>• قراءة سورة يس.<br>• الدعاء بدعاء اليوم العشرين.",
+                21: "اليوم الحادي والعشرون من رمضان (ليلة القدر الثانية)<br><br>• إحياء الليل بالعبادة.<br>• غسل الاستحباب.<br>• قراءة دعاء الجوشن الصغير.<br>• قراءة سورة القدر 1000 مرة.",
+                23: "اليوم الثالث والعشرون من رمضان (ليلة القدر الثالثة)<br><br>• إحياء الليل بالعبادة.<br>• غسل الاستحباب.<br>• قراءة سورة القدر.<br>• الدعاء بدعاء اليوم الثالث والعشرين.",
+                27: "اليوم السابع والعشرون من رمضان (ليلة القدر المحتملة)<br><br>• إحياء الليل بالعبادة.<br>• قراءة دعاء الجوشن الكبير.<br>• الإكثار من الاستغفار.<br>• قراءة سورة الدخان."
             },
-            advertising: {
-                bt1: ["التصميم الجرافيكي", "التصوير الإعلاني", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt2: ["التصميم الجرافيكي", "التصوير الإعلاني", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt3: ["التصميم الجرافيكي", "التصوير الإعلاني", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"]
+            
+            // شهر شوال
+            10: {
+                name: "شوال",
+                1: "اليوم الأول من شوال (عيد الفطر)<br><br>• غسل العيد.<br>• صلاة العيد.<br>• إخراج زكاة الفطر.<br>• زيارة الإمام الحسين عليه السلام.",
+                2: "اليوم الثاني من شوال<br><br>• صيام هذا اليوم قضاء لرمضان.<br>• الإكثار من الصلاة على النبي وآله.<br>• الدعاء بدعاء اليوم الثاني من شوال.",
+                25: "اليوم الخامس والعشرون من شوال (شهادة الإمام جعفر الصادق عليه السلام)<br><br>• زيارة الإمام جعفر الصادق عليه السلام.<br>• الصيام مستحب.<br>• قراءة القرآن بنية راحة روحه."
             },
-            education: {
-                bt1: ["التربية العامة", "علم النفس", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt2: ["التربية العامة", "علم النفس", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt3: ["التربية العامة", "علم النفس", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"]
+            
+            // شهر ذو القعدة
+            11: {
+                name: "ذو القعدة",
+                1: "اليوم الأول من ذو القعدة (بداية الأشهر الحرم)<br><br>• الصيام مستحب.<br>• زيارة الإمام الحسين عليه السلام.<br>• قراءة دعاء أول الشهر.",
+                11: "اليوم الحادي عشر من ذو القعدة (مولد الإمام علي بن موسى الرضا عليه السلام)<br><br>• الصيام مستحب.<br>• غسل الاستحباب.<br>• زيارة الإمام الرضا عليه السلام.<br>• إطعام المؤمنين.",
+                25: "اليوم الخامس والعشرون من ذو القعدة (دحو الأرض)<br><br>• الصيام مستحب.<br>• غسل الاستحباب.<br>• زيارة الإمام الحسين عليه السلام.<br>• قراءة دعاء دحو الأرض."
             },
-            "special-education": {
-                bt1: ["التربية العامة", "علم النفس", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt2: ["التربية العامة", "علم النفس", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt3: ["التربية العامة", "علم النفس", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"]
-            },
-            it: {
-                bt1: ["البرمجة", "الشبكات", "أنظمة التشغيل", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt2: ["البرمجة", "الشبكات", "أنظمة التشغيل", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"],
-                bt3: ["البرمجة", "الشبكات", "أنظمة التشغيل", "اللغة العربية", "اللغة الفرنسية", "اللغة الإنكليزية", "الرياضيات"]
+            
+            // شهر ذو الحجة
+            12: {
+                name: "ذو الحجة",
+                1: "اليوم الأول من ذو الحجة<br><br>• الصيام مستحب.<br>• قراءة دعاء أول الشهر.<br>• الإكثار من التهليل والتكبير.",
+                7: "اليوم السابع من ذو الحجة<br><br>• الصيام مستحب.<br>• قراءة سورة يس.<br>• الدعاء بدعاء اليوم السابع.",
+                8: "اليوم الثامن من ذو الحجة (يوم التروية)<br><br>• الصيام مستحب.<br>• الإكثار من التلبية.<br>• الدعاء بدعاء يوم التروية.",
+                9: "اليوم التاسع من ذو الحجة (يوم عرفة)<br><br>• الصيام مستحب جداً.<br>• غسل الاستحباب.<br>• قراءة دعاء عرفة للإمام الحسين عليه السلام.<br>• الإكثار من الاستغفار والدعاء.",
+                10: "اليوم العاشر من ذو الحجة (عيد الأضحى)<br><br>• غسل العيد.<br>• صلاة العيد.<br>• ذبح الأضحية.<br>• زيارة الإمام الحسين عليه السلام.",
+                15: "اليوم الخامس عشر من ذو الحجة<br><br>• الصيام مستحب.<br>• قراءة سورة الحمد وسورة التوحيد 100 مرة.<br>• الدعاء بدعاء اليوم الخامس عشر.",
+                18: "اليوم الثامن عشر من ذو الحجة (عيد الغدير)<br><br>• الصيام مستحب.<br>• غسل الاستحباب.<br>• زيارة أمير المؤمنين عليه السلام.<br>• قراءة دعاء العهد.<br>• إطعام المؤمنين.",
+                24: "اليوم الرابع والعشرون من ذو الحجة (عيد المباهلة)<br><br>• الصيام مستحب.<br>• غسل الاستحباب.<br>• زيارة الإمام الحسين عليه السلام.<br>• قراءة دعاء المباهلة."
             }
         };
-        
-        // Specialization names in Arabic
-        const specializationNames = {
-            nursing: "العناية التمريضية",
-            accounting: "المحاسبة والمعلوماتية",
-            advertising: "فنون الإعلان",
-            education: "التربية الحضانية",
-            "special-education": "التربية الحضانية المختصة",
-            it: "تكنولوجيا المعلوماتية"
-        };
-        
-        // Grade names in Arabic
-        const gradeNames = {
-            bt1: "BT1",
-            bt2: "BT2",
-            bt3: "BT3"
-        };
-        
-        // Current selections
-        let currentSpecialization = "";
-        let currentGrade = "";
-        let currentSubject = "";
-        
-        // File storage simulation
-        let fileStorage = {};
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize dropdowns for student page
-            const studentSpecialization = document.getElementById('student-specialization');
-            const studentGrade = document.getElementById('student-grade');
-            const studentSubject = document.getElementById('student-subject');
+
+        // الحصول على التاريخ الهجري الحالي - الإصدار النهائي المصحح
+        function getCurrentHijriDate() {
+            const now = new Date();
             
-            if (studentSpecialization) {
-                studentSpecialization.addEventListener('change', function() {
-                    currentSpecialization = this.value;
-                    studentGrade.disabled = !this.value;
-                    studentSubject.disabled = true;
-                    studentSubject.innerHTML = '<option value="">اختر المادة</option>';
-                    
-                    if (this.value) {
-                        // Enable grade dropdown and populate subjects when grade is selected
-                        studentGrade.addEventListener('change', function() {
-                            currentGrade = this.value;
-                            studentSubject.disabled = !this.value;
-                            
-                            if (this.value) {
-                                const subjects = subjectsData[currentSpecialization][currentGrade];
-                                studentSubject.innerHTML = '<option value="">اختر المادة</option>';
-                                
-                                subjects.forEach(subject => {
-                                    const option = document.createElement('option');
-                                    option.value = subject;
-                                    option.textContent = subject;
-                                    studentSubject.appendChild(option);
-                                });
-                            }
-                        });
-                    }
-                });
+            try {
+                // استخدام Intl.DateTimeFormat مع تقويم Islamic Umalqura
+                // هذا هو التقويم الرسمي للمملكة العربية السعودية
+                const hijriDateStr = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                }).format(now);
                 
-                studentSubject.addEventListener('change', function() {
-                    currentSubject = this.value;
-                    
-                    if (this.value) {
-                        loadStudentFiles();
-                        document.getElementById('student-files-section').classList.remove('hidden');
-                    } else {
-                        document.getElementById('student-files-section').classList.add('hidden');
-                    }
-                });
-            }
-            
-            // Initialize dropdowns for teacher page
-            const teacherSpecialization = document.getElementById('teacher-specialization');
-            const teacherGrade = document.getElementById('teacher-grade');
-            const teacherSubject = document.getElementById('teacher-subject');
-            
-            if (teacherSpecialization) {
-                teacherSpecialization.addEventListener('change', function() {
-                    currentSpecialization = this.value;
-                    teacherGrade.disabled = !this.value;
-                    teacherSubject.disabled = true;
-                    teacherSubject.innerHTML = '<option value="">اختر المادة</option>';
-                    
-                    if (this.value) {
-                        // Enable grade dropdown and populate subjects when grade is selected
-                        teacherGrade.addEventListener('change', function() {
-                            currentGrade = this.value;
-                            teacherSubject.disabled = !this.value;
-                            
-                            if (this.value) {
-                                const subjects = subjectsData[currentSpecialization][currentGrade];
-                                teacherSubject.innerHTML = '<option value="">اختر المادة</option>';
-                                
-                                subjects.forEach(subject => {
-                                    const option = document.createElement('option');
-                                    option.value = subject;
-                                    option.textContent = subject;
-                                    teacherSubject.appendChild(option);
-                                });
-                            }
-                        });
-                    }
-                });
+                console.log("التاريخ المستلم من المتصفح:", hijriDateStr); // للمساعدة في التصحيح
                 
-                teacherSubject.addEventListener('change', function() {
-                    currentSubject = this.value;
-                    
-                    if (this.value) {
-                        // Clean up any previous file URLs to prevent memory leaks
-                        if (fileStorage[currentSpecialization] && 
-                            fileStorage[currentSpecialization][currentGrade] && 
-                            fileStorage[currentSpecialization][currentGrade][currentSubject]) {
-                            
-                            const files = fileStorage[currentSpecialization][currentGrade][currentSubject];
-                            files.images.forEach(img => {
-                                if (img.url.startsWith('blob:')) {
-                                    URL.revokeObjectURL(img.url);
-                                }
-                            });
-                            files.files.forEach(f => {
-                                if (f.url.startsWith('blob:')) {
-                                    URL.revokeObjectURL(f.url);
-                                }
-                            });
+                // تحويل الأرقام العربية إلى لاتينية بدقة
+                const arabicToLatin = {
+                    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+                    '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+                };
+                
+                // استخراج اليوم من السلسلة - طريقة محسنة
+                let dayNumber = 1;
+                
+                // البحث عن أول رقم عربي في السلسلة
+                for (let i = 0; i < hijriDateStr.length; i++) {
+                    if (arabicToLatin[hijriDateStr[i]] !== undefined) {
+                        let arabicDay = '';
+                        // تجميع جميع الأرقام العربية المتتالية
+                        while (i < hijriDateStr.length && arabicToLatin[hijriDateStr[i]] !== undefined) {
+                            arabicDay += hijriDateStr[i];
+                            i++;
                         }
                         
-                        document.getElementById('teacher-upload-section').classList.remove('hidden');
-                        document.getElementById('teacher-select-message').classList.add('hidden');
-                        document.getElementById('teacher-files-section').classList.remove('hidden');
-                        setupFileUploads();
-                        loadTeacherFiles();
-                    } else {
-                        document.getElementById('teacher-upload-section').classList.add('hidden');
-                        document.getElementById('teacher-select-message').classList.remove('hidden');
-                        document.getElementById('teacher-files-section').classList.add('hidden');
-                    }
-                });
-            }
-            
-            // Initialize teacher login form
-            const teacherLoginForm = document.getElementById('teacher-login-form');
-            if (teacherLoginForm) {
-                teacherLoginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const username = document.getElementById('username').value;
-                    const password = document.getElementById('password').value;
-                    
-                    if (username === teacherUser && password === teacherPass) {
-                        hideTeacherLogin();
-                        navigateToTeacher();
-                    } else {
-                        alert('اسم المستخدم أو كلمة المرور غير صحيحة');
-                    }
-                });
-            }
-            
-            // Initialize sidebar toggle for mobile
-            const sidebarToggle = document.getElementById('sidebar-toggle');
-            const sidebarClose = document.getElementById('sidebar-close');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.add('open');
-                    overlay.classList.add('open');
-                });
-            }
-            
-            if (sidebarClose) {
-                sidebarClose.addEventListener('click', function() {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('open');
-                });
-            }
-            
-            if (overlay) {
-                overlay.addEventListener('click', function() {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('open');
-                });
-            }
-            
-            // Initialize file storage with some sample data
-            initializeFileStorage();
-        });
-        
-        // Navigation functions
-        function navigateToIndex() {
-            document.getElementById('index-page').classList.remove('hidden');
-            document.getElementById('student-page').classList.add('hidden');
-            document.getElementById('teacher-page').classList.add('hidden');
-        }
-        
-        function navigateToStudent() {
-            document.getElementById('index-page').classList.add('hidden');
-            document.getElementById('student-page').classList.remove('hidden');
-            document.getElementById('teacher-page').classList.add('hidden');
-        }
-        
-        function navigateToTeacher() {
-            document.getElementById('index-page').classList.add('hidden');
-            document.getElementById('student-page').classList.add('hidden');
-            document.getElementById('teacher-page').classList.remove('hidden');
-        }
-        
-        function showTeacherLogin() {
-            document.getElementById('teacher-login-modal').classList.remove('hidden');
-        }
-        
-        function hideTeacherLogin() {
-            document.getElementById('teacher-login-modal').classList.add('hidden');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-        
-        function logoutTeacher() {
-            navigateToIndex();
-        }
-        
-        // File handling functions
-        function initializeFileStorage() {
-            // This is a simulation of file storage since we're not using a real database
-            // In a real app, this would be replaced with actual file storage or database calls
-            
-            fileStorage = {
-                nursing: {
-                    bt1: {
-                        "الأحياء": {
-                            images: [
-                                {name: "خلية حية.jpg", url: "https://via.placeholder.com/300x200?text=خلية+حية"},
-                                {name: "جهاز هضمي.png", url: "https://via.placeholder.com/300x200?text=جهاز+هضمي"}
-                            ],
-                            files: [
-                                {name: "ملخص الأحياء.pdf", url: "https://via.placeholder.com/300x200?text=ملخص+الأحياء.pdf"},
-                                {name: "أسئلة.docx", url: "https://via.placeholder.com/300x200?text=أسئلة.docx"}
-                            ]
-                        },
-                        "الكيمياء": {
-                            images: [
-                                {name: "جدول دوري.jpg", url: "https://via.placeholder.com/300x200?text=جدول+دوري"}
-                            ],
-                            files: [
-                                {name: "تفاعلات كيميائية.pdf", url: "https://via.placeholder.com/300x200?text=تفاعلات+كيميائية.pdf"}
-                            ]
+                        if (arabicDay) {
+                            let latinDay = '';
+                            for (let char of arabicDay) {
+                                latinDay += arabicToLatin[char];
+                            }
+                            dayNumber = parseInt(latinDay) || 1;
                         }
-                    },
-                    bt2: {
-                        "الأحياء": {
-                            images: [],
-                            files: []
-                        }
+                        break;
                     }
-                },
-                accounting: {
-                    bt1: {
-                        "المحاسبة": {
-                            images: [
-                                {name: "ميزانية.jpg", url: "https://via.placeholder.com/300x200?text=ميزانية"}
-                            ],
-                            files: [
-                                {name: "أساسيات المحاسبة.pdf", url: "https://via.placeholder.com/300x200?text=أساسيات+المحاسبة.pdf"},
-                                {name: "تمارين.xlsx", url: "https://via.placeholder.com/300x200?text=تمارين.xlsx"}
-                            ]
+                }
+                
+                // استخراج اسم الشهر
+                const monthNames = [
+                    'محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني',
+                    'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان',
+                    'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
+                ];
+                
+                let monthName = 'محرم';
+                for (const name of monthNames) {
+                    if (hijriDateStr.includes(name)) {
+                        monthName = name;
+                        break;
+                    }
+                }
+                
+                // استخراج السنة
+                let hijriYear = '1445';
+                // البحث عن السنة بعد اسم الشهر
+                const monthIndex = hijriDateStr.indexOf(monthName);
+                if (monthIndex !== -1) {
+                    const afterMonth = hijriDateStr.substring(monthIndex + monthName.length);
+                    for (let i = 0; i < afterMonth.length; i++) {
+                        if (arabicToLatin[afterMonth[i]] !== undefined) {
+                            let arabicYear = '';
+                            while (i < afterMonth.length && arabicToLatin[afterMonth[i]] !== undefined) {
+                                arabicYear += afterMonth[i];
+                                i++;
+                            }
+                            
+                            if (arabicYear) {
+                                let latinYear = '';
+                                for (let char of arabicYear) {
+                                    latinYear += arabicToLatin[char];
+                                }
+                                hijriYear = latinYear;
+                            }
+                            break;
                         }
                     }
                 }
-            };
-        }
-        
-        function loadStudentFiles() {
-            const imagesContainer = document.getElementById('student-images-container');
-            const filesContainer = document.getElementById('student-files-container');
-            
-            imagesContainer.innerHTML = '';
-            filesContainer.innerHTML = '';
-            
-            // Check if files exist for the selected path
-            if (fileStorage[currentSpecialization] && 
-                fileStorage[currentSpecialization][currentGrade] && 
-                fileStorage[currentSpecialization][currentGrade][currentSubject]) {
                 
-                const files = fileStorage[currentSpecialization][currentGrade][currentSubject];
+                // استخراج اسم اليوم
+                const weekdayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                let weekday = 'الأحد';
+                for (const name of weekdayNames) {
+                    if (hijriDateStr.includes(name)) {
+                        weekday = name;
+                        break;
+                    }
+                }
                 
-                // Display images
-                files.images.forEach(image => {
-                    const imageCard = createImageCard(image, false);
-                    imagesContainer.appendChild(imageCard);
+                // الحصول على التاريخ الميلادي
+                const gregorianFormatter = new Intl.DateTimeFormat('ar-SA', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
                 });
+                const gregorianDate = gregorianFormatter.format(now);
                 
-                // Display files
-                files.files.forEach(file => {
-                    const fileCard = createFileCard(file, false);
-                    filesContainer.appendChild(fileCard);
-                });
-            } else {
-                // No files found
-                imagesContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-4">لا توجد صور متاحة</p>';
-                filesContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-4">لا توجد ملفات متاحة</p>';
-            }
-        }
-        
-        function loadTeacherFiles() {
-            const imagesContainer = document.getElementById('teacher-images-container');
-            const filesContainer = document.getElementById('teacher-files-container');
-            
-            imagesContainer.innerHTML = '';
-            filesContainer.innerHTML = '';
-            
-            // Initialize storage path if it doesn't exist
-            if (!fileStorage[currentSpecialization]) {
-                fileStorage[currentSpecialization] = {};
-            }
-            
-            if (!fileStorage[currentSpecialization][currentGrade]) {
-                fileStorage[currentSpecialization][currentGrade] = {};
-            }
-            
-            if (!fileStorage[currentSpecialization][currentGrade][currentSubject]) {
-                fileStorage[currentSpecialization][currentGrade][currentSubject] = {
-                    images: [],
-                    files: []
+                return {
+                    hijri: {
+                        year: hijriYear,
+                        month: monthName,
+                        day: dayNumber,
+                        weekday: weekday
+                    },
+                    gregorian: gregorianDate
+                };
+                
+            } catch (error) {
+                console.error('خطأ في قراءة التاريخ الهجري:', error);
+                // في حالة الخطأ، نستخدم التاريخ الحالي من المتصفح
+                return {
+                    hijri: {
+                        year: '1445',
+                        month: 'محرم',
+                        day: new Date().getDate(), // يوم الشهر الحالي
+                        weekday: ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'][new Date().getDay()]
+                    },
+                    gregorian: new Intl.DateTimeFormat('ar-SA').format(new Date())
                 };
             }
+        }
+
+        // تحويل اسم الشهر الهجري إلى رقم
+        function hijriMonthNameToNumber(monthName) {
+            const monthMap = {
+                'محرم': 1,
+                'صفر': 2,
+                'ربيع الأول': 3,
+                'ربيع الثاني': 4,
+                'جمادى الأولى': 5,
+                'جمادى الآخرة': 6,
+                'رجب': 7,
+                'شعبان': 8,
+                'رمضان': 9,
+                'شوال': 10,
+                'ذو القعدة': 11,
+                'ذو الحجة': 12
+            };
             
-            const files = fileStorage[currentSpecialization][currentGrade][currentSubject];
+            // البحث عن اسم الشهر في الخريطة
+            for (const [name, number] of Object.entries(monthMap)) {
+                if (monthName.includes(name)) {
+                    return number;
+                }
+            }
             
-            // Display images with delete option
-            if (files.images.length > 0) {
-                files.images.forEach((image, index) => {
-                    const imageCard = createImageCard(image, true, index);
-                    imagesContainer.appendChild(imageCard);
-                });
+            return 1; // قيمة افتراضية
+        }
+
+        // عرض التاريخ الهجري الحالي
+        function displayHijriDate() {
+            const currentDate = getCurrentHijriDate();
+            const hijri = currentDate.hijri;
+            
+            // عرض التاريخ الهجري
+            document.getElementById('hijriDateContainer').innerHTML = 
+                `${hijri.weekday}، ${hijri.day} ${hijri.month} ${hijri.year} هـ`;
+            
+            // عرض التاريخ الميلادي
+            document.getElementById('gregorianDate').textContent = 
+                `الميلادي: ${currentDate.gregorian}`;
+            
+            // عرض اليوم والشهر والسنة بشكل منفصل
+            document.getElementById('hijriDay').textContent = hijri.day;
+            document.getElementById('hijriMonth').textContent = hijri.month;
+            document.getElementById('hijriYear').textContent = hijri.year + " هـ";
+            
+            // عرض أعمال اليوم
+            displayTodayWorks(hijriMonthNameToNumber(hijri.month), hijri.day);
+            
+            // تعيين الشهر المحدد في القائمة
+            const monthNumber = hijriMonthNameToNumber(hijri.month);
+            document.getElementById('monthSelect').value = monthNumber;
+            
+            // ملء أيام الشهر
+            populateDays(monthNumber);
+            
+            // تعيين اليوم الحالي في القائمة
+            document.getElementById('daySelect').value = hijri.day;
+        }
+
+        // عرض أعمال اليوم الحالي
+        function displayTodayWorks(month, day) {
+            const worksContainer = document.getElementById('worksContainer');
+            
+            // التحقق من وجود أعمال لهذا اليوم
+            if (hijriWorks[month] && hijriWorks[month][day]) {
+                worksContainer.innerHTML = `<div class="text-right">${hijriWorks[month][day]}</div>`;
             } else {
-                imagesContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-4">لا توجد صور متاحة</p>';
+                worksContainer.innerHTML = `
+                    <div class="no-works text-center">
+                        <i class="fas fa-calendar-times text-3xl mb-3"></i>
+                        <h4 class="font-bold text-lg mb-2">لا توجد أعمال خاصة لهذا اليوم</h4>
+                        <p>لم يتم تحديد أعمال خاصة لليوم ${day} من شهر ${hijriWorks[month] ? hijriWorks[month].name : ''}</p>
+                        <p class="mt-3">يمكنك الاجتهاد في العبادة العامة مثل:</p>
+                        <ul class="mt-2 text-right pr-4">
+                            <li>• الإكثار من الصلاة على النبي محمد صلى الله عليه وسلم</li>
+                            <li>• قراءة القرآن الكريم</li>
+                            <li>• الصدقة والإحسان إلى الآخرين</li>
+                            <li>• صلاة النوافل والدعاء</li>
+                        </ul>
+                    </div>
+                `;
             }
+        }
+
+        // عرض أعمال يوم محدد
+        function displaySpecificWorks(month, day) {
+            const worksContainer = document.getElementById('worksContainer');
             
-            // Display files with delete option
-            if (files.files.length > 0) {
-                files.files.forEach((file, index) => {
-                    const fileCard = createFileCard(file, true, index);
-                    filesContainer.appendChild(fileCard);
-                });
+            // التحقق من وجود أعمال لهذا اليوم
+            if (hijriWorks[month] && hijriWorks[month][day]) {
+                worksContainer.innerHTML = `
+                    <div class="text-right">
+                        <h4 class="font-bold text-xl mb-3 text-teal-700">أعمال اليوم ${day} من ${hijriWorks[month].name}</h4>
+                        ${hijriWorks[month][day]}
+                    </div>
+                `;
             } else {
-                filesContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-4">لا توجد ملفات متاحة</p>';
+                worksContainer.innerHTML = `
+                    <div class="no-works text-center">
+                        <i class="fas fa-calendar-times text-3xl mb-3"></i>
+                        <h4 class="font-bold text-lg mb-2">لا توجد أعمال خاصة لهذا اليوم</h4>
+                        <p>لم يتم تحديد أعمال خاصة لليوم ${day} من شهر ${hijriWorks[month].name}</p>
+                        <p class="mt-3">يمكنك الاجتهاد في العبادة العامة</p>
+                    </div>
+                `;
             }
         }
-        
-        function createImageCard(image, isTeacher, index = -1) {
-            const card = document.createElement('div');
-            card.className = 'bg-white rounded-lg overflow-hidden shadow-md file-card transition-all';
+
+        // ملء أيام الشهر في القائمة
+        function populateDays(month) {
+            const daySelect = document.getElementById('daySelect');
+            daySelect.innerHTML = '';
             
-            card.innerHTML = `
-                <div class="relative pt-[100%]">
-                    <img src="${image.url}" alt="${image.name}" class="absolute top-0 left-0 w-full h-full object-cover">
-                </div>
-                <div class="p-3">
-                    <p class="text-sm font-medium text-gray-800 truncate">${image.name}</p>
-                    <div class="flex justify-between items-center mt-2">
-                        <a href="${image.url}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
-                            <i class="fas fa-eye ml-1"></i> عرض
-                        </a>
-                        <a href="${image.url}" download="${image.name}" class="text-green-600 hover:text-green-800 text-sm flex items-center">
-                            <i class="fas fa-download ml-1"></i> تحميل
-                        </a>
-                    </div>
-                    ${isTeacher ? `
-                    <div class="mt-2">
-                        <button onclick="deleteImage(${index})" class="w-full bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm flex items-center justify-center">
-                            <i class="fas fa-trash-alt ml-1"></i> حذف
-                        </button>
-                    </div>
-                    ` : ''}
-                </div>
-            `;
+            // عدد أيام الشهر (تقريبي)
+            let daysInMonth = 30;
+            if (month === 12) daysInMonth = 29; // ذو الحجة قد يكون 29 يوم
             
-            return card;
-        }
-        
-        function createFileCard(file, isTeacher, index = -1) {
-            const card = document.createElement('div');
-            card.className = 'bg-white rounded-lg overflow-hidden shadow-md file-card transition-all';
-            
-            // Get file icon based on extension
-            const fileExt = file.name.split('.').pop().toLowerCase();
-            let fileIcon = 'fa-file';
-            let fileColor = 'text-gray-500';
-            
-            if (fileExt === 'pdf') {
-                fileIcon = 'fa-file-pdf';
-                fileColor = 'text-red-500';
-            } else if (fileExt === 'doc' || fileExt === 'docx') {
-                fileIcon = 'fa-file-word';
-                fileColor = 'text-blue-500';
-            } else if (fileExt === 'ppt' || fileExt === 'pptx') {
-                fileIcon = 'fa-file-powerpoint';
-                fileColor = 'text-orange-500';
-            } else if (fileExt === 'xls' || fileExt === 'xlsx') {
-                fileIcon = 'fa-file-excel';
-                fileColor = 'text-green-500';
-            }
-            
-            card.innerHTML = `
-                <div class="p-4">
-                    <div class="flex items-center mb-3">
-                        <i class="fas ${fileIcon} ${fileColor} text-3xl ml-2"></i>
-                        <p class="text-sm font-medium text-gray-800 truncate flex-grow">${file.name}</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <a href="${file.url}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
-                            <i class="fas fa-eye ml-1"></i> عرض
-                        </a>
-                        <a href="${file.url}" download="${file.name}" class="text-green-600 hover:text-green-800 text-sm flex items-center">
-                            <i class="fas fa-download ml-1"></i> تحميل
-                        </a>
-                    </div>
-                    ${isTeacher ? `
-                    <div class="mt-3">
-                        <button onclick="deleteFile(${index})" class="w-full bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm flex items-center justify-center">
-                            <i class="fas fa-trash-alt ml-1"></i> حذف
-                        </button>
-                    </div>
-                    ` : ''}
-                </div>
-            `;
-            
-            return card;
-        }
-        
-        function deleteImage(index) {
-            if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
-                const img = fileStorage[currentSpecialization][currentGrade][currentSubject].images[index];
-                if (img.url.startsWith('blob:')) {
-                    URL.revokeObjectURL(img.url);
-                }
-                fileStorage[currentSpecialization][currentGrade][currentSubject].images.splice(index, 1);
-                loadTeacherFiles();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `اليوم ${i}`;
+                daySelect.appendChild(option);
             }
         }
-        
-        function deleteFile(index) {
-            if (confirm('هل أنت متأكد من حذف هذا الملف؟')) {
-                const file = fileStorage[currentSpecialization][currentGrade][currentSubject].files[index];
-                if (file.url.startsWith('blob:')) {
-                    URL.revokeObjectURL(file.url);
-                }
-                fileStorage[currentSpecialization][currentGrade][currentSubject].files.splice(index, 1);
-                loadTeacherFiles();
-            }
-        }
-        
-        function setupFileUploads() {
-            // Image upload
-            const imageUpload = document.getElementById('image-upload');
-            const imagePreview = document.getElementById('image-preview');
-            const uploadImagesBtn = document.getElementById('upload-images-btn');
+
+        // عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // عرض التاريخ الحالي وأعمال اليوم
+            displayHijriDate();
             
-            let selectedImages = [];
+            // تحديث القائمة عند تغيير الشهر
+            document.getElementById('monthSelect').addEventListener('change', function() {
+                const month = parseInt(this.value);
+                populateDays(month);
+            });
             
-            imageUpload.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-                selectedImages = files;
-                imagePreview.innerHTML = '';
+            // زر عرض الأعمال المحددة
+            document.getElementById('viewWorksBtn').addEventListener('click', function() {
+                const month = parseInt(document.getElementById('monthSelect').value);
+                const day = parseInt(document.getElementById('daySelect').value);
                 
-                if (files.length > 0) {
-                    files.forEach(file => {
-                        if (!file.type.match('image.*')) return;
-                        
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const previewItem = document.createElement('div');
-                            previewItem.className = 'relative';
-                            previewItem.innerHTML = `
-                                <img src="${e.target.result}" class="w-full h-32 object-cover rounded-lg">
-                                <span class="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">${file.name}</span>
-                            `;
-                            imagePreview.appendChild(previewItem);
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                    
-                    uploadImagesBtn.classList.remove('hidden');
-                } else {
-                    uploadImagesBtn.classList.add('hidden');
-                }
-            });
-            
-            uploadImagesBtn.addEventListener('click', function() {
-                if (selectedImages.length > 0) {
-                    // Simulate upload - in a real app, this would upload to a server
-                    selectedImages.forEach(file => {
-                        const imageName = file.name;
-                        const imageUrl = URL.createObjectURL(file);
-                        
-                        // Create a blob URL that will persist
-                        const blobUrl = URL.createObjectURL(file);
-                        fileStorage[currentSpecialization][currentGrade][currentSubject].images.push({
-                            name: imageName,
-                            url: blobUrl,
-                            file: file  // Store the file object for later reference
-                        });
-                    });
-                    
-                    // Reset upload
-                    imageUpload.value = '';
-                    imagePreview.innerHTML = '';
-                    uploadImagesBtn.classList.add('hidden');
-                    selectedImages = [];
-                    
-                    // Reload files
-                    loadTeacherFiles();
-                    
-                    alert('تم رفع الصور بنجاح');
-                }
-            });
-            
-            // File upload
-            const fileUpload = document.getElementById('file-upload');
-            const filePreview = document.getElementById('file-preview');
-            const uploadFilesBtn = document.getElementById('upload-files-btn');
-            
-            let selectedFiles = [];
-            
-            fileUpload.addEventListener('change', function(e) {
-                const files = Array.from(e.target.files);
-                selectedFiles = files;
-                filePreview.innerHTML = '';
+                // تحديث العنوان ليعكس الشهر واليوم المختارين
+                const monthName = hijriWorks[month].name;
+                document.getElementById('hijriDay').textContent = day;
+                document.getElementById('hijriMonth').textContent = monthName;
+                document.getElementById('hijriYear').textContent = "(شهر مختار)";
                 
-                if (files.length > 0) {
-                    files.forEach(file => {
-                        const fileExt = file.name.split('.').pop().toLowerCase();
-                        let fileIcon = 'fa-file';
-                        let fileColor = 'text-gray-500';
-                        
-                        if (fileExt === 'pdf') {
-                            fileIcon = 'fa-file-pdf';
-                            fileColor = 'text-red-500';
-                        } else if (fileExt === 'doc' || fileExt === 'docx') {
-                            fileIcon = 'fa-file-word';
-                            fileColor = 'text-blue-500';
-                        } else if (fileExt === 'ppt' || fileExt === 'pptx') {
-                            fileIcon = 'fa-file-powerpoint';
-                            fileColor = 'text-orange-500';
-                        } else if (fileExt === 'xls' || fileExt === 'xlsx') {
-                            fileIcon = 'fa-file-excel';
-                            fileColor = 'text-green-500';
-                        }
-                        
-                        const previewItem = document.createElement('div');
-                        previewItem.className = 'flex items-center p-3 bg-gray-100 rounded-lg mb-2';
-                        previewItem.innerHTML = `
-                            <i class="fas ${fileIcon} ${fileColor} text-2xl ml-3"></i>
-                            <span class="text-sm font-medium text-gray-800 truncate flex-grow">${file.name}</span>
-                            <span class="text-xs text-gray-500">${formatFileSize(file.size)}</span>
-                        `;
-                        filePreview.appendChild(previewItem);
-                    });
-                    
-                    uploadFilesBtn.classList.remove('hidden');
-                } else {
-                    uploadFilesBtn.classList.add('hidden');
-                }
+                // عرض التاريخ المختار
+                document.getElementById('hijriDateContainer').innerHTML = 
+                    `اليوم ${day} من شهر ${monthName}`;
+                
+                // عرض الأعمال المختارة
+                displaySpecificWorks(month, day);
             });
             
-            uploadFilesBtn.addEventListener('click', function() {
-                if (selectedFiles.length > 0) {
-                    // Simulate upload - in a real app, this would upload to a server
-                    selectedFiles.forEach(file => {
-                        const fileName = file.name;
-                        const fileUrl = URL.createObjectURL(file);
-                        
-                        fileStorage[currentSpecialization][currentGrade][currentSubject].files.push({
-                            name: fileName,
-                            url: fileUrl
-                        });
-                    });
-                    
-                    // Reset upload
-                    fileUpload.value = '';
-                    filePreview.innerHTML = '';
-                    uploadFilesBtn.classList.add('hidden');
-                    selectedFiles = [];
-                    
-                    // Reload files
-                    loadTeacherFiles();
-                    
-                    alert('تم رفع الملفات بنجاح');
-                }
-            });
-        }
-        
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
+            // تحديث الصفحة كل ساعة (في حال بقاء الصفحة مفتوحة)
+            setInterval(displayHijriDate, 3600000);
+        });
     </script>
 </body>
 </html>
+
+>
+
