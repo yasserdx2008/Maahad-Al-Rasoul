@@ -230,6 +230,15 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
+        /* تغيير لون النصوص إلى الأسود في الوضع النهاري فقط */
+        .text-black-light-mode {
+            color: #1e293b !important;
+        }
+        
+        .dark-theme .text-black-light-mode {
+            color: #f1f5f9 !important;
+        }
+        
         @media (max-width: 768px) {
             .arabic-date {
                 font-size: 1.8rem;
@@ -268,10 +277,10 @@
     <div class="container mx-auto max-w-4xl">
         <!-- العنوان الرئيسي -->
         <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-slate-800 dark:text-slate-100 mb-3">
+            <h1 class="text-4xl font-bold text-black-light-mode mb-3">
                 <i class="fas fa-mosque text-teal-600 mr-2"></i>نور الولاية
             </h1>
-            <p class="text-slate-600 dark:text-slate-300 text-lg">اعرف أعمال وفضائل اليوم حسب التقويم الهجري الإسلامي</p>
+            <p class="text-black-light-mode text-lg">اعرف أعمال وفضائل اليوم حسب التقويم الهجري الإسلامي</p>
         </header>
         
         <!-- بطاقة التاريخ الهجري -->
@@ -295,17 +304,17 @@
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex flex-wrap justify-center gap-4 flex-1">
                         <div class="text-center">
-                            <div class="text-slate-600 dark:text-slate-400 mb-1">اليوم</div>
+                            <div class="text-black-light-mode mb-1">اليوم</div>
                             <div id="hijriDay" class="day-highlight">--</div>
                         </div>
                         
                         <div class="text-center">
-                            <div class="text-slate-600 dark:text-slate-400 mb-1">الشهر</div>
+                            <div class="text-black-light-mode mb-1">الشهر</div>
                             <div id="hijriMonth" class="day-highlight">--</div>
                         </div>
                         
                         <div class="text-center">
-                            <div class="text-slate-600 dark:text-slate-400 mb-1">السنة</div>
+                            <div class="text-black-light-mode mb-1">السنة</div>
                             <div id="hijriYear" class="day-highlight">--</div>
                         </div>
                     </div>
@@ -317,7 +326,7 @@
                 </div>
                 
                 <div class="text-center mb-4">
-                    <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
+                    <h2 class="text-2xl font-bold text-black-light-mode mb-4">
                         <i class="fas fa-tasks text-teal-600 mr-2"></i>أعمال اليوم
                     </h2>
                 </div>
@@ -329,29 +338,20 @@
                         <div class="spinner-border text-teal-600" role="status">
                             <i class="fas fa-spinner fa-spin fa-2x"></i>
                         </div>
-                        <p class="mt-3 text-slate-600 dark:text-slate-300">جاري تحميل أعمال اليوم...</p>
-                    </div>
-                </div>
-                
-                <!-- قسم الإنجازات -->
-                <div id="achievementsSection" class="achievements-section mt-6" style="display: none;">
-                    <h4 class="font-bold text-lg mb-3 text-center text-amber-700 dark:text-amber-300">
-                        <i class="fas fa-trophy mr-2"></i>إنجازاتي
-                    </h4>
-                    <div id="achievementsList">
-                        <!-- سيتم ملء الإنجازات هنا -->
+                        <p class="mt-3 text-black-light-mode">جاري تحميل أعمال اليوم...</p>
                     </div>
                 </div>
                 
                 <!-- أزرار التنقل -->
                 <div class="flex justify-center gap-4 mt-6 nav-buttons">
                     <button id="nextDayBtn" class="nav-btn font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center gap-2">
-                        <i class="fas fa-arrow-left"></i>
+                      <i class="fas fa-arrow-right"></i>
+ 
                         <span>اليوم التالي</span>
                     </button>
                     <button id="prevDayBtn" class="nav-btn font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center gap-2">
                         <span>اليوم السابق</span>
-                        <i class="fas fa-arrow-right"></i>
+                        <i class="fas fa-arrow-left"></i>
                     </button>
                 </div>
             </div>
@@ -359,13 +359,13 @@
         
         <!-- اختيار الشهر يدويًا -->
         <div class="month-selector mb-10">
-            <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 text-center">
+            <h3 class="text-xl font-bold text-black-light-mode mb-4 text-center">
                 <i class="fas fa-calendar-day text-teal-600 mr-2"></i>استعرض أعمال شهر آخر
             </h3>
             
             <div class="flex flex-wrap justify-center gap-4 mb-6">
                 <div class="flex-1 min-w-[200px]">
-                    <label for="monthSelect" class="block text-slate-700 dark:text-slate-300 mb-2">اختر الشهر الهجري:</label>
+                    <label for="monthSelect" class="block text-black-light-mode mb-2">اختر الشهر الهجري:</label>
                     <select id="monthSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200">
                         <option value="1">محرم</option>
                         <option value="2">صفر</option>
@@ -383,7 +383,7 @@
                 </div>
                 
                 <div class="flex-1 min-w-[200px]">
-                    <label for="daySelect" class="block text-slate-700 dark:text-slate-300 mb-2">اختر اليوم:</label>
+                    <label for="daySelect" class="block text-black-light-mode mb-2">اختر اليوم:</label>
                     <select id="daySelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200">
                         <!-- سيتم ملء الأيام جافاسكريبت -->
                     </select>
@@ -395,6 +395,16 @@
                     <i class="fas fa-eye"></i>
                     <span>عرض الأعمال</span>
                 </button>
+            </div>
+        </div>
+        
+        <!-- قسم الإنجازات (تم نقله ليكون آخر شيء) -->
+        <div id="achievementsSection" class="calendar-card p-6 mb-10">
+            <h3 class="text-xl font-bold text-black-light-mode mb-4 text-center">
+                <i class="fas fa-trophy text-yellow-500 mr-2"></i>إنجازاتي
+            </h3>
+            <div id="achievementsList" class="works-content">
+                <!-- سيتم ملء الإنجازات هنا -->
             </div>
         </div>
     </div>
@@ -559,13 +569,6 @@
         let currentHijriDate = null;
         let achievements = JSON.parse(localStorage.getItem('noorAchievements')) || {};
         let lastNotificationDate = localStorage.getItem('lastNotificationDate');
-
-        // 1. إجابة سؤال: هل يرسل الموقع إشعار كل يوم؟
-        // الجواب: لا، الموقع الحالي لا يرسل إشعارات تلقائية كل يوم.
-        // الإشعارات الحالية تظهر فقط عند:
-        // - فتح الصفحة لأول مرة
-        // - القيام بإجراءات (إنجاز عمل، تبديل يوم، إلخ)
-        // - ليست إشعارات مجدولة يومية
 
         // الحصول على التاريخ الهجري الحالي
         function getCurrentHijriDate() {
@@ -878,11 +881,10 @@
                 achievementsList.innerHTML = `
                     <div class="text-center py-4">
                         <i class="far fa-check-circle text-2xl text-slate-400 mb-2"></i>
-                        <p class="text-slate-600 dark:text-slate-300">لا توجد إنجازات بعد</p>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">انجز العمل واضغط على زر ✅ لتسجيل الإنجاز</p>
+                        <p class="text-black-light-mode">لا توجد إنجازات بعد</p>
+                        <p class="text-sm text-black-light-mode mt-1 opacity-80">انجز العمل واضغط على زر ✅ لتسجيل الإنجاز</p>
                     </div>
                 `;
-                achievementsSection.style.display = 'none';
                 return;
             }
             
@@ -896,30 +898,26 @@
             
             sortedAchievements.forEach(([key, achievement]) => {
                 const monthName = hijriMonthNumberToName(achievement.month);
-                const work = hijriWorks[achievement.month] && hijriWorks[achievement.month][achievement.day];
+                count++;
                 
-                if (work) {
-                    count++;
-                    const workTitle = work.substring(0, 50) + '...';
-                    achievementsHTML += `
-                        <div class="achievement-item">
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                <div>
-                                    <div class="font-medium text-slate-700 dark:text-slate-300">
-                                        ${count}. اليوم ${achievement.day} من ${monthName}
-                                    </div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400">
-                                        ${achievement.date}
-                                    </div>
+                achievementsHTML += `
+                    <div class="achievement-item">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <div>
+                                <div class="font-medium text-black-light-mode">
+                                    ${count}. اليوم ${achievement.day} من ${monthName}
+                                </div>
+                                <div class="text-xs text-black-light-mode opacity-70">
+                                    ${achievement.date}
                                 </div>
                             </div>
-                            <button class="remove-achievement text-red-500 hover:text-red-700 text-sm" data-key="${key}">
-                                <i class="fas fa-trash"></i>
-                            </button>
                         </div>
-                    `;
-                }
+                        <button class="remove-achievement text-red-500 hover:text-red-700 text-sm" data-key="${key}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
             });
             
             achievementsHTML += '</div>';
@@ -938,7 +936,6 @@
             }
             
             achievementsList.innerHTML = achievementsHTML;
-            achievementsSection.style.display = 'block';
             
             // إضافة أحداث لأزرار الحذف
             document.querySelectorAll('.remove-achievement').forEach(btn => {
@@ -1037,7 +1034,7 @@
                 toggleAchievement(month, day);
             });
             
-            // أزرار التنقل (تم تبديل المواقع)
+            // أزرار التنقل
             document.getElementById('prevDayBtn').addEventListener('click', function() {
                 const currentMonth = hijriMonthNameToNumber(document.getElementById('hijriMonth').textContent);
                 let currentDay = parseInt(document.getElementById('hijriDay').textContent);
@@ -1074,7 +1071,7 @@
                 
                 document.getElementById('daySelect').value = currentDay;
                 document.getElementById('viewWorksBtn').click();
-                showNotification("تم الانتقال لليوم التالي");
+                showNotification("تم الانتقال لاليوم التالي");
             });
             
             // تحديث الإنجازات
