@@ -162,61 +162,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .month-calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-top: 20px;
-        }
-        
-        .calendar-day {
-            padding: 10px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .calendar-day:hover {
-            background-color: rgba(13, 148, 136, 0.1);
-        }
-        
-        .calendar-day.has-works {
-            background-color: rgba(13, 148, 136, 0.2);
-            font-weight: bold;
-        }
-        
-        .calendar-day.today {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .reading-mode {
-            background: #fefefe !important;
-            padding: 2rem !important;
-            max-height: none !important;
-            font-size: 1.2rem;
-            line-height: 2;
-        }
-        
-        .dark-theme .reading-mode {
-            background: #1a1a1a !important;
-            color: #e0e0e0;
-        }
-        
         @media (max-width: 768px) {
             .arabic-date {
                 font-size: 1.8rem;
-            }
-            
-            .month-calendar {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 4px;
-            }
-            
-            .calendar-day {
-                padding: 5px;
-                font-size: 0.9rem;
             }
         }
     </style>
@@ -243,14 +191,9 @@
     <div class="container mx-auto max-w-4xl">
         <!-- العنوان الرئيسي -->
         <header class="text-center mb-10">
-            <div class="flex justify-center items-center gap-4 mb-4">
-                <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
-                    <i class="fas fa-mosque text-teal-600 mr-2"></i>نور الولاية
-                </h1>
-                <button id="readingModeBtn" class="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition" title="وضع القراءة">
-                    <i class="fas fa-book-reader"></i>
-                </button>
-            </div>
+            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-3">
+                <i class="fas fa-mosque text-teal-600 mr-2"></i>نور الولاية
+            </h1>
             <p class="text-gray-600 dark:text-gray-300 text-lg">اعرف أعمال وفضائل اليوم حسب التقويم الهجري الإسلامي</p>
         </header>
         
@@ -325,16 +268,6 @@
                         اليوم التالي<i class="fas fa-arrow-left ml-2"></i>
                     </button>
                 </div>
-            </div>
-        </div>
-        
-        <!-- التقويم الشهري -->
-        <div class="calendar-card p-6 mb-10">
-            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4 text-center">
-                <i class="fas fa-calendar-alt text-teal-600 mr-2"></i>تقويم الشهر الحالي
-            </h3>
-            <div id="monthCalendar" class="month-calendar">
-                <!-- سيتم ملء التقويم جافاسكريبت -->
             </div>
         </div>
         
@@ -548,7 +481,6 @@
         // متغيرات حالة التطبيق
         let currentHijriDate = null;
         let favorites = JSON.parse(localStorage.getItem('noorFavorites')) || {};
-        let isReadingMode = false;
 
         // الحصول على التاريخ الهجري الحالي
         function getCurrentHijriDate() {
@@ -725,7 +657,6 @@
             document.getElementById('daySelect').value = hijri.day;
             
             updateFavoriteButton(monthNumber, hijri.day);
-            generateMonthCalendar(monthNumber, hijri.day);
             
             showNotification("مرحباً بك! هذا أعمال يومك المبارك.");
         }
@@ -757,9 +688,6 @@
                     </div>
                 `;
             }
-            
-            worksContainer.classList.remove('reading-mode');
-            isReadingMode = false;
         }
 
         // عرض أعمال يوم محدد
@@ -785,8 +713,6 @@
                 `;
             }
             
-            worksContainer.classList.remove('reading-mode');
-            isReadingMode = false;
             updateFavoriteButton(month, day);
         }
 
@@ -803,63 +729,6 @@
                 option.value = i;
                 option.textContent = `اليوم ${i}`;
                 daySelect.appendChild(option);
-            }
-        }
-
-        // توليد التقويم الشهري
-        function generateMonthCalendar(monthNumber, currentDay) {
-            const calendarContainer = document.getElementById('monthCalendar');
-            calendarContainer.innerHTML = '';
-            
-            // عناوين الأيام
-            const dayNames = ['أح', 'إث', 'ثلا', 'أر', 'خم', 'جم', 'سب'];
-            dayNames.forEach(day => {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day font-bold text-gray-600 dark:text-gray-400';
-                dayElement.textContent = day;
-                calendarContainer.appendChild(dayElement);
-            });
-            
-            // تحديد عدد أيام الشهر
-            let daysInMonth = 30;
-            if (monthNumber === 12) daysInMonth = 29;
-            
-            // إضافة الأيام
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = day;
-                dayElement.dataset.day = day;
-                dayElement.dataset.month = monthNumber;
-                
-                // تمييز اليوم الحالي
-                if (day === currentDay && monthNumber === hijriMonthNameToNumber(currentHijriDate?.hijri?.month || 'محرم')) {
-                    dayElement.classList.add('today');
-                }
-                
-                // تمييز الأيام التي لها أعمال
-                if (hijriWorks[monthNumber] && hijriWorks[monthNumber][day]) {
-                    dayElement.classList.add('has-works');
-                }
-                
-                dayElement.addEventListener('click', () => {
-                    document.getElementById('monthSelect').value = monthNumber;
-                    document.getElementById('daySelect').value = day;
-                    document.getElementById('daySelect').dispatchEvent(new Event('change'));
-                    
-                    const monthName = hijriMonthNumberToName(monthNumber);
-                    document.getElementById('hijriDay').textContent = day;
-                    document.getElementById('hijriMonth').textContent = monthName;
-                    document.getElementById('hijriYear').textContent = "(مختار)";
-                    
-                    document.getElementById('hijriDateContainer').innerHTML = 
-                        `اليوم ${day} من شهر ${monthName}`;
-                    
-                    displaySpecificWorks(monthNumber, day);
-                    showNotification(`تم عرض أعمال اليوم ${day} من ${monthName}`);
-                });
-                
-                calendarContainer.appendChild(dayElement);
             }
         }
 
@@ -1029,33 +898,10 @@
             });
         }
 
-        // إدارة وضع القراءة
-        function initReadingMode() {
-            const readingModeBtn = document.getElementById('readingModeBtn');
-            
-            readingModeBtn.addEventListener('click', () => {
-                const worksContainer = document.getElementById('worksContainer');
-                isReadingMode = !isReadingMode;
-                
-                if (isReadingMode) {
-                    worksContainer.classList.add('reading-mode');
-                    readingModeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    readingModeBtn.title = "خروج من وضع القراءة";
-                    showNotification("تم تفعيل وضع القراءة");
-                } else {
-                    worksContainer.classList.remove('reading-mode');
-                    readingModeBtn.innerHTML = '<i class="fas fa-book-reader"></i>';
-                    readingModeBtn.title = "وضع القراءة";
-                    showNotification("تم إيقاف وضع القراءة");
-                }
-            });
-        }
-
         // عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             // تهيئة الميزات
             initDarkMode();
-            initReadingMode();
             
             // عرض التاريخ الحالي وأعمال اليوم
             displayHijriDate();
