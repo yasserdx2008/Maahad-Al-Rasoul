@@ -3,1083 +3,1424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نور الولاية</title>
+    <title>ديسكورد العرب - تواصل صوتي مع الأصدقاء</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-primary: #f8fafc;
-            --text-primary: #1e293b;
-            --card-bg: #ffffff;
-            --primary-color: #0d9488;
-            --secondary-color: #e2e8f0;
-            --border-color: #e2e8f0;
-            --text-secondary: #64748b;
-            --select-bg: #ffffff;
-            --select-text: #1e293b;
-            --select-border: #cbd5e1;
+        /* إعدادات عامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .dark-theme {
-            --bg-primary: #0f172a;
-            --text-primary: #f1f5f9;
-            --card-bg: #1e293b;
-            --primary-color: #14b8a6;
-            --secondary-color: #334155;
-            --border-color: #334155;
-            --text-secondary: #94a3b8;
-            --select-bg: #1e293b;
-            --select-text: #f1f5f9;
-            --select-border: #475569;
-        }
-        
+
         body {
             font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--secondary-color) 100%);
-            min-height: 100vh;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
+            background-color: #36393f;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
         }
-        
-        .islamic-pattern {
-            background-color: var(--primary-color);
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231976d2' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
-        
-        .calendar-card {
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
+
+        /* شريط التنقل العلوي */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-color: #202225;
+            height: 60px;
+            border-bottom: 1px solid #2f3136;
         }
-        
-        .calendar-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        .arabic-date {
-            font-size: 2.5rem;
-            line-height: 1.2;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+
+        .logo i {
+            font-size: 28px;
+            color: #7289da;
         }
-        
-        .hijri-month-name {
-            color: var(--primary-color);
+
+        .logo h1 {
+            font-size: 22px;
             font-weight: 700;
+            color: #ffffff;
         }
-        
-        .works-content {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 1.5rem;
-            line-height: 1.8;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        
-        .dark-theme .works-content {
-            background: rgba(30, 41, 59, 0.95);
-            border: 1px solid #334155;
+
+        .user-avatar {
+            position: relative;
+            width: 40px;
+            height: 40px;
         }
-        
-        .works-content::-webkit-scrollbar {
-            width: 8px;
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
-        
-        .works-content::-webkit-scrollbar-track {
-            background: var(--secondary-color);
-            border-radius: 10px;
+
+        .status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #202225;
         }
-        
-        .works-content::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
+
+        .status.online {
+            background-color: #3ba55d;
         }
-        
-        .no-works {
-            background: rgba(254, 243, 199, 0.9);
-            border-right: 4px solid #f59e0b;
-            color: #92400e;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid #fbbf24;
+
+        .status.offline {
+            background-color: #747f8d;
         }
-        
-        .dark-theme .no-works {
-            background: rgba(120, 53, 15, 0.3);
-            color: #fde68a;
-            border: 1px solid #f59e0b;
+
+        .status.busy {
+            background-color: #ed4245;
         }
-        
-        .day-highlight {
-            background: linear-gradient(120deg, #a5f3fc 0%, #5eead4 100%);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            display: inline-block;
-            font-weight: bold;
-            color: var(--primary-color);
-            border: 1px solid rgba(13, 148, 136, 0.2);
+
+        .status.idle {
+            background-color: #faa81a;
         }
-        
-        .month-selector {
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
         }
-        
-        /* إصلاح خاص لـ select في الوضع النهاري */
-        .month-selector select {
-            background-color: var(--select-bg) !important;
-            color: var(--select-text) !important;
-            border-color: var(--select-border) !important;
+
+        .user-details span:first-child {
+            font-weight: 600;
+            font-size: 14px;
         }
-        
-        .month-selector select option {
-            background-color: var(--select-bg);
-            color: var(--select-text);
+
+        .user-status {
+            font-size: 12px;
+            color: #b9bbbe;
         }
-        
-        .notification-box {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: var(--primary-color);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            z-index: 1000;
-            max-width: 300px;
-            display: none;
-            animation: slideIn 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .achievement-btn {
-            transition: all 0.3s ease;
+
+        .btn-notification {
+            position: relative;
+            background: none;
+            border: none;
+            color: #b9bbbe;
+            font-size: 20px;
             cursor: pointer;
         }
-        
-        .achievement-btn:hover {
-            transform: scale(1.2);
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #ed4245;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .achievement-btn.active {
-            color: #10b981;
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
-        
-        .achievement-btn.completed {
-            color: #fbbf24;
+
+        /* الشريط الجانبي للقنوات */
+        .sidebar {
+            width: 240px;
+            background-color: #2f3136;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 10px;
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease;
+
+        .servers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #40444b;
+            padding-bottom: 20px;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .server {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        
-        .nav-btn {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #0d9488 100%);
+
+        .server:hover {
+            background-color: #40444b;
+        }
+
+        .server.active {
+            background-color: #40444b;
+        }
+
+        .server i {
+            font-size: 20px;
+            color: #b9bbbe;
+        }
+
+        .server.active i {
+            color: #ffffff;
+        }
+
+        .server-name {
+            font-size: 14px;
+        }
+
+        .add-server {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #36393f;
+            color: #3ba55d;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        .add-server:hover {
+            background-color: #40444b;
+        }
+
+        .channels {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .channels h3 {
+            font-size: 12px;
+            color: #8e9297;
+            margin: 20px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .channel {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .channel:hover {
+            background-color: #40444b;
+        }
+
+        .channel.active {
+            background-color: #40444b;
+        }
+
+        .channel i {
+            color: #8e9297;
+        }
+
+        .channel.active i {
+            color: #ffffff;
+        }
+
+        .channel-count {
+            margin-right: auto;
+            background-color: #36393f;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .voice-controls {
+            background-color: #292b2f;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .user-mic, .user-headphones {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-mic i, .user-headphones i {
+            color: #b9bbbe;
+            font-size: 18px;
+        }
+
+        .volume-slider {
+            flex: 1;
+        }
+
+        .slider {
+            width: 100%;
+            height: 5px;
+            background: #4f545c;
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        .btn-disconnect {
+            width: 100%;
+            background-color: #ed4245;
             color: white;
             border: none;
-            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.2s;
         }
-        
-        .nav-btn:hover {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0d9488 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(13, 148, 136, 0.3);
+
+        .btn-disconnect:hover {
+            background-color: #c03537;
         }
-        
-        .achievements-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(254, 243, 199, 0.2);
-            border-radius: 10px;
-            border: 1px solid #fbbf24;
+
+        /* قسم الأصدقاء */
+        .friends-section {
+            flex: 1;
+            background-color: #36393f;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow: hidden;
         }
-        
-        .dark-theme .achievements-section {
-            background: rgba(120, 53, 15, 0.1);
-            border: 1px solid #f59e0b;
+
+        .friends-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #40444b;
         }
-        
-        .achievement-item {
+
+        .friends-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+        }
+
+        .friends-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #202225;
+            border-radius: 5px;
+            padding: 8px 12px;
+            width: 250px;
+        }
+
+        .search-box i {
+            color: #8e9297;
+            margin-left: 8px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            outline: none;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-add-friend {
+            background-color: #3ba55d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-add-friend:hover {
+            background-color: #2d8b4a;
+        }
+
+        .filter-friends select {
+            background-color: #202225;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* قائمة الأصدقاء */
+        .friends-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background-color: #2f3136;
+            transition: background-color 0.2s;
+        }
+
+        .friend-item:hover {
+            background-color: #40444b;
+        }
+
+        .friend-avatar {
+            position: relative;
+            margin-left: 15px;
+        }
+
+        .friend-avatar img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .friend-status {
+            font-size: 13px;
+            color: #b9bbbe;
+        }
+
+        .friend-game {
+            font-size: 12px;
+            color: #b9bbbe;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 3px;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .friend-btn {
+            background-color: #4f545c;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .friend-btn.call:hover {
+            background-color: #3ba55d;
+        }
+
+        .friend-btn.message:hover {
+            background-color: #7289da;
+        }
+
+        .friend-btn.join:hover {
+            background-color: #faa81a;
+        }
+
+        .online-friends {
+            width: 300px;
+            background-color: #2f3136;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .online-friends h3 {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            font-size: 16px;
         }
-        
-        .dark-theme .achievement-item {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+
+        .online-friends h3 i {
+            color: #3ba55d;
         }
-        
-        /* تغيير لون النصوص إلى الأسود في الوضع النهاري فقط */
-        .text-black-light-mode {
-            color: #1e293b !important;
+
+        .online-count {
+            background-color: #3ba55d;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 12px;
         }
-        
-        .dark-theme .text-black-light-mode {
-            color: #f1f5f9 !important;
+
+        .online-list {
+            margin-bottom: 30px;
         }
-        
-        @media (max-width: 768px) {
-            .arabic-date {
-                font-size: 1.8rem;
+
+        .online-user {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+
+        .online-user:hover {
+            background-color: #40444b;
+        }
+
+        .online-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        .online-user-info {
+            flex: 1;
+        }
+
+        .online-user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .online-user-game {
+            font-size: 12px;
+            color: #b9bbbe;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .active-now h3 {
+            color: #b9bbbe;
+            font-size: 14px;
+            margin: 20px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            background-color: #36393f;
+        }
+
+        .game i {
+            font-size: 24px;
+            margin-left: 10px;
+            color: #7289da;
+        }
+
+        .game-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .players-count {
+            font-size: 12px;
+            color: #b9bbbe;
+        }
+
+        /* نموذج إضافة صديق */
+        .add-friend-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #36393f;
+            border-radius: 8px;
+            width: 450px;
+            max-width: 90%;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #40444b;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #b9bbbe;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+            color: #b9bbbe;
+        }
+
+        .modal-body input {
+            width: 100%;
+            padding: 12px;
+            background-color: #202225;
+            border: 1px solid #40444b;
+            border-radius: 5px;
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-send-request {
+            background-color: #3ba55d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .btn-cancel {
+            background-color: #4f545c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* شريط التحكم السفلي */
+        .footer-controls {
+            background-color: #292b2f;
+            padding: 10px 20px;
+        }
+
+        .audio-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-audio-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mini-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .audio-user {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .audio-username {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .audio-status {
+            font-size: 12px;
+            color: #b9bbbe;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .audio-btn {
+            background-color: #4f545c;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: background-color 0.2s;
+        }
+
+        .audio-btn.active {
+            background-color: #3ba55d;
+        }
+
+        .audio-btn:hover {
+            background-color: #5d6269;
+        }
+
+        .audio-btn.active:hover {
+            background-color: #2d8b4a;
+        }
+
+        .audio-timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b9bbbe;
+            font-size: 14px;
+        }
+
+        /* شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #2f3136;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #202225;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1a1c20;
+        }
+
+        /* التجاوب مع الشاشات الصغيرة */
+        @media (max-width: 1200px) {
+            .online-friends {
+                display: none;
             }
             
-            .nav-buttons {
+            .friends-actions {
                 flex-direction: column;
+                align-items: flex-start;
                 gap: 10px;
             }
             
-            .nav-btn {
+            .search-box {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 10px 5px;
+            }
+            
+            .server-name, .channel span, .channels h3 span, .voice-controls span {
+                display: none;
+            }
+            
+            .channel-count {
+                display: none;
+            }
+            
+            .server {
+                justify-content: center;
+                padding: 12px 0;
+            }
+            
+            .channel {
+                justify-content: center;
+                padding: 10px 0;
+            }
+            
+            .friends-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-box {
                 width: 100%;
             }
         }
     </style>
 </head>
-<body class="py-8 px-4">
-    <!-- زر تبديل الوضع الليلي -->
-    <button id="themeToggle" class="fixed bottom-4 left-4 p-3 bg-teal-600 dark:bg-teal-700 text-white rounded-full shadow-lg z-50 hover:bg-teal-700 dark:hover:bg-teal-600 transition">
-        <i class="fas fa-moon"></i>
-    </button>
-    
-    <!-- إشعارات -->
-    <div id="notification" class="notification-box">
-        <div class="flex justify-between items-start">
-            <div>
-                <i class="fas fa-bell mr-2"></i>
-                <span id="notificationText"></span>
+<body>
+    <div class="container">
+        <!-- شريط التنقل العلوي -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-headset"></i>
+                <h1>ديسكورد العرب</h1>
             </div>
-            <button onclick="hideNotification()" class="text-white hover:text-gray-200 text-lg">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-    
-    <div class="container mx-auto max-w-4xl">
-        <!-- العنوان الرئيسي -->
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-black-light-mode mb-3">
-                <i class="fas fa-mosque text-teal-600 mr-2"></i>نور الولاية
-            </h1>
-            <p class="text-black-light-mode text-lg">اعرف أعمال وفضائل اليوم حسب التقويم الهجري الإسلامي</p>
-        </header>
-        
-        <!-- بطاقة التاريخ الهجري -->
-        <div class="calendar-card rounded-2xl overflow-hidden mb-10">
-            <div class="islamic-pattern py-8 px-6 text-center">
-                <div class="text-white mb-2">
-                    <i class="fas fa-calendar-alt text-2xl"></i>
-                    <span class="mr-2 text-xl">التاريخ الهجري</span>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="صورة المستخدم" id="current-user-img">
+                    <span class="status online"></span>
                 </div>
-                
-                <div id="hijriDateContainer" class="text-white arabic-date">
-                    <!-- سيتم ملء التاريخ هنا جافاسكريبت -->
+                <div class="user-details">
+                    <span id="current-user-name">علي أحمد</span>
+                    <span class="user-status" id="current-user-status">متصل</span>
                 </div>
-                
-                <div id="gregorianDate" class="text-white opacity-90 mt-2 text-lg">
-                    <!-- التاريخ الميلادي -->
-                </div>
-            </div>
-            
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex flex-wrap justify-center gap-4 flex-1">
-                        <div class="text-center">
-                            <div class="text-black-light-mode mb-1">اليوم</div>
-                            <div id="hijriDay" class="day-highlight">--</div>
-                        </div>
-                        
-                        <div class="text-center">
-                            <div class="text-black-light-mode mb-1">الشهر</div>
-                            <div id="hijriMonth" class="day-highlight">--</div>
-                        </div>
-                        
-                        <div class="text-center">
-                            <div class="text-black-light-mode mb-1">السنة</div>
-                            <div id="hijriYear" class="day-highlight">--</div>
-                        </div>
-                    </div>
-                    
-                    <!-- زر إنجاز العمل -->
-                    <button id="achievementBtn" class="achievement-btn text-2xl text-slate-400 hover:text-green-500 p-2" title="تسجيل إنجاز العمل">
-                        <i class="far fa-check-circle"></i>
-                    </button>
-                </div>
-                
-                <div class="text-center mb-4">
-                    <h2 class="text-2xl font-bold text-black-light-mode mb-4">
-                        <i class="fas fa-tasks text-teal-600 mr-2"></i>أعمال اليوم
-                    </h2>
-                </div>
-                
-                <!-- عرض الأعمال -->
-                <div id="worksContainer" class="works-content">
-                    <!-- سيتم ملء الأعمال هنا جافاسكريبت -->
-                    <div class="text-center py-8">
-                        <div class="spinner-border text-teal-600" role="status">
-                            <i class="fas fa-spinner fa-spin fa-2x"></i>
-                        </div>
-                        <p class="mt-3 text-black-light-mode">جاري تحميل أعمال اليوم...</p>
-                    </div>
-                </div>
-                
-                <!-- أزرار التنقل -->
-                <div class="flex justify-center gap-4 mt-6 nav-buttons">
-                    <button id="nextDayBtn" class="nav-btn font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center gap-2">
-                      <i class="fas fa-arrow-right"></i>
- 
-                        <span>اليوم التالي</span>
-                    </button>
-                    <button id="prevDayBtn" class="nav-btn font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center gap-2">
-                        <span>اليوم السابق</span>
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- اختيار الشهر يدويًا -->
-        <div class="month-selector mb-10">
-            <h3 class="text-xl font-bold text-black-light-mode mb-4 text-center">
-                <i class="fas fa-calendar-day text-teal-600 mr-2"></i>استعرض أعمال شهر آخر
-            </h3>
-            
-            <div class="flex flex-wrap justify-center gap-4 mb-6">
-                <div class="flex-1 min-w-[200px]">
-                    <label for="monthSelect" class="block text-black-light-mode mb-2">اختر الشهر الهجري:</label>
-                    <select id="monthSelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200">
-                        <option value="1">محرم</option>
-                        <option value="2">صفر</option>
-                        <option value="3">ربيع الأول</option>
-                        <option value="4">ربيع الثاني</option>
-                        <option value="5">جمادى الأولى</option>
-                        <option value="6">جمادى الآخرة</option>
-                        <option value="7">رجب</option>
-                        <option value="8">شعبان</option>
-                        <option value="9">رمضان</option>
-                        <option value="10">شوال</option>
-                        <option value="11">ذو القعدة</option>
-                        <option value="12">ذو الحجة</option>
-                    </select>
-                </div>
-                
-                <div class="flex-1 min-w-[200px]">
-                    <label for="daySelect" class="block text-black-light-mode mb-2">اختر اليوم:</label>
-                    <select id="daySelect" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200">
-                        <!-- سيتم ملء الأيام جافاسكريبت -->
-                    </select>
-                </div>
-            </div>
-            
-            <div class="text-center">
-                <button id="viewWorksBtn" class="nav-btn font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105 flex items-center justify-center gap-2 mx-auto">
-                    <i class="fas fa-eye"></i>
-                    <span>عرض الأعمال</span>
+                <button class="btn-notification">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
                 </button>
             </div>
+        </header>
+
+        <div class="main-content">
+            <!-- الشريط الجانبي للقنوات -->
+            <aside class="sidebar">
+                <div class="servers">
+                    <div class="server active" data-server="all">
+                        <i class="fas fa-users"></i>
+                        <span class="server-name">جميع الأصدقاء</span>
+                    </div>
+                    <div class="server" data-server="gaming">
+                        <i class="fas fa-gamepad"></i>
+                        <span class="server-name">غرفة الألعاب</span>
+                    </div>
+                    <div class="server" data-server="study">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span class="server-name">غرفة الدراسة</span>
+                    </div>
+                    <div class="server" data-server="general">
+                        <i class="fas fa-comments"></i>
+                        <span class="server-name">الدردشة العامة</span>
+                    </div>
+                    <div class="add-server">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="channels">
+                    <h3><i class="fas fa-hashtag"></i> القنوات الصوتية</h3>
+                    <div class="channel active" data-channel="general">
+                        <i class="fas fa-volume-up"></i>
+                        <span>القناة العامة</span>
+                        <span class="channel-count">12</span>
+                    </div>
+                    <div class="channel" data-channel="gaming">
+                        <i class="fas fa-volume-up"></i>
+                        <span>غرفة الألعاب</span>
+                        <span class="channel-count">8</span>
+                    </div>
+                    <div class="channel" data-channel="private">
+                        <i class="fas fa-volume-up"></i>
+                        <span>غرفة خاصة</span>
+                        <span class="channel-count">4</span>
+                    </div>
+                    
+                    <h3><i class="fas fa-comment"></i> القنوات النصية</h3>
+                    <div class="channel" data-channel="chat">
+                        <i class="fas fa-hashtag"></i>
+                        <span>الدردشة العامة</span>
+                    </div>
+                    <div class="channel" data-channel="memes">
+                        <i class="fas fa-hashtag"></i>
+                        <span>الميمز</span>
+                    </div>
+                </div>
+                
+                <div class="voice-controls">
+                    <div class="user-mic">
+                        <i class="fas fa-microphone"></i>
+                        <div class="volume-slider">
+                            <input type="range" min="0" max="100" value="80" class="slider">
+                        </div>
+                    </div>
+                    <div class="user-headphones">
+                        <i class="fas fa-headphones"></i>
+                        <div class="volume-slider">
+                            <input type="range" min="0" max="100" value="70" class="slider">
+                        </div>
+                    </div>
+                    <button class="btn-disconnect">
+                        <i class="fas fa-phone-slash"></i>
+                        <span>قطع الاتصال</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- المنطقة الرئيسية - عرض الأصدقاء -->
+            <main class="friends-section">
+                <div class="friends-header">
+                    <h2><i class="fas fa-user-friends"></i> جميع الأصدقاء</h2>
+                    <div class="friends-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-friends" placeholder="ابحث عن أصدقاء...">
+                        </div>
+                        <button class="btn-add-friend" id="openAddFriendModal">
+                            <i class="fas fa-user-plus"></i>
+                            إضافة صديق
+                        </button>
+                        <div class="filter-friends">
+                            <select id="status-filter">
+                                <option value="all">جميع الحالات</option>
+                                <option value="online">المتصلون فقط</option>
+                                <option value="offline">غير المتصلين</option>
+                                <option value="busy">المشغولون</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="friends-list" id="friends-list">
+                    <!-- سيتم ملء قائمة الأصدقاء عن طريق JavaScript -->
+                </div>
+
+                <!-- نموذج إضافة صديق -->
+                <div class="add-friend-modal" id="addFriendModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>إضافة صديق جديد</h3>
+                            <button class="close-modal" id="closeModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>أدخل اسم المستخدم أو البريد الإلكتروني للإضافة</p>
+                            <input type="text" id="friend-username" placeholder="اسم المستخدم#1234">
+                            <div class="modal-actions">
+                                <button class="btn-send-request" id="sendRequest">إرسال طلب الصداقة</button>
+                                <button class="btn-cancel" id="cancelRequest">إلغاء</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- الشريط الجانبي للأصدقاء المتصلين -->
+            <aside class="online-friends">
+                <h3><i class="fas fa-signal"></i> الأصدقاء المتصلون <span class="online-count" id="onlineCount">0</span></h3>
+                <div class="online-list" id="online-list">
+                    <!-- سيتم ملء قائمة المتصلين عن طريق JavaScript -->
+                </div>
+                
+                <div class="active-now">
+                    <h3><i class="fas fa-gamepad"></i> يلعبون الآن</h3>
+                    <div class="game-activity">
+                        <div class="game">
+                            <i class="fas fa-basketball-ball"></i>
+                            <div class="game-info">
+                                <span class="game-name">فورتنايت</span>
+                                <span class="players-count">5 أصدقاء يلعبون</span>
+                            </div>
+                        </div>
+                        <div class="game">
+                            <i class="fas fa-car"></i>
+                            <div class="game-info">
+                                <span class="game-name">ركتور ليج</span>
+                                <span class="players-count">3 أصدقاء يلعبون</span>
+                            </div>
+                        </div>
+                        <div class="game">
+                            <i class="fas fa-chess"></i>
+                            <div class="game-info">
+                                <span class="game-name">فالورانت</span>
+                                <span class="players-count">7 أصدقاء يلعبون</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
         </div>
-        
-        <!-- قسم الإنجازات (تم نقله ليكون آخر شيء) -->
-        <div id="achievementsSection" class="calendar-card p-6 mb-10">
-            <h3 class="text-xl font-bold text-black-light-mode mb-4 text-center">
-                <i class="fas fa-trophy text-yellow-500 mr-2"></i>إنجازاتي
-            </h3>
-            <div id="achievementsList" class="works-content">
-                <!-- سيتم ملء الإنجازات هنا -->
+
+        <!-- شريط الصوت والميكروفون -->
+        <footer class="footer-controls">
+            <div class="audio-controls">
+                <div class="user-audio-info">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="صورة المستخدم" class="mini-avatar">
+                    <div class="audio-user">
+                        <span class="audio-username">علي أحمد</span>
+                        <span class="audio-status">متصل بالقناة العامة</span>
+                    </div>
+                </div>
+                <div class="audio-buttons">
+                    <button class="audio-btn mic-btn active">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="audio-btn headphone-btn active">
+                        <i class="fas fa-headphones"></i>
+                    </button>
+                    <button class="audio-btn settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                <div class="audio-timer">
+                    <i class="fas fa-clock"></i>
+                    <span id="connection-time">00:00:00</span>
+                </div>
             </div>
-        </div>
+        </footer>
     </div>
 
     <script>
-        // كائن يحتوي على أعمال كل شهر هجري
-        const hijriWorks = {
-             // شهر محرم
-            1: {
-                name: "محرم",
-               },            
-            // شهر صفر
-            2: {
-                name: "صفر",
-              
+        // بيانات الأصدقاء
+        const friendsData = [
+            {
+                id: 1,
+                name: "محمد علي",
+                avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+                status: "online",
+                game: "فورتنايت",
+                statusText: "متصل الآن",
+                username: "Mohamed#1234"
             },
-            
-            // شهر ربيع الأول
-            3: {
-                name: "ربيع الأول",
-                         },
-            
-            // شهر ربيع الثاني
-            4: {
-                name: "ربيع الثاني",
-                            },
-            
-            // شهر جمادى الأولى
-            5: {
-                name: "جمادى الأولى",
-                            },
-            
-            // شهر جمادى الآخرة
-            6: {
-                name: "جمادى الآخرة",
-                         },
-            
-            // شهر رجب
-            7: {
-                name: "رجب",
-  "2": "<br><b>قال الإمام الصادق (ع):<br>«رجب شهر عظيم، يُضاعف الله فيه الحسنات، ويمحو فيه السيئات».<br>📚 المصدر:<br>الكافي – ج 4 – ص 66",
-  "3": "<br><b>قال الإمام موسى الكاظم (ع):<br>«رجب نهر في الجنة، أبيض من اللبن، وأحلى من العسل».<br>📚 المصدر:<br>الكافي – ج 4 – ص 67",
-  "4": "<br><b>قال الإمام الصادق (ع):<br>«من صام يومًا من رجب تباعدت عنه النار مسيرة سنة».<br>📚 المصدر:<br>من لا يحضره الفقيه – الشيخ الصدوق – ج 2 – ص 93",
-  "5": "<br><b>قال رسول الله ﷺ:<br>«من صام ثلاثة أيام من رجب وجبت له الجنة».<br>📚 المصدر:<br>ثواب الأعمال – الشيخ الصدوق – ص 53",
-  "6": "<br><b>قال الإمام الباقر (ع):<br>«رجب شهر الاستغفار، فأكثروا فيه الاستغفار».<br>📚 المصدر:<br>الكافي – ج 2 – ص 504 – كتاب الدعاء",
-  "7": "<br><b>قال الإمام الصادق (ع):<br>«من قال في رجب: أستغفر الله وأتوب إليه، غفر الله له».<br>📚 المصدر:<br>الكافي – ج 2 – ص 504",
-  "8": "<br><b>قال رسول الله ﷺ:<br>«رجب شهر حرام، الدعاء فيه مستجاب».<br>📚 المصدر:<br>الأمالي – الشيخ الصدوق – المجلس 28 – ص 138",
-  "9": "<br><b>قال الإمام علي (ع):<br>«اغتنموا شهر رجب، فإنه شهر التوبة والإنابة».<br>📚 المصدر:<br>غرر الحكم – الآمدي – ح 2891",
-  "10": "<br><b>قال الإمام الصادق (ع):<br>«من صام أول يوم من رجب وجبت له الجنة».<br>📚 المصدر:<br>ثواب الأعمال – ص 52",
-  "11": "<br><b>قال رسول الله ﷺ:<br>«رجب شهر عظيم، يكرم الله فيه عباده المؤمنين».<br>📚 المصدر:<br>الأمالي – الشيخ الطوسي – المجلس 19 – ص 554",
-  "12": "<br><b>قال الإمام الباقر (ع):<br>«إذا دخل رجب نادى منادٍ: طوبى للذاكرين».<br>📚 المصدر:<br>وسائل الشيعة – الحر العاملي – ج 10 – ص 321 (نقلًا عن الكافي)",
-  "13": "<br><b>قال الإمام الصادق (ع):<br>«الصيام في رجب يورث نورًا في القلب».<br>📚 المصدر:<br>مصباح المتهجد – الشيخ الطوسي – ص 704",
-  "14": "<br><b>قال رسول الله ﷺ:<br>«من أحيا ليلة من رجب غفر الله له».<br>📚 المصدر:<br>ثواب الأعمال – ص 54",
-  "15": "<br><b>قال الإمام الصادق (ع):<br>«الدعاء في رجب لا يُرد».<br>📚 المصدر:<br>الكافي – ج 2 – ص 349",
-  "16": "<br><b>قال الإمام علي (ع):<br>«رجب شهر التهيؤ للقاء الله».<br>📚 المصدر:<br>نهج البلاغة – الحكمة 301 (بالمعنى)",
-  "17": "<br><b>قال رسول الله ﷺ:<br>«من صام يومًا من رجب كُتب له أجر شهر صيامًا».<br>📚 المصدر:<br>ثواب الأعمال – ص 52",
-  "18": "<br><b>قال الإمام الصادق (ع):<br>«من لم يقدر على الصيام في رجب فليكثر الذكر».<br>📚 المصدر:<br>الكافي – ج 2 – ص 505",
-  "19": "<br><b>قال الإمام الباقر (ع):<br>«الاستغفار في رجب يمحو الذنوب العظام».<br>📚 المصدر:<br>الأمالي – الشيخ الصدوق – المجلس 30",
-  "20": "<br><b>قال رسول الله ﷺ:<br>«رجب شهر الله الأصم».<br>📚 المصدر:<br>من لا يحضره الفقيه – ج 2 – ص 92",
-  "21": "<br><b>قال الإمام الصادق (ع):<br>«من أكثر في رجب الصلاة على محمد وآل محمد زاد الله في رزقه».<br>📚 المصدر:<br>الكافي – ج 2 – ص 492",
-  "22": "<br><b>قال الإمام علي (ع):<br>«ما من عبد يُقبل على الله في رجب إلا أقبل الله عليه».<br>📚 المصدر:<br>غرر الحكم – ح 8243",
-  "23": "<br><b>قال رسول الله ﷺ:<br>«رجب شهر عظيم، أجر العمل فيه مضاعف».<br>📚 المصدر:<br>الأمالي – الشيخ الطوسي – ص 680",
-  "24": "<br><b>قال الإمام الصادق (ع):<br>«رجب باب من أبواب الرحمة».<br>📚 المصدر:<br>وسائل الشيعة – ج 10 – ص 321",
-  "25": "<br><b>قال الإمام الباقر (ع):<br>«من صام رجب إيمانًا واحتسابًا وجبت له المغفرة».<br>📚 المصدر:<br>ثواب الأعمال – ص 53",
-  "26": "<br><b>قال رسول الله ﷺ:<br>«أكثروا في رجب من قول: أستغفر الله وأسأله التوبة».<br>📚 المصدر:<br>الكافي – ج 2 – ص 504",
-  "27": "<br><b>قال الإمام الصادق (ع):<br>«العمل الصالح في رجب يُضاعف سبعين ضعفًا».<br>📚 المصدر:<br>مصباح المتهجد – ص 703",
-  "28": "<br><b>قال الإمام علي (ع):<br>«رجب شهر تزكية النفوس».<br>📚 المصدر:<br>غرر الحكم – ح 4567",
-  "29": "<br><b>قال الإمام الصادق (ع):<br>«من عظّم رجب عظّم الله أمره يوم القيامة».<br>📚 المصدر:<br>وسائل الشيعة – ج 10 – ص 322",
-  "30": "<br><b>قال رسول الله ﷺ:<br>«رجب بداية طريق القرب من الله».<br>📚 المصدر:<br>الأمالي – الشيخ الصدوق – المجلس 27"
-  },
-            
-            // شهر شعبان
-            8: {
-                name: "شعبان",
-1:"<br><b>",
-2:"<br><b>",
-3:"<br><b>",
-4:"<br><b>",
-5:"<br><b>",
-6:"<br><b>",
-7:"<br><b>",
-8:"<br><b>",
-9:"<br><b>",
-10:"<br><b>",
-11:"<br><b>",
-12:"<br><b>",
-13:"<br><b>",
-14:"<br><b>",
-15:"<br><b>",
-16:"<br><b>",
-17:"<br><b>",
-18:"<br><b>",
-19:"<br><b>",
-20:"<br><b>",
-21:"<br><b>",
-22:"<br><b>",
-23:"<br><b>",
-24:"<br><b>",
-25:"<br><b>",
-26:"<br><b>",
-27:"<br><b>",
-28:"<br><b>",
-29:"<br><b>",
-30:"<br><b>",
-                            },
-            
-            // شهر رمضان
-            9: {
-                name: "رمضان",
-1:"<br><b>",
-2:"<br><b>",
-3:"<br><b>",
-4:"<br><b>",
-5:"<br><b>",
-6:"<br><b>",
-7:"<br><b>",
-8:"<br><b>",
-9:"<br><b>",
-10:"<br><b>",
-11:"<br><b>",
-12:"<br><b>",
-13:"<br><b>",
-14:"<br><b>",
-15:"<br><b>",
-16:"<br><b>",
-17:"<br><b>",
-18:"<br><b>",
-19:"<br><b>",
-20:"<br><b>",
-21:"<br><b>",
-22:"<br><b>",
-23:"<br><b>",
-24:"<br><b>",
-25:"<br><b>",
-26:"<br><b>",
-27:"<br><b>",
-28:"<br><b>",
-29:"<br><b>",
-30:"<br><b>",
-                      
-                        },
-            
-            // شهر شوال
-            10: {
-                name: "شوال",
-                            },
-            
-            // شهر ذو القعدة
-            11: {
-                name: "ذو القعدة",
-               
+            {
+                id: 2,
+                name: "سارة أحمد",
+                avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+                status: "online",
+                game: "فالورانت",
+                statusText: "يلعب فالورانت",
+                username: "Sarah#5678"
             },
-            
-            // شهر ذو الحجة
-            12: {
-                name: "ذو الحجة",
-               
+            {
+                id: 3,
+                name: "خالد راشد",
+                avatar: "https://randomuser.me/api/portraits/men/3.jpg",
+                status: "busy",
+                game: "",
+                statusText: "مشغول",
+                username: "Khaled#9101"
+            },
+            {
+                id: 4,
+                name: "فاطمة حسن",
+                avatar: "https://randomuser.me/api/portraits/women/4.jpg",
+                status: "online",
+                game: "ماينكرافت",
+                statusText: "يلعب ماينكرافت",
+                username: "Fatima#1121"
+            },
+            {
+                id: 5,
+                name: "عمر سعيد",
+                avatar: "https://randomuser.me/api/portraits/men/5.jpg",
+                status: "offline",
+                game: "",
+                statusText: "غير متصل - قبل ساعتين",
+                username: "Omar#3141"
+            },
+            {
+                id: 6,
+                name: "نورة محمد",
+                avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+                status: "online",
+                game: "ركتور ليج",
+                statusText: "يلعب ركتور ليج",
+                username: "Noura#5161"
+            },
+            {
+                id: 7,
+                name: "ياسر كمال",
+                avatar: "https://randomuser.me/api/portraits/men/7.jpg",
+                status: "offline",
+                game: "",
+                statusText: "غير متصل - قبل يوم",
+                username: "Yasser#7181"
+            },
+            {
+                id: 8,
+                name: "لمياء عبدالله",
+                avatar: "https://randomuser.me/api/portraits/women/8.jpg",
+                status: "online",
+                game: "فورتنايت",
+                statusText: "يلعب فورتنايت",
+                username: "Lamya#9202"
+            },
+            {
+                id: 9,
+                name: "أحمد سلمان",
+                avatar: "https://randomuser.me/api/portraits/men/9.jpg",
+                status: "busy",
+                game: "",
+                statusText: "مشغول - في اجتماع",
+                username: "Ahmed#1222"
+            },
+            {
+                id: 10,
+                name: "حصة ناصر",
+                avatar: "https://randomuser.me/api/portraits/women/10.jpg",
+                status: "online",
+                game: "ببجي",
+                statusText: "يلعب ببجي",
+                username: "Hessa#3242"
             }
-        };
+        ];
 
-        // متغيرات حالة التطبيق
-        let currentHijriDate = null;
-        let achievements = JSON.parse(localStorage.getItem('noorAchievements')) || {};
-        let lastNotificationDate = localStorage.getItem('lastNotificationDate');
-
-        // الحصول على التاريخ الهجري الحالي
-        function getCurrentHijriDate() {
-            const now = new Date();
-            
-            try {
-                const hijriDateStr = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    weekday: 'long'
-                }).format(now);
-                
-                const arabicToLatin = {
-                    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
-                    '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
-                };
-                
-                let dayNumber = 1;
-                
-                for (let i = 0; i < hijriDateStr.length; i++) {
-                    if (arabicToLatin[hijriDateStr[i]] !== undefined) {
-                        let arabicDay = '';
-                        while (i < hijriDateStr.length && arabicToLatin[hijriDateStr[i]] !== undefined) {
-                            arabicDay += hijriDateStr[i];
-                            i++;
-                        }
-                        
-                        if (arabicDay) {
-                            let latinDay = '';
-                            for (let char of arabicDay) {
-                                latinDay += arabicToLatin[char];
-                            }
-                            dayNumber = parseInt(latinDay) || 1;
-                        }
-                        break;
-                    }
-                }
-                
-                const monthNames = [
-                    'محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني',
-                    'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان',
-                    'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
-                ];
-                
-                let monthName = 'محرم';
-                for (const name of monthNames) {
-                    if (hijriDateStr.includes(name)) {
-                        monthName = name;
-                        break;
-                    }
-                }
-                
-                let hijriYear = '1445';
-                const monthIndex = hijriDateStr.indexOf(monthName);
-                if (monthIndex !== -1) {
-                    const afterMonth = hijriDateStr.substring(monthIndex + monthName.length);
-                    for (let i = 0; i < afterMonth.length; i++) {
-                        if (arabicToLatin[afterMonth[i]] !== undefined) {
-                            let arabicYear = '';
-                            while (i < afterMonth.length && arabicToLatin[afterMonth[i]] !== undefined) {
-                                arabicYear += afterMonth[i];
-                                i++;
-                            }
-                            
-                            if (arabicYear) {
-                                let latinYear = '';
-                                for (let char of arabicYear) {
-                                    latinYear += arabicToLatin[char];
-                                }
-                                hijriYear = latinYear;
-                            }
-                            break;
-                        }
-                    }
-                }
-                
-                const weekdayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-                let weekday = 'الأحد';
-                for (const name of weekdayNames) {
-                    if (hijriDateStr.includes(name)) {
-                        weekday = name;
-                        break;
-                    }
-                }
-                
-                const gregorianFormatter = new Intl.DateTimeFormat('ar-SA', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                const gregorianDate = gregorianFormatter.format(now);
-                
-                return {
-                    hijri: {
-                        year: hijriYear,
-                        month: monthName,
-                        day: dayNumber,
-                        weekday: weekday
-                    },
-                    gregorian: gregorianDate
-                };
-                
-            } catch (error) {
-                console.error('خطأ في قراءة التاريخ الهجري:', error);
-                return {
-                    hijri: {
-                        year: '1445',
-                        month: 'محرم',
-                        day: new Date().getDate(),
-                        weekday: ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'][new Date().getDay()]
-                    },
-                    gregorian: new Intl.DateTimeFormat('ar-SA').format(new Date())
-                };
-            }
-        }
-
-        // تحويل اسم الشهر الهجري إلى رقم
-        function hijriMonthNameToNumber(monthName) {
-            const monthMap = {
-                'محرم': 1,
-                'صفر': 2,
-                'ربيع الأول': 3,
-                'ربيع الثاني': 4,
-                'جمادى الأولى': 5,
-                'جمادى الآخرة': 6,
-                'رجب': 7,
-                'شعبان': 8,
-                'رمضان': 9,
-                'شوال': 10,
-                'ذو القعدة': 11,
-                'ذو الحجة': 12
-            };
-            
-            for (const [name, number] of Object.entries(monthMap)) {
-                if (monthName.includes(name)) {
-                    return number;
-                }
-            }
-            
-            return 1;
-        }
-
-        // تحويل رقم الشهر إلى اسم
-        function hijriMonthNumberToName(monthNumber) {
-            const monthNames = [
-                'محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني',
-                'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان',
-                'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
-            ];
-            return monthNames[monthNumber - 1] || 'محرم';
-        }
-
-        // عرض التاريخ الهجري الحالي
-        function displayHijriDate() {
-            currentHijriDate = getCurrentHijriDate();
-            const hijri = currentHijriDate.hijri;
-            
-            document.getElementById('hijriDateContainer').innerHTML = 
-                `${hijri.weekday}، ${hijri.day} ${hijri.month} ${hijri.year} هـ`;
-            
-            document.getElementById('gregorianDate').textContent = 
-                `الميلادي: ${currentHijriDate.gregorian}`;
-            
-            document.getElementById('hijriDay').textContent = hijri.day;
-            document.getElementById('hijriMonth').textContent = hijri.month;
-            document.getElementById('hijriYear').textContent = hijri.year + " هـ";
-            
-            const monthNumber = hijriMonthNameToNumber(hijri.month);
-            displayTodayWorks(monthNumber, hijri.day);
-            
-            document.getElementById('monthSelect').value = monthNumber;
-            populateDays(monthNumber);
-            document.getElementById('daySelect').value = hijri.day;
-            
-            updateAchievementButton(monthNumber, hijri.day);
-            updateAchievementsSection();
-            
-            // إشعار يومي عند أول زيارة في اليوم
-            const today = new Date().toDateString();
-            if (lastNotificationDate !== today) {
-                showNotification(`مرحباً بك! اليوم ${hijri.weekday}، ${hijri.day} ${hijri.month}. تفضل أعمال يومك المبارك.`);
-                localStorage.setItem('lastNotificationDate', today);
-            }
-        }
-
-        // عرض أعمال اليوم الحالي
-        function displayTodayWorks(month, day) {
-            const worksContainer = document.getElementById('worksContainer');
-            const monthName = hijriMonthNumberToName(month);
-            
-            if (hijriWorks[month] && hijriWorks[month][day]) {
-                worksContainer.innerHTML = `
-                    <div class="text-right fade-in">
-                        ${hijriWorks[month][day]}
-                    </div>
-                `;
-            } else {
-                worksContainer.innerHTML = `
-                    <div class="no-works text-center fade-in">
-                        <i class="fas fa-calendar-times text-3xl mb-3"></i>
-                        <h4 class="font-bold text-lg mb-2">لا توجد أعمال خاصة لهذا اليوم</h4>
-                        <p>لم يتم تحديد أعمال خاصة لليوم ${day} من شهر ${monthName}</p>
-                        <p class="mt-3">يمكنك الاجتهاد في العبادة العامة مثل:</p>
-                        <ul class="mt-2 text-right pr-4">
-                            <li>• الإكثار من الصلاة على النبي محمد صلى الله عليه وسلم</li>
-                            <li>• قراءة القرآن الكريم</li>
-                            <li>• الصدقة والإحسان إلى الآخرين</li>
-                            <li>• صلاة النوافل والدعاء</li>
-                        </ul>
-                    </div>
-                `;
-            }
-        }
-
-        // عرض أعمال يوم محدد
-        function displaySpecificWorks(month, day) {
-            const worksContainer = document.getElementById('worksContainer');
-            const monthName = hijriMonthNumberToName(month);
-            
-            if (hijriWorks[month] && hijriWorks[month][day]) {
-                worksContainer.innerHTML = `
-                    <div class="text-right fade-in">
-                        <h4 class="font-bold text-xl mb-3 text-teal-700 dark:text-teal-400">أعمال اليوم ${day} من ${monthName}</h4>
-                        ${hijriWorks[month][day]}
-                    </div>
-                `;
-            } else {
-                worksContainer.innerHTML = `
-                    <div class="no-works text-center fade-in">
-                        <i class="fas fa-calendar-times text-3xl mb-3"></i>
-                        <h4 class="font-bold text-lg mb-2">لا توجد أعمال خاصة لهذا اليوم</h4>
-                        <p>لم يتم تحديد أعمال خاصة لليوم ${day} من شهر ${monthName}</p>
-                        <p class="mt-3">يمكنك الاجتهاد في العبادة العامة</p>
-                    </div>
-                `;
-            }
-            
-            updateAchievementButton(month, day);
-        }
-
-        // ملء أيام الشهر في القائمة
-        function populateDays(month) {
-            const daySelect = document.getElementById('daySelect');
-            daySelect.innerHTML = '';
-            
-            let daysInMonth = 30;
-            if (month === 12) daysInMonth = 29;
-            
-            for (let i = 1; i <= daysInMonth; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `اليوم ${i}`;
-                daySelect.appendChild(option);
-            }
-        }
-
-        // إدارة الإنجازات
-        function toggleAchievement(month, day) {
-            const key = `${month}-${day}`;
-            const today = new Date().toISOString().split('T')[0];
-            
-            if (achievements[key]) {
-                // إذا كان الإنجاز موجوداً، نسأل المستخدم إذا كان يريد إزالته
-                if (confirm("هل تريد إزالة هذا الإنجاز؟")) {
-                    delete achievements[key];
-                    showNotification("تمت إزالة الإنجاز");
-                }
-            } else {
-                achievements[key] = {
-                    month: month,
-                    day: day,
-                    date: today,
-                    completed: true
-                };
-                showNotification("مبروك! تم تسجيل إنجاز العمل بنجاح ✅");
-            }
-            
-            localStorage.setItem('noorAchievements', JSON.stringify(achievements));
-            updateAchievementButton(month, day);
-            updateAchievementsSection();
-        }
-
-        function updateAchievementButton(month, day) {
-            const achievementBtn = document.getElementById('achievementBtn');
-            const key = `${month}-${day}`;
-            
-            if (achievements[key]) {
-                achievementBtn.innerHTML = '<i class="fas fa-check-circle"></i>';
-                achievementBtn.classList.add('completed');
-                achievementBtn.classList.remove('text-slate-400');
-                achievementBtn.classList.add('text-yellow-500');
-                achievementBtn.title = "تم إنجاز هذا العمل";
-            } else {
-                achievementBtn.innerHTML = '<i class="far fa-check-circle"></i>';
-                achievementBtn.classList.remove('completed');
-                achievementBtn.classList.add('text-slate-400');
-                achievementBtn.classList.remove('text-yellow-500');
-                achievementBtn.title = "تسجيل إنجاز العمل";
-            }
-        }
-
-        function updateAchievementsSection() {
-            const achievementsList = document.getElementById('achievementsList');
-            const achievementsSection = document.getElementById('achievementsSection');
-            
-            const achievementKeys = Object.keys(achievements);
-            
-            if (achievementKeys.length === 0) {
-                achievementsList.innerHTML = `
-                    <div class="text-center py-4">
-                        <i class="far fa-check-circle text-2xl text-slate-400 mb-2"></i>
-                        <p class="text-black-light-mode">لا توجد إنجازات بعد</p>
-                        <p class="text-sm text-black-light-mode mt-1 opacity-80">انجز العمل واضغط على زر ✅ لتسجيل الإنجاز</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let achievementsHTML = '<div class="space-y-2">';
-            let count = 0;
-            
-            // ترتيب الإنجازات حسب التاريخ (الأحدث أولاً)
-            const sortedAchievements = Object.entries(achievements)
-                .sort((a, b) => new Date(b[1].date) - new Date(a[1].date))
-                .slice(0, 10); // عرض آخر 10 إنجازات فقط
-            
-            sortedAchievements.forEach(([key, achievement]) => {
-                const monthName = hijriMonthNumberToName(achievement.month);
-                count++;
-                
-                achievementsHTML += `
-                    <div class="achievement-item">
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                            <div>
-                                <div class="font-medium text-black-light-mode">
-                                    ${count}. اليوم ${achievement.day} من ${monthName}
-                                </div>
-                                <div class="text-xs text-black-light-mode opacity-70">
-                                    ${achievement.date}
-                                </div>
-                            </div>
-                        </div>
-                        <button class="remove-achievement text-red-500 hover:text-red-700 text-sm" data-key="${key}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-            });
-            
-            achievementsHTML += '</div>';
-            
-            // إضافة ملخص الإنجازات
-            if (count > 0) {
-                achievementsHTML = `
-                    <div class="text-center mb-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                        <p class="text-green-700 dark:text-green-300 font-bold">
-                            <i class="fas fa-trophy mr-2"></i>
-                            لديك ${count} إنجاز${count > 1 ? 'ات' : ''}
-                        </p>
-                    </div>
-                    ${achievementsHTML}
-                `;
-            }
-            
-            achievementsList.innerHTML = achievementsHTML;
-            
-            // إضافة أحداث لأزرار الحذف
-            document.querySelectorAll('.remove-achievement').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const key = this.dataset.key;
-                    if (confirm("هل تريد حذف هذا الإنجاز؟")) {
-                        delete achievements[key];
-                        localStorage.setItem('noorAchievements', JSON.stringify(achievements));
-                        updateAchievementsSection();
-                        updateAchievementButton(
-                            hijriMonthNameToNumber(currentHijriDate?.hijri?.month || 'محرم'),
-                            currentHijriDate?.hijri?.day || 1
-                        );
-                        showNotification("تم حذف الإنجاز");
-                    }
-                });
-            });
-        }
-
-        // إدارة الإشعارات
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            
-            notificationText.textContent = message;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                hideNotification();
-            }, 5000);
-        }
-
-        function hideNotification() {
-            const notification = document.getElementById('notification');
-            notification.style.display = 'none';
-        }
-
-        // إدارة الوضع الليلي
-        function initDarkMode() {
-            const themeToggle = document.getElementById('themeToggle');
-            const savedTheme = localStorage.getItem('theme');
-            
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-            
-            themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-theme');
-                const isDark = document.body.classList.contains('dark-theme');
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                
-                themeToggle.innerHTML = isDark ? 
-                    '<i class="fas fa-sun"></i>' : 
-                    '<i class="fas fa-moon"></i>';
-                
-                showNotification(isDark ? "تم تفعيل الوضع الليلي" : "تم تفعيل الوضع الفاتح");
-            });
-        }
-
-        // عند تحميل الصفحة
+        // تهيئة الصفحة عند التحميل
         document.addEventListener('DOMContentLoaded', function() {
-            // تهيئة الميزات
-            initDarkMode();
+            // عرض قائمة الأصدقاء
+            renderFriendsList();
             
-            // عرض التاريخ الحالي وأعمال اليوم
-            displayHijriDate();
+            // عرض قائمة المتصلين
+            updateOnlineFriends();
             
-            // تحديث القائمة عند تغيير الشهر
-            document.getElementById('monthSelect').addEventListener('change', function() {
-                const month = parseInt(this.value);
-                populateDays(month);
-            });
+            // بدء عداد وقت الاتصال
+            startConnectionTimer();
             
-            // زر عرض الأعمال المحددة
-            document.getElementById('viewWorksBtn').addEventListener('click', function() {
-                const month = parseInt(document.getElementById('monthSelect').value);
-                const day = parseInt(document.getElementById('daySelect').value);
-                
-                const monthName = hijriMonthNumberToName(month);
-                document.getElementById('hijriDay').textContent = day;
-                document.getElementById('hijriMonth').textContent = monthName;
-                document.getElementById('hijriYear').textContent = "(شهر مختار)";
-                
-                document.getElementById('hijriDateContainer').innerHTML = 
-                    `اليوم ${day} من شهر ${monthName}`;
-                
-                displaySpecificWorks(month, day);
-                showNotification(`تم عرض أعمال اليوم ${day} من ${monthName}`);
-            });
+            // إضافة مستمعي الأحداث
+            setupEventListeners();
             
-            // زر الإنجاز
-            document.getElementById('achievementBtn').addEventListener('click', function() {
-                const month = hijriMonthNameToNumber(document.getElementById('hijriMonth').textContent);
-                const day = parseInt(document.getElementById('hijriDay').textContent);
-                toggleAchievement(month, day);
-            });
-            
-            // أزرار التنقل
-            document.getElementById('prevDayBtn').addEventListener('click', function() {
-                const currentMonth = hijriMonthNameToNumber(document.getElementById('hijriMonth').textContent);
-                let currentDay = parseInt(document.getElementById('hijriDay').textContent);
-                
-                if (currentDay > 1) {
-                    currentDay--;
-                } else {
-                    // انتقل للشهر السابق
-                    const prevMonth = currentMonth > 1 ? currentMonth - 1 : 12;
-                    document.getElementById('monthSelect').value = prevMonth;
-                    document.getElementById('monthSelect').dispatchEvent(new Event('change'));
-                    currentDay = prevMonth === 12 ? 29 : 30;
-                }
-                
-                document.getElementById('daySelect').value = currentDay;
-                document.getElementById('viewWorksBtn').click();
-                showNotification("تم الانتقال لليوم السابق");
-            });
-            
-            document.getElementById('nextDayBtn').addEventListener('click', function() {
-                const currentMonth = hijriMonthNameToNumber(document.getElementById('hijriMonth').textContent);
-                let currentDay = parseInt(document.getElementById('hijriDay').textContent);
-                const daysInMonth = currentMonth === 12 ? 29 : 30;
-                
-                if (currentDay < daysInMonth) {
-                    currentDay++;
-                } else {
-                    // انتقل للشهر التالي
-                    const nextMonth = currentMonth < 12 ? currentMonth + 1 : 1;
-                    document.getElementById('monthSelect').value = nextMonth;
-                    document.getElementById('monthSelect').dispatchEvent(new Event('change'));
-                    currentDay = 1;
-                }
-                
-                document.getElementById('daySelect').value = currentDay;
-                document.getElementById('viewWorksBtn').click();
-                showNotification("تم الانتقال لاليوم التالي");
-            });
-            
-            // تحديث الإنجازات
-            updateAchievementsSection();
-            
-            // تحديث الصفحة كل ساعة
-            setInterval(displayHijriDate, 3600000);
+            // تحديث عدد المتصلين
+            updateOnlineCount();
         });
+
+        // عرض قائمة الأصدقاء
+        function renderFriendsList(filteredFriends = null) {
+            const friendsList = document.getElementById('friends-list');
+            const friendsToShow = filteredFriends || friendsData;
+            
+            friendsList.innerHTML = '';
+            
+            friendsToShow.forEach(friend => {
+                const friendElement = document.createElement('div');
+                friendElement.className = 'friend-item';
+                friendElement.innerHTML = `
+                    <div class="friend-avatar">
+                        <img src="${friend.avatar}" alt="${friend.name}">
+                        <span class="status ${friend.status}"></span>
+                    </div>
+                    <div class="friend-info">
+                        <div class="friend-name">${friend.name}</div>
+                        <div class="friend-status">${friend.statusText}</div>
+                        ${friend.game ? `<div class="friend-game"><i class="fas fa-gamepad"></i> ${friend.game}</div>` : ''}
+                    </div>
+                    <div class="friend-actions">
+                        ${friend.status === 'online' ? `
+                            <button class="friend-btn call" title="اتصال صوتي" onclick="callFriend(${friend.id})">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="friend-btn message" title="إرسال رسالة" onclick="messageFriend(${friend.id})">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            ${friend.game ? `<button class="friend-btn join" title="الانضمام للعبة" onclick="joinGame(${friend.id})">
+                                <i class="fas fa-gamepad"></i>
+                            </button>` : ''}
+                        ` : `
+                            <button class="friend-btn call disabled" title="غير متصل" disabled>
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="friend-btn message" title="إرسال رسالة" onclick="messageFriend(${friend.id})">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                        `}
+                    </div>
+                `;
+                
+                friendsList.appendChild(friendElement);
+            });
+        }
+
+        // تحديث قائمة الأصدقاء المتصلين
+        function updateOnlineFriends() {
+            const onlineList = document.getElementById('online-list');
+            const onlineFriends = friendsData.filter(friend => friend.status === 'online');
+            
+            onlineList.innerHTML = '';
+            
+            onlineFriends.forEach(friend => {
+                const onlineUserElement = document.createElement('div');
+                onlineUserElement.className = 'online-user';
+                onlineUserElement.innerHTML = `
+                    <img src="${friend.avatar}" alt="${friend.name}">
+                    <div class="online-user-info">
+                        <div class="online-user-name">${friend.name}</div>
+                        ${friend.game ? `<div class="online-user-game"><i class="fas fa-gamepad"></i> ${friend.game}</div>` : ''}
+                    </div>
+                    <span class="status ${friend.status}"></span>
+                `;
+                
+                onlineList.appendChild(onlineUserElement);
+            });
+            
+            // تحديث عدد المتصلين
+            updateOnlineCount();
+        }
+
+        // تحديث عدد المتصلين
+        function updateOnlineCount() {
+            const onlineCount = friendsData.filter(friend => friend.status === 'online').length;
+            document.getElementById('onlineCount').textContent = onlineCount;
+        }
+
+        // بدء عداد وقت الاتصال
+        function startConnectionTimer() {
+            let seconds = 0;
+            let minutes = 0;
+            let hours = 0;
+            
+            const timerElement = document.getElementById('connection-time');
+            
+            setInterval(() => {
+                seconds++;
+                if (seconds >= 60) {
+                    seconds = 0;
+                    minutes++;
+                    if (minutes >= 60) {
+                        minutes = 0;
+                        hours++;
+                    }
+                }
+                
+                const timeString = 
+                    (hours < 10 ? '0' + hours : hours) + ':' +
+                    (minutes < 10 ? '0' + minutes : minutes) + ':' +
+                    (seconds < 10 ? '0' + seconds : seconds);
+                
+                timerElement.textContent = timeString;
+            }, 1000);
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // البحث عن الأصدقاء
+            const searchInput = document.getElementById('search-friends');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                if (searchTerm.trim() === '') {
+                    renderFriendsList();
+                    return;
+                }
+                
+                const filteredFriends = friendsData.filter(friend => 
+                    friend.name.toLowerCase().includes(searchTerm) || 
+                    friend.username.toLowerCase().includes(searchTerm)
+                );
+                
+                renderFriendsList(filteredFriends);
+            });
+            
+            // تصفية حسب الحالة
+            const statusFilter = document.getElementById('status-filter');
+            statusFilter.addEventListener('change', function() {
+                const selectedStatus = this.value;
+                
+                if (selectedStatus === 'all') {
+                    renderFriendsList();
+                    return;
+                }
+                
+                const filteredFriends = friendsData.filter(friend => 
+                    friend.status === selectedStatus
+                );
+                
+                renderFriendsList(filteredFriends);
+            });
+            
+            // فتح نموذج إضافة صديق
+            const openModalBtn = document.getElementById('openAddFriendModal');
+            const modal = document.getElementById('addFriendModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const cancelBtn = document.getElementById('cancelRequest');
+            
+            openModalBtn.addEventListener('click', function() {
+                modal.style.display = 'flex';
+            });
+            
+            closeModalBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            cancelBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // إرسال طلب الصداقة
+            const sendRequestBtn = document.getElementById('sendRequest');
+            sendRequestBtn.addEventListener('click', function() {
+                const friendUsername = document.getElementById('friend-username').value;
+                
+                if (friendUsername.trim() === '') {
+                    alert('الرجاء إدخال اسم المستخدم');
+                    return;
+                }
+                
+                alert(`تم إرسال طلب صداقة إلى ${friendUsername}`);
+                document.getElementById('friend-username').value = '';
+                modal.style.display = 'none';
+            });
+            
+            // إغلاق النموذج عند النقر خارج المحتوى
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // تبديل الخوادم
+            const servers = document.querySelectorAll('.server');
+            servers.forEach(server => {
+                server.addEventListener('click', function() {
+                    servers.forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // في تطبيق حقيقي، هنا سيتم تحميل قنوات الخادم المحدد
+                });
+            });
+            
+            // تبديل القنوات
+            const channels = document.querySelectorAll('.channel');
+            channels.forEach(channel => {
+                channel.addEventListener('click', function() {
+                    channels.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // في تطبيق حقيقي، هنا سيتم الاتصال بالقناة المحددة
+                    const channelName = this.querySelector('span').textContent;
+                    document.querySelector('.audio-status').textContent = `متصل ب${channelName}`;
+                });
+            });
+            
+            // تبديل حالة الميكروفون
+            const micBtn = document.querySelector('.mic-btn');
+            micBtn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (this.classList.contains('active')) {
+                    icon.className = 'fas fa-microphone';
+                } else {
+                    icon.className = 'fas fa-microphone-slash';
+                }
+            });
+            
+            // تبديل حالة السماعات
+            const headphoneBtn = document.querySelector('.headphone-btn');
+            headphoneBtn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (this.classList.contains('active')) {
+                    icon.className = 'fas fa-headphones';
+                } else {
+                    icon.className = 'fas fa-headphones-slash';
+                }
+            });
+            
+            // قطع الاتصال
+            const disconnectBtn = document.querySelector('.btn-disconnect');
+            disconnectBtn.addEventListener('click', function() {
+                if (confirm('هل تريد قطع الاتصال من جميع القنوات؟')) {
+                    // في تطبيق حقيقي، هنا سيتم قطع الاتصال
+                    document.querySelector('.audio-status').textContent = 'غير متصل';
+                    document.querySelector('.btn-disconnect').innerHTML = '<i class="fas fa-phone"></i><span>الاتصال</span>';
+                    alert('تم قطع الاتصال');
+                }
+            });
+        }
+
+        // وظائف الأزرار
+        function callFriend(friendId) {
+            const friend = friendsData.find(f => f.id === friendId);
+            alert(`جاري الاتصال بـ ${friend.name}...`);
+        }
+
+        function messageFriend(friendId) {
+            const friend = friendsData.find(f => f.id === friendId);
+            alert(`فتح محادثة مع ${friend.name}`);
+        }
+
+        function joinGame(friendId) {
+            const friend = friendsData.find(f => f.id === friendId);
+            alert(`الانضمام إلى لعبة ${friend.game} مع ${friend.name}`);
+        }
     </script>
 </body>
-</html>
+                        </html>
