@@ -3,11 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ديسكورد العرب - تواصل صوتي مع الأصدقاء</title>
+    <title>VoiceChat - تواصل صوتي مباشر</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* إعدادات عامة */
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #4F545C;
+            --dark: #2F3136;
+            --darker: #202225;
+            --text: #FFFFFF;
+            --text-secondary: #B9BBBE;
+            --success: #3BA55D;
+            --danger: #ED4245;
+            --warning: #FAA81A;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,28 +26,32 @@
         }
 
         body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #36393f;
-            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2F3136 0%, #202225 100%);
+            color: var(--text);
             height: 100vh;
             overflow: hidden;
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
+        .app-container {
+            display: grid;
+            grid-template-columns: 72px 240px 1fr 320px;
+            grid-template-rows: 48px 1fr 52px;
             height: 100vh;
+            gap: 1px;
+            background: var(--darker);
         }
 
-        /* شريط التنقل العلوي */
+        /* Header */
         .header {
+            grid-column: 1 / 5;
+            background: var(--darker);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
-            background-color: #202225;
-            height: 60px;
-            border-bottom: 1px solid #2f3136;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .logo {
@@ -46,1381 +61,1336 @@
         }
 
         .logo i {
-            font-size: 28px;
-            color: #7289da;
+            color: var(--primary);
+            font-size: 24px;
         }
 
         .logo h1 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            color: #ffffff;
         }
 
-        .user-info {
+        .user-profile {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            background: var(--dark);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
-        .user-avatar {
-            position: relative;
-            width: 40px;
-            height: 40px;
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
+        .avatar {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            object-fit: cover;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
         }
 
-        .status {
+        .status-indicator {
             position: absolute;
-            bottom: 2px;
-            right: 2px;
+            bottom: -2px;
+            right: -2px;
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            border: 2px solid #202225;
+            background: var(--success);
+            border: 2px solid var(--dark);
         }
 
-        .status.online {
-            background-color: #3ba55d;
-        }
-
-        .status.offline {
-            background-color: #747f8d;
-        }
-
-        .status.busy {
-            background-color: #ed4245;
-        }
-
-        .status.idle {
-            background-color: #faa81a;
-        }
-
-        .user-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-details span:first-child {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .user-status {
-            font-size: 12px;
-            color: #b9bbbe;
-        }
-
-        .btn-notification {
-            position: relative;
-            background: none;
-            border: none;
-            color: #b9bbbe;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .notification-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: #ed4245;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* المحتوى الرئيسي */
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* الشريط الجانبي للقنوات */
-        .sidebar {
-            width: 240px;
-            background-color: #2f3136;
-            display: flex;
-            flex-direction: column;
-            padding: 15px 10px;
-        }
-
+        /* Servers Sidebar */
         .servers {
+            background: var(--darker);
+            padding: 12px 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #40444b;
-            padding-bottom: 20px;
+            align-items: center;
+            gap: 8px;
+            overflow-y: auto;
         }
 
         .server {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--dark);
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 5px;
+            justify-content: center;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            position: relative;
         }
 
         .server:hover {
-            background-color: #40444b;
+            background: var(--primary);
+            border-radius: 16px;
         }
 
         .server.active {
-            background-color: #40444b;
+            background: var(--primary);
+            border-radius: 16px;
         }
 
-        .server i {
-            font-size: 20px;
-            color: #b9bbbe;
+        .server-add {
+            background: var(--success);
+            color: white;
         }
 
-        .server.active i {
-            color: #ffffff;
-        }
-
-        .server-name {
-            font-size: 14px;
-        }
-
-        .add-server {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #36393f;
-            color: #3ba55d;
-            font-size: 20px;
-            margin-top: 5px;
-        }
-
-        .add-server:hover {
-            background-color: #40444b;
-        }
-
+        /* Channels Sidebar */
         .channels {
-            flex: 1;
-            overflow-y: auto;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
         }
 
-        .channels h3 {
+        .channel-category {
+            padding: 16px 16px 8px;
+            color: var(--text-secondary);
             font-size: 12px;
-            color: #8e9297;
-            margin: 20px 0 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .channel {
+            padding: 8px 16px;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 10px;
-            border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 5px;
-            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0 8px;
+            border-radius: 4px;
         }
 
         .channel:hover {
-            background-color: #40444b;
+            background: rgba(79, 84, 92, 0.3);
+            color: var(--text);
         }
 
         .channel.active {
-            background-color: #40444b;
+            background: rgba(79, 84, 92, 0.6);
+            color: var(--text);
         }
 
         .channel i {
-            color: #8e9297;
+            font-size: 14px;
         }
 
-        .channel.active i {
-            color: #ffffff;
+        .channel-text i {
+            color: var(--text-secondary);
         }
 
-        .channel-count {
-            margin-right: auto;
-            background-color: #36393f;
-            padding: 2px 8px;
-            border-radius: 10px;
+        .channel-voice i {
+            color: var(--success);
+        }
+
+        /* Chat Area */
+        .chat {
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-header i {
+            color: var(--success);
+        }
+
+        .messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            padding: 4px 0;
+        }
+
+        .message:hover {
+            background: rgba(79, 84, 92, 0.1);
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .message-time {
+            color: var(--text-secondary);
             font-size: 12px;
         }
 
+        .message-text {
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        /* Voice Controls */
         .voice-controls {
-            background-color: #292b2f;
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--darker);
+            padding: 16px;
             border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-
-        .user-mic, .user-headphones {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .user-mic i, .user-headphones i {
-            color: #b9bbbe;
-            font-size: 18px;
-        }
-
-        .volume-slider {
-            flex: 1;
-        }
-
-        .slider {
-            width: 100%;
-            height: 5px;
-            background: #4f545c;
-            border-radius: 5px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-        }
-
-        .btn-disconnect {
-            width: 100%;
-            background-color: #ed4245;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background-color 0.2s;
-        }
-
-        .btn-disconnect:hover {
-            background-color: #c03537;
-        }
-
-        /* قسم الأصدقاء */
-        .friends-section {
-            flex: 1;
-            background-color: #36393f;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            overflow: hidden;
-        }
-
-        .friends-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #40444b;
-        }
-
-        .friends-header h2 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-        }
-
-        .friends-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            background-color: #202225;
-            border-radius: 5px;
-            padding: 8px 12px;
-            width: 250px;
-        }
-
-        .search-box i {
-            color: #8e9297;
-            margin-left: 8px;
-        }
-
-        .search-box input {
-            background: none;
-            border: none;
-            color: white;
-            width: 100%;
-            outline: none;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        .btn-add-friend {
-            background-color: #3ba55d;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.2s;
-        }
-
-        .btn-add-friend:hover {
-            background-color: #2d8b4a;
-        }
-
-        .filter-friends select {
-            background-color: #202225;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        /* قائمة الأصدقاء */
-        .friends-list {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .friend-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            background-color: #2f3136;
-            transition: background-color 0.2s;
-        }
-
-        .friend-item:hover {
-            background-color: #40444b;
-        }
-
-        .friend-avatar {
-            position: relative;
-            margin-left: 15px;
-        }
-
-        .friend-avatar img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .friend-info {
-            flex: 1;
-        }
-
-        .friend-name {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .friend-status {
-            font-size: 13px;
-            color: #b9bbbe;
-        }
-
-        .friend-game {
-            font-size: 12px;
-            color: #b9bbbe;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 3px;
-        }
-
-        .friend-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .friend-btn {
-            background-color: #4f545c;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;
-        }
-
-        .friend-btn.call:hover {
-            background-color: #3ba55d;
-        }
-
-        .friend-btn.message:hover {
-            background-color: #7289da;
-        }
-
-        .friend-btn.join:hover {
-            background-color: #faa81a;
-        }
-
-        .online-friends {
-            width: 300px;
-            background-color: #2f3136;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .online-friends h3 {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .online-friends h3 i {
-            color: #3ba55d;
-        }
-
-        .online-count {
-            background-color: #3ba55d;
-            padding: 2px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-        }
-
-        .online-list {
-            margin-bottom: 30px;
-        }
-
-        .online-user {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 8px;
-        }
-
-        .online-user:hover {
-            background-color: #40444b;
-        }
-
-        .online-user img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-left: 10px;
-        }
-
-        .online-user-info {
-            flex: 1;
-        }
-
-        .online-user-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .online-user-game {
-            font-size: 12px;
-            color: #b9bbbe;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .active-now h3 {
-            color: #b9bbbe;
-            font-size: 14px;
-            margin: 20px 0 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .game {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            background-color: #36393f;
-        }
-
-        .game i {
-            font-size: 24px;
-            margin-left: 10px;
-            color: #7289da;
-        }
-
-        .game-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .game-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .players-count {
-            font-size: 12px;
-            color: #b9bbbe;
-        }
-
-        /* نموذج إضافة صديق */
-        .add-friend-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             z-index: 100;
+        }
+
+        .control-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--secondary);
+            color: white;
+            cursor: pointer;
+            display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
         }
 
-        .modal-content {
-            background-color: #36393f;
-            border-radius: 8px;
-            width: 450px;
-            max-width: 90%;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        .control-btn:hover {
+            background: var(--primary);
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #40444b;
+        .control-btn.active {
+            background: var(--success);
         }
 
-        .modal-header h3 {
-            font-size: 18px;
+        .control-btn.danger {
+            background: var(--danger);
         }
 
-        .close-modal {
-            background: none;
-            border: none;
-            color: #b9bbbe;
-            font-size: 28px;
-            cursor: pointer;
-            line-height: 1;
+        .control-btn.danger:hover {
+            background: #c03537;
         }
 
-        .modal-body {
-            padding: 20px;
+        /* Members List */
+        .members {
+            background: var(--dark);
+            padding: 16px;
+            overflow-y: auto;
         }
 
-        .modal-body p {
-            margin-bottom: 15px;
-            color: #b9bbbe;
+        .members-header {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .modal-body input {
-            width: 100%;
-            padding: 12px;
-            background-color: #202225;
-            border: 1px solid #40444b;
-            border-radius: 5px;
-            color: white;
-            font-family: 'Tajawal', sans-serif;
-            margin-bottom: 20px;
-            outline: none;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .btn-send-request {
-            background-color: #3ba55d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        .btn-cancel {
-            background-color: #4f545c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        /* شريط التحكم السفلي */
-        .footer-controls {
-            background-color: #292b2f;
-            padding: 10px 20px;
-        }
-
-        .audio-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-audio-info {
+        .member {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .mini-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .audio-user {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .audio-username {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .audio-status {
-            font-size: 12px;
-            color: #b9bbbe;
-        }
-
-        .audio-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .audio-btn {
-            background-color: #4f545c;
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            padding: 8px;
+            border-radius: 4px;
             cursor: pointer;
+        }
+
+        .member:hover {
+            background: rgba(79, 84, 92, 0.3);
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            transition: background-color 0.2s;
+            font-weight: bold;
+            position: relative;
         }
 
-        .audio-btn.active {
-            background-color: #3ba55d;
+        .member-status {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--dark);
         }
 
-        .audio-btn:hover {
-            background-color: #5d6269;
-        }
-
-        .audio-btn.active:hover {
-            background-color: #2d8b4a;
-        }
-
-        .audio-timer {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #b9bbbe;
+        .member-name {
+            flex: 1;
             font-size: 14px;
         }
 
-        /* شريط التمرير */
+        .member-game {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* Voice Call Interface */
+        .voice-call {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--darker);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .call-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .call-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .call-participants {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .participant {
+            background: var(--dark);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            gap: 12px;
+            position: relative;
+        }
+
+        .participant-speaking {
+            box-shadow: 0 0 0 3px var(--success);
+        }
+
+        .participant-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .participant-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .participant-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .volume-indicator {
+            width: 100%;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .volume-level {
+            height: 100%;
+            background: var(--success);
+            width: 30%;
+            transition: width 0.2s;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--darker);
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5d6269;
+        }
+
+        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #2f3136;
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #202225;
+            background: var(--secondary);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #1a1c20;
-        }
-
-        /* التجاوب مع الشاشات الصغيرة */
-        @media (max-width: 1200px) {
-            .online-friends {
-                display: none;
-            }
-            
-            .friends-actions {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .search-box {
-                width: 200px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-                padding: 10px 5px;
-            }
-            
-            .server-name, .channel span, .channels h3 span, .voice-controls span {
-                display: none;
-            }
-            
-            .channel-count {
-                display: none;
-            }
-            
-            .server {
-                justify-content: center;
-                padding: 12px 0;
-            }
-            
-            .channel {
-                justify-content: center;
-                padding: 10px 0;
-            }
-            
-            .friends-actions {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .search-box {
-                width: 100%;
-            }
+            background: #5d6269;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- شريط التنقل العلوي -->
+    <div class="app-container">
+        <!-- Header -->
         <header class="header">
             <div class="logo">
                 <i class="fas fa-headset"></i>
-                <h1>ديسكورد العرب</h1>
+                <h1>VoiceChat</h1>
             </div>
-            <div class="user-info">
-                <div class="user-avatar">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="صورة المستخدم" id="current-user-img">
-                    <span class="status online"></span>
+            <div class="user-profile" id="userProfile">
+                <div class="avatar" id="userAvatar">م</div>
+                <div class="user-info">
+                    <div class="username" id="username">محمد</div>
+                    <div class="user-status">#1234</div>
                 </div>
-                <div class="user-details">
-                    <span id="current-user-name">علي أحمد</span>
-                    <span class="user-status" id="current-user-status">متصل</span>
-                </div>
-                <button class="btn-notification">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-count">3</span>
-                </button>
             </div>
         </header>
 
-        <div class="main-content">
-            <!-- الشريط الجانبي للقنوات -->
-            <aside class="sidebar">
-                <div class="servers">
-                    <div class="server active" data-server="all">
-                        <i class="fas fa-users"></i>
-                        <span class="server-name">جميع الأصدقاء</span>
-                    </div>
-                    <div class="server" data-server="gaming">
-                        <i class="fas fa-gamepad"></i>
-                        <span class="server-name">غرفة الألعاب</span>
-                    </div>
-                    <div class="server" data-server="study">
-                        <i class="fas fa-graduation-cap"></i>
-                        <span class="server-name">غرفة الدراسة</span>
-                    </div>
-                    <div class="server" data-server="general">
-                        <i class="fas fa-comments"></i>
-                        <span class="server-name">الدردشة العامة</span>
-                    </div>
-                    <div class="add-server">
-                        <i class="fas fa-plus"></i>
-                    </div>
-                </div>
-                
-                <div class="channels">
-                    <h3><i class="fas fa-hashtag"></i> القنوات الصوتية</h3>
-                    <div class="channel active" data-channel="general">
-                        <i class="fas fa-volume-up"></i>
-                        <span>القناة العامة</span>
-                        <span class="channel-count">12</span>
-                    </div>
-                    <div class="channel" data-channel="gaming">
-                        <i class="fas fa-volume-up"></i>
-                        <span>غرفة الألعاب</span>
-                        <span class="channel-count">8</span>
-                    </div>
-                    <div class="channel" data-channel="private">
-                        <i class="fas fa-volume-up"></i>
-                        <span>غرفة خاصة</span>
-                        <span class="channel-count">4</span>
-                    </div>
-                    
-                    <h3><i class="fas fa-comment"></i> القنوات النصية</h3>
-                    <div class="channel" data-channel="chat">
-                        <i class="fas fa-hashtag"></i>
-                        <span>الدردشة العامة</span>
-                    </div>
-                    <div class="channel" data-channel="memes">
-                        <i class="fas fa-hashtag"></i>
-                        <span>الميمز</span>
-                    </div>
-                </div>
-                
-                <div class="voice-controls">
-                    <div class="user-mic">
-                        <i class="fas fa-microphone"></i>
-                        <div class="volume-slider">
-                            <input type="range" min="0" max="100" value="80" class="slider">
-                        </div>
-                    </div>
-                    <div class="user-headphones">
-                        <i class="fas fa-headphones"></i>
-                        <div class="volume-slider">
-                            <input type="range" min="0" max="100" value="70" class="slider">
-                        </div>
-                    </div>
-                    <button class="btn-disconnect">
-                        <i class="fas fa-phone-slash"></i>
-                        <span>قطع الاتصال</span>
-                    </button>
-                </div>
-            </aside>
+        <!-- Servers Sidebar -->
+        <nav class="servers">
+            <div class="server active" data-server="home">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="server" data-server="gaming">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <div class="server" data-server="study">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="server" data-server="music">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="server server-add" id="addServer">
+                <i class="fas fa-plus"></i>
+            </div>
+        </nav>
 
-            <!-- المنطقة الرئيسية - عرض الأصدقاء -->
-            <main class="friends-section">
-                <div class="friends-header">
-                    <h2><i class="fas fa-user-friends"></i> جميع الأصدقاء</h2>
-                    <div class="friends-actions">
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="search-friends" placeholder="ابحث عن أصدقاء...">
-                        </div>
-                        <button class="btn-add-friend" id="openAddFriendModal">
-                            <i class="fas fa-user-plus"></i>
-                            إضافة صديق
-                        </button>
-                        <div class="filter-friends">
-                            <select id="status-filter">
-                                <option value="all">جميع الحالات</option>
-                                <option value="online">المتصلون فقط</option>
-                                <option value="offline">غير المتصلين</option>
-                                <option value="busy">المشغولون</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+        <!-- Channels Sidebar -->
+        <aside class="channels">
+            <div class="channel-category">القنوات الصوتية</div>
+            <div class="channel channel-voice active" data-channel="general">
+                <i class="fas fa-volume-up"></i>
+                <span>عام 🔊</span>
+            </div>
+            <div class="channel channel-voice" data-channel="gaming">
+                <i class="fas fa-volume-up"></i>
+                <span>ألعاب 🎮</span>
+            </div>
+            <div class="channel channel-voice" data-channel="chat">
+                <i class="fas fa-volume-up"></i>
+                <span>دردشة 💬</span>
+            </div>
 
-                <div class="friends-list" id="friends-list">
-                    <!-- سيتم ملء قائمة الأصدقاء عن طريق JavaScript -->
-                </div>
+            <div class="channel-category">القنوات النصية</div>
+            <div class="channel channel-text" data-channel="general-text">
+                <i class="fas fa-hashtag"></i>
+                <span>عام</span>
+            </div>
+            <div class="channel channel-text" data-channel="help">
+                <i class="fas fa-hashtag"></i>
+                <span>مساعدة</span>
+            </div>
+        </aside>
 
-                <!-- نموذج إضافة صديق -->
-                <div class="add-friend-modal" id="addFriendModal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3>إضافة صديق جديد</h3>
-                            <button class="close-modal" id="closeModal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <p>أدخل اسم المستخدم أو البريد الإلكتروني للإضافة</p>
-                            <input type="text" id="friend-username" placeholder="اسم المستخدم#1234">
-                            <div class="modal-actions">
-                                <button class="btn-send-request" id="sendRequest">إرسال طلب الصداقة</button>
-                                <button class="btn-cancel" id="cancelRequest">إلغاء</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
+        <!-- Main Chat Area -->
+        <main class="chat">
+            <div class="chat-header">
+                <i class="fas fa-volume-up"></i>
+                <h2>عام 🔊</h2>
+                <span class="online-count" id="onlineCount">0 متصل</span>
+            </div>
 
-            <!-- الشريط الجانبي للأصدقاء المتصلين -->
-            <aside class="online-friends">
-                <h3><i class="fas fa-signal"></i> الأصدقاء المتصلون <span class="online-count" id="onlineCount">0</span></h3>
-                <div class="online-list" id="online-list">
-                    <!-- سيتم ملء قائمة المتصلين عن طريق JavaScript -->
+            <div class="messages" id="messages">
+                <!-- Messages will be loaded here -->
+            </div>
+
+            <!-- Voice Controls -->
+            <div class="voice-controls" id="voiceControls">
+                <button class="control-btn" id="micToggle">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="control-btn" id="headphoneToggle">
+                    <i class="fas fa-headphones"></i>
+                </button>
+                <button class="control-btn danger" id="disconnectBtn">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+                <button class="control-btn" id="inviteBtn">
+                    <i class="fas fa-user-plus"></i>
+                </button>
+                <button class="control-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- Members List -->
+        <aside class="members">
+            <div class="members-header">الأعضاء المتصلون</div>
+            <div class="members-list" id="membersList">
+                <!-- Members will be loaded here -->
+            </div>
+        </aside>
+
+        <!-- Voice Call Interface -->
+        <div class="voice-call" id="voiceCall">
+            <div class="call-header">
+                <div class="call-title">
+                    <i class="fas fa-volume-up"></i>
+                    <span>مكالمة صوتية نشطة</span>
                 </div>
-                
-                <div class="active-now">
-                    <h3><i class="fas fa-gamepad"></i> يلعبون الآن</h3>
-                    <div class="game-activity">
-                        <div class="game">
-                            <i class="fas fa-basketball-ball"></i>
-                            <div class="game-info">
-                                <span class="game-name">فورتنايت</span>
-                                <span class="players-count">5 أصدقاء يلعبون</span>
-                            </div>
-                        </div>
-                        <div class="game">
-                            <i class="fas fa-car"></i>
-                            <div class="game-info">
-                                <span class="game-name">ركتور ليج</span>
-                                <span class="players-count">3 أصدقاء يلعبون</span>
-                            </div>
-                        </div>
-                        <div class="game">
-                            <i class="fas fa-chess"></i>
-                            <div class="game-info">
-                                <span class="game-name">فالورانت</span>
-                                <span class="players-count">7 أصدقاء يلعبون</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
+                <button class="control-btn danger" id="endCall">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+            </div>
+            <div class="call-participants" id="callParticipants">
+                <!-- Participants will be added here -->
+            </div>
         </div>
 
-        <!-- شريط الصوت والميكروفون -->
-        <footer class="footer-controls">
-            <div class="audio-controls">
-                <div class="user-audio-info">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="صورة المستخدم" class="mini-avatar">
-                    <div class="audio-user">
-                        <span class="audio-username">علي أحمد</span>
-                        <span class="audio-status">متصل بالقناة العامة</span>
-                    </div>
+        <!-- Modals -->
+        <div class="modal" id="profileModal">
+            <div class="modal-content">
+                <h2 class="modal-title">تعديل الملف الشخصي</h2>
+                <div class="form-group">
+                    <label class="form-label">اسم المستخدم</label>
+                    <input type="text" class="form-input" id="editUsername" value="محمد">
                 </div>
-                <div class="audio-buttons">
-                    <button class="audio-btn mic-btn active">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <button class="audio-btn headphone-btn active">
-                        <i class="fas fa-headphones"></i>
-                    </button>
-                    <button class="audio-btn settings-btn">
-                        <i class="fas fa-cog"></i>
-                    </button>
+                <div class="form-group">
+                    <label class="form-label">اللون</label>
+                    <input type="color" class="form-input" id="editColor" value="#5865F2">
                 </div>
-                <div class="audio-timer">
-                    <i class="fas fa-clock"></i>
-                    <span id="connection-time">00:00:00</span>
+                <div class="form-group">
+                    <label class="form-label">الحالة</label>
+                    <select class="form-input" id="editStatus">
+                        <option value="online">متصل</option>
+                        <option value="idle">مشغول</option>
+                        <option value="dnd">عدم الإزعاج</option>
+                        <option value="offline">غير متصل</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="cancelEdit">إلغاء</button>
+                    <button class="btn btn-primary" id="saveProfile">حفظ</button>
                 </div>
             </div>
-        </footer>
+        </div>
+
+        <div class="modal" id="inviteModal">
+            <div class="modal-content">
+                <h2 class="modal-title">دعوة صديق</h2>
+                <div class="form-group">
+                    <label class="form-label">رابط الدعوة</label>
+                    <input type="text" class="form-input" id="inviteLink" value="https://voicechat.com/invite/abc123" readonly>
+                </div>
+                <p style="color: var(--text-secondary); margin: 20px 0; font-size: 14px;">
+                    شارك هذا الرابط مع أصدقائك للانضمام إلى هذه القناة.
+                </p>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="copyInvite">نسخ الرابط</button>
+                    <button class="btn btn-secondary" id="closeInvite">إغلاق</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // بيانات الأصدقاء
-        const friendsData = [
-            {
-                id: 1,
-                name: "محمد علي",
-                avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-                status: "online",
-                game: "فورتنايت",
-                statusText: "متصل الآن",
-                username: "Mohamed#1234"
-            },
-            {
-                id: 2,
-                name: "سارة أحمد",
-                avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-                status: "online",
-                game: "فالورانت",
-                statusText: "يلعب فالورانت",
-                username: "Sarah#5678"
-            },
-            {
-                id: 3,
-                name: "خالد راشد",
-                avatar: "https://randomuser.me/api/portraits/men/3.jpg",
-                status: "busy",
-                game: "",
-                statusText: "مشغول",
-                username: "Khaled#9101"
-            },
-            {
-                id: 4,
-                name: "فاطمة حسن",
-                avatar: "https://randomuser.me/api/portraits/women/4.jpg",
-                status: "online",
-                game: "ماينكرافت",
-                statusText: "يلعب ماينكرافت",
-                username: "Fatima#1121"
-            },
-            {
-                id: 5,
-                name: "عمر سعيد",
-                avatar: "https://randomuser.me/api/portraits/men/5.jpg",
-                status: "offline",
-                game: "",
-                statusText: "غير متصل - قبل ساعتين",
-                username: "Omar#3141"
-            },
-            {
-                id: 6,
-                name: "نورة محمد",
-                avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-                status: "online",
-                game: "ركتور ليج",
-                statusText: "يلعب ركتور ليج",
-                username: "Noura#5161"
-            },
-            {
-                id: 7,
-                name: "ياسر كمال",
-                avatar: "https://randomuser.me/api/portraits/men/7.jpg",
-                status: "offline",
-                game: "",
-                statusText: "غير متصل - قبل يوم",
-                username: "Yasser#7181"
-            },
-            {
-                id: 8,
-                name: "لمياء عبدالله",
-                avatar: "https://randomuser.me/api/portraits/women/8.jpg",
-                status: "online",
-                game: "فورتنايت",
-                statusText: "يلعب فورتنايت",
-                username: "Lamya#9202"
-            },
-            {
-                id: 9,
-                name: "أحمد سلمان",
-                avatar: "https://randomuser.me/api/portraits/men/9.jpg",
-                status: "busy",
-                game: "",
-                statusText: "مشغول - في اجتماع",
-                username: "Ahmed#1222"
-            },
-            {
-                id: 10,
-                name: "حصة ناصر",
-                avatar: "https://randomuser.me/api/portraits/women/10.jpg",
-                status: "online",
-                game: "ببجي",
-                statusText: "يلعب ببجي",
-                username: "Hessa#3242"
+        // بيانات التطبيق
+        class VoiceChatApp {
+            constructor() {
+                this.currentUser = null;
+                this.friends = [];
+                this.messages = [];
+                this.voiceCall = null;
+                this.localStream = null;
+                this.peerConnections = {};
+                this.dataChannel = null;
+                this.isMicMuted = false;
+                this.isHeadphoneMuted = false;
+                
+                this.init();
             }
-        ];
 
-        // تهيئة الصفحة عند التحميل
-        document.addEventListener('DOMContentLoaded', function() {
-            // عرض قائمة الأصدقاء
-            renderFriendsList();
-            
-            // عرض قائمة المتصلين
-            updateOnlineFriends();
-            
-            // بدء عداد وقت الاتصال
-            startConnectionTimer();
-            
-            // إضافة مستمعي الأحداث
-            setupEventListeners();
-            
-            // تحديث عدد المتصلين
-            updateOnlineCount();
-        });
+            init() {
+                this.loadUserData();
+                this.setupEventListeners();
+                this.loadFriends();
+                this.loadMessages();
+                this.updateOnlineCount();
+                this.setupAudioVisualizer();
+            }
 
-        // عرض قائمة الأصدقاء
-        function renderFriendsList(filteredFriends = null) {
-            const friendsList = document.getElementById('friends-list');
-            const friendsToShow = filteredFriends || friendsData;
-            
-            friendsList.innerHTML = '';
-            
-            friendsToShow.forEach(friend => {
-                const friendElement = document.createElement('div');
-                friendElement.className = 'friend-item';
-                friendElement.innerHTML = `
-                    <div class="friend-avatar">
-                        <img src="${friend.avatar}" alt="${friend.name}">
-                        <span class="status ${friend.status}"></span>
-                    </div>
-                    <div class="friend-info">
-                        <div class="friend-name">${friend.name}</div>
-                        <div class="friend-status">${friend.statusText}</div>
-                        ${friend.game ? `<div class="friend-game"><i class="fas fa-gamepad"></i> ${friend.game}</div>` : ''}
-                    </div>
-                    <div class="friend-actions">
-                        ${friend.status === 'online' ? `
-                            <button class="friend-btn call" title="اتصال صوتي" onclick="callFriend(${friend.id})">
-                                <i class="fas fa-phone"></i>
-                            </button>
-                            <button class="friend-btn message" title="إرسال رسالة" onclick="messageFriend(${friend.id})">
-                                <i class="fas fa-comment"></i>
-                            </button>
-                            ${friend.game ? `<button class="friend-btn join" title="الانضمام للعبة" onclick="joinGame(${friend.id})">
-                                <i class="fas fa-gamepad"></i>
-                            </button>` : ''}
-                        ` : `
-                            <button class="friend-btn call disabled" title="غير متصل" disabled>
-                                <i class="fas fa-phone"></i>
-                            </button>
-                            <button class="friend-btn message" title="إرسال رسالة" onclick="messageFriend(${friend.id})">
-                                <i class="fas fa-comment"></i>
-                            </button>
-                        `}
-                    </div>
-                `;
+            loadUserData() {
+                const savedUser = localStorage.getItem('voiceChat_user');
+                if (savedUser) {
+                    this.currentUser = JSON.parse(savedUser);
+                } else {
+                    this.currentUser = {
+                        id: this.generateId(),
+                        username: 'محمد',
+                        color: '#5865F2',
+                        status: 'online',
+                        avatar: 'م'
+                    };
+                    this.saveUserData();
+                }
+                this.updateUserUI();
+            }
+
+            saveUserData() {
+                localStorage.setItem('voiceChat_user', JSON.stringify(this.currentUser));
+            }
+
+            generateId() {
+                return Math.random().toString(36).substr(2, 9);
+            }
+
+            updateUserUI() {
+                document.getElementById('username').textContent = this.currentUser.username;
+                document.getElementById('userAvatar').textContent = this.currentUser.avatar;
+                document.getElementById('userAvatar').style.backgroundColor = this.currentUser.color;
                 
-                friendsList.appendChild(friendElement);
-            });
-        }
+                const statusIndicator = document.querySelector('.status-indicator');
+                if (statusIndicator) {
+                    statusIndicator.style.backgroundColor = this.getStatusColor(this.currentUser.status);
+                }
+            }
 
-        // تحديث قائمة الأصدقاء المتصلين
-        function updateOnlineFriends() {
-            const onlineList = document.getElementById('online-list');
-            const onlineFriends = friendsData.filter(friend => friend.status === 'online');
-            
-            onlineList.innerHTML = '';
-            
-            onlineFriends.forEach(friend => {
-                const onlineUserElement = document.createElement('div');
-                onlineUserElement.className = 'online-user';
-                onlineUserElement.innerHTML = `
-                    <img src="${friend.avatar}" alt="${friend.name}">
-                    <div class="online-user-info">
-                        <div class="online-user-name">${friend.name}</div>
-                        ${friend.game ? `<div class="online-user-game"><i class="fas fa-gamepad"></i> ${friend.game}</div>` : ''}
-                    </div>
-                    <span class="status ${friend.status}"></span>
-                `;
-                
-                onlineList.appendChild(onlineUserElement);
-            });
-            
-            // تحديث عدد المتصلين
-            updateOnlineCount();
-        }
+            getStatusColor(status) {
+                const colors = {
+                    online: '#3BA55D',
+                    idle: '#FAA81A',
+                    dnd: '#ED4245',
+                    offline: '#747F8D'
+                };
+                return colors[status] || colors.online;
+            }
 
-        // تحديث عدد المتصلين
-        function updateOnlineCount() {
-            const onlineCount = friendsData.filter(friend => friend.status === 'online').length;
-            document.getElementById('onlineCount').textContent = onlineCount;
-        }
+            loadFriends() {
+                const savedFriends = localStorage.getItem('voiceChat_friends');
+                if (savedFriends) {
+                    this.friends = JSON.parse(savedFriends);
+                } else {
+                    this.friends = this.generateDefaultFriends();
+                    this.saveFriends();
+                }
+                this.renderFriends();
+            }
 
-        // بدء عداد وقت الاتصال
-        function startConnectionTimer() {
-            let seconds = 0;
-            let minutes = 0;
-            let hours = 0;
-            
-            const timerElement = document.getElementById('connection-time');
-            
-            setInterval(() => {
-                seconds++;
-                if (seconds >= 60) {
-                    seconds = 0;
-                    minutes++;
-                    if (minutes >= 60) {
-                        minutes = 0;
-                        hours++;
+            generateDefaultFriends() {
+                return [
+                    {
+                        id: this.generateId(),
+                        username: 'أحمد',
+                        status: 'online',
+                        color: '#ED4245',
+                        avatar: 'أ',
+                        game: 'فورتنايت'
+                    },
+                    {
+                        id: this.generateId(),
+                        username: 'سارة',
+                        status: 'online',
+                        color: '#FAA81A',
+                        avatar: 'س',
+                        game: 'فالورانت'
+                    },
+                    {
+                        id: this.generateId(),
+                        username: 'خالد',
+                        status: 'idle',
+                        color: '#3BA55D',
+                        avatar: 'خ'
+                    },
+                    {
+                        id: this.generateId(),
+                        username: 'فاطمة',
+                        status: 'dnd',
+                        color: '#5865F2',
+                        avatar: 'ف',
+                        game: 'ماينكرافت'
                     }
-                }
-                
-                const timeString = 
-                    (hours < 10 ? '0' + hours : hours) + ':' +
-                    (minutes < 10 ? '0' + minutes : minutes) + ':' +
-                    (seconds < 10 ? '0' + seconds : seconds);
-                
-                timerElement.textContent = timeString;
-            }, 1000);
-        }
+                ];
+            }
 
-        // إعداد مستمعي الأحداث
-        function setupEventListeners() {
-            // البحث عن الأصدقاء
-            const searchInput = document.getElementById('search-friends');
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                if (searchTerm.trim() === '') {
-                    renderFriendsList();
-                    return;
-                }
-                
-                const filteredFriends = friendsData.filter(friend => 
-                    friend.name.toLowerCase().includes(searchTerm) || 
-                    friend.username.toLowerCase().includes(searchTerm)
-                );
-                
-                renderFriendsList(filteredFriends);
-            });
-            
-            // تصفية حسب الحالة
-            const statusFilter = document.getElementById('status-filter');
-            statusFilter.addEventListener('change', function() {
-                const selectedStatus = this.value;
-                
-                if (selectedStatus === 'all') {
-                    renderFriendsList();
-                    return;
-                }
-                
-                const filteredFriends = friendsData.filter(friend => 
-                    friend.status === selectedStatus
-                );
-                
-                renderFriendsList(filteredFriends);
-            });
-            
-            // فتح نموذج إضافة صديق
-            const openModalBtn = document.getElementById('openAddFriendModal');
-            const modal = document.getElementById('addFriendModal');
-            const closeModalBtn = document.getElementById('closeModal');
-            const cancelBtn = document.getElementById('cancelRequest');
-            
-            openModalBtn.addEventListener('click', function() {
-                modal.style.display = 'flex';
-            });
-            
-            closeModalBtn.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-            
-            cancelBtn.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-            
-            // إرسال طلب الصداقة
-            const sendRequestBtn = document.getElementById('sendRequest');
-            sendRequestBtn.addEventListener('click', function() {
-                const friendUsername = document.getElementById('friend-username').value;
-                
-                if (friendUsername.trim() === '') {
-                    alert('الرجاء إدخال اسم المستخدم');
-                    return;
-                }
-                
-                alert(`تم إرسال طلب صداقة إلى ${friendUsername}`);
-                document.getElementById('friend-username').value = '';
-                modal.style.display = 'none';
-            });
-            
-            // إغلاق النموذج عند النقر خارج المحتوى
-            window.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-            
-            // تبديل الخوادم
-            const servers = document.querySelectorAll('.server');
-            servers.forEach(server => {
-                server.addEventListener('click', function() {
-                    servers.forEach(s => s.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // في تطبيق حقيقي، هنا سيتم تحميل قنوات الخادم المحدد
+            saveFriends() {
+                localStorage.setItem('voiceChat_friends', JSON.stringify(this.friends));
+            }
+
+            renderFriends() {
+                const membersList = document.getElementById('membersList');
+                membersList.innerHTML = '';
+
+                // Add current user first
+                const currentUserElement = this.createMemberElement(this.currentUser);
+                membersList.appendChild(currentUserElement);
+
+                // Add friends
+                this.friends.forEach(friend => {
+                    const friendElement = this.createMemberElement(friend);
+                    membersList.appendChild(friendElement);
                 });
-            });
-            
-            // تبديل القنوات
-            const channels = document.querySelectorAll('.channel');
-            channels.forEach(channel => {
-                channel.addEventListener('click', function() {
-                    channels.forEach(c => c.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // في تطبيق حقيقي، هنا سيتم الاتصال بالقناة المحددة
-                    const channelName = this.querySelector('span').textContent;
-                    document.querySelector('.audio-status').textContent = `متصل ب${channelName}`;
-                });
-            });
-            
-            // تبديل حالة الميكروفون
-            const micBtn = document.querySelector('.mic-btn');
-            micBtn.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const icon = this.querySelector('i');
-                if (this.classList.contains('active')) {
-                    icon.className = 'fas fa-microphone';
+            }
+
+            createMemberElement(user) {
+                const div = document.createElement('div');
+                div.className = 'member';
+                div.innerHTML = `
+                    <div class="member-avatar" style="background-color: ${user.color};">
+                        ${user.avatar}
+                        <div class="member-status" style="background-color: ${this.getStatusColor(user.status)};"></div>
+                    </div>
+                    <div class="member-name">${user.username}</div>
+                    ${user.game ? `<div class="member-game">${user.game}</div>` : ''}
+                `;
+                return div;
+            }
+
+            loadMessages() {
+                const savedMessages = localStorage.getItem('voiceChat_messages');
+                if (savedMessages) {
+                    this.messages = JSON.parse(savedMessages);
                 } else {
+                    this.messages = this.generateDefaultMessages();
+                    this.saveMessages();
+                }
+                this.renderMessages();
+            }
+
+            generateDefaultMessages() {
+                return [
+                    {
+                        id: this.generateId(),
+                        author: 'النظام',
+                        avatar: '⚙️',
+                        color: '#5865F2',
+                        time: this.formatTime(new Date()),
+                        text: 'مرحباً بك في VoiceChat! يمكنك البدء بالتحدث مع أصدقائك الآن.'
+                    },
+                    {
+                        id: this.generateId(),
+                        author: 'أحمد',
+                        avatar: 'أ',
+                        color: '#ED4245',
+                        time: this.formatTime(new Date(Date.now() - 300000)),
+                        text: 'هل هناك أحد يلعب فورتنايت؟'
+                    },
+                    {
+                        id: this.generateId(),
+                        author: 'سارة',
+                        avatar: 'س',
+                        color: '#FAA81A',
+                        time: this.formatTime(new Date(Date.now() - 180000)),
+                        text: 'نعم! أنا مستعدة للعب 😊'
+                    }
+                ];
+            }
+
+            saveMessages() {
+                localStorage.setItem('voiceChat_messages', JSON.stringify(this.messages));
+            }
+
+            renderMessages() {
+                const messagesContainer = document.getElementById('messages');
+                messagesContainer.innerHTML = '';
+
+                this.messages.forEach(message => {
+                    const messageElement = this.createMessageElement(message);
+                    messagesContainer.appendChild(messageElement);
+                });
+
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            createMessageElement(message) {
+                const div = document.createElement('div');
+                div.className = 'message';
+                div.innerHTML = `
+                    <div class="message-avatar" style="background-color: ${message.color};">${message.avatar}</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">${message.author}</span>
+                            <span class="message-time">${message.time}</span>
+                        </div>
+                        <div class="message-text">${message.text}</div>
+                    </div>
+                `;
+                return div;
+            }
+
+            formatTime(date) {
+                return date.toLocaleTimeString('ar-EG', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+            }
+
+            updateOnlineCount() {
+                const onlineCount = this.friends.filter(f => f.status === 'online').length + 1;
+                document.getElementById('onlineCount').textContent = `${onlineCount} متصل`;
+            }
+
+            setupAudioVisualizer() {
+                // Create audio context for visualizer
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.analyser = this.audioContext.createAnalyser();
+                this.analyser.fftSize = 256;
+                
+                // Create volume indicator for participants
+                setInterval(() => {
+                    this.updateVolumeIndicators();
+                }, 100);
+            }
+
+            updateVolumeIndicators() {
+                const participants = document.querySelectorAll('.participant');
+                participants.forEach(participant => {
+                    const volumeLevel = participant.querySelector('.volume-level');
+                    if (volumeLevel) {
+                        // Simulate random volume changes for demo
+                        const randomVolume = Math.random() * 100;
+                        volumeLevel.style.width = `${randomVolume}%`;
+                        
+                        // Add speaking effect
+                        if (randomVolume > 50) {
+                            participant.classList.add('participant-speaking');
+                        } else {
+                            participant.classList.remove('participant-speaking');
+                        }
+                    }
+                });
+            }
+
+            async startVoiceCall() {
+                try {
+                    // Request microphone access
+                    this.localStream = await navigator.mediaDevices.getUserMedia({
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true
+                        }
+                    });
+
+                    // Connect to audio context
+                    const source = this.audioContext.createMediaStreamSource(this.localStream);
+                    source.connect(this.analyser);
+
+                    // Show voice call interface
+                    this.showVoiceCall();
+
+                    // Add current user to participants
+                    this.addParticipant(this.currentUser);
+
+                    // Simulate adding friends to call
+                    this.friends
+                        .filter(friend => friend.status === 'online')
+                        .forEach(friend => {
+                            setTimeout(() => {
+                                this.addParticipant(friend);
+                            }, Math.random() * 1000);
+                        });
+
+                    // Show success message
+                    this.addSystemMessage('بدأت المكالمة الصوتية. يمكنك الآن التحدث مع الأصدقاء.');
+
+                } catch (error) {
+                    console.error('Error accessing microphone:', error);
+                    this.addSystemMessage('تعذر الوصول إلى الميكروفون. يرجى التحقق من الأذونات.');
+                }
+            }
+
+            showVoiceCall() {
+                const voiceCall = document.getElementById('voiceCall');
+                voiceCall.style.display = 'flex';
+                
+                // Hide voice controls
+                document.getElementById('voiceControls').style.display = 'none';
+            }
+
+            hideVoiceCall() {
+                const voiceCall = document.getElementById('voiceCall');
+                voiceCall.style.display = 'none';
+                
+                // Show voice controls
+                document.getElementById('voiceControls').style.display = 'flex';
+                
+                // Stop all tracks
+                if (this.localStream) {
+                    this.localStream.getTracks().forEach(track => track.stop());
+                    this.localStream = null;
+                }
+            }
+
+            addParticipant(user) {
+                const participantsContainer = document.getElementById('callParticipants');
+                const participant = document.createElement('div');
+                participant.className = 'participant';
+                participant.innerHTML = `
+                    <div class="participant-avatar" style="background-color: ${user.color};">${user.avatar}</div>
+                    <div class="participant-name">${user.username}</div>
+                    <div class="participant-status">${user.game ? `يلعب ${user.game}` : 'يتحدث'}</div>
+                    <div class="volume-indicator">
+                        <div class="volume-level"></div>
+                    </div>
+                `;
+                participantsContainer.appendChild(participant);
+            }
+
+            addSystemMessage(text) {
+                const message = {
+                    id: this.generateId(),
+                    author: 'النظام',
+                    avatar: '⚙️',
+                    color: '#5865F2',
+                    time: this.formatTime(new Date()),
+                    text: text
+                };
+                
+                this.messages.push(message);
+                this.saveMessages();
+                this.renderMessages();
+            }
+
+            sendMessage(text) {
+                if (!text.trim()) return;
+
+                const message = {
+                    id: this.generateId(),
+                    author: this.currentUser.username,
+                    avatar: this.currentUser.avatar,
+                    color: this.currentUser.color,
+                    time: this.formatTime(new Date()),
+                    text: text
+                };
+
+                this.messages.push(message);
+                this.saveMessages();
+                this.renderMessages();
+            }
+
+            setupEventListeners() {
+                // Profile modal
+                document.getElementById('userProfile').addEventListener('click', () => {
+                    this.showProfileModal();
+                });
+
+                document.getElementById('saveProfile').addEventListener('click', () => {
+                    this.saveProfile();
+                });
+
+                document.getElementById('cancelEdit').addEventListener('click', () => {
+                    this.hideProfileModal();
+                });
+
+                // Voice controls
+                document.getElementById('micToggle').addEventListener('click', () => {
+                    this.toggleMicrophone();
+                });
+
+                document.getElementById('headphoneToggle').addEventListener('click', () => {
+                    this.toggleHeadphones();
+                });
+
+                document.getElementById('disconnectBtn').addEventListener('click', () => {
+                    this.toggleVoiceCall();
+                });
+
+                document.getElementById('inviteBtn').addEventListener('click', () => {
+                    this.showInviteModal();
+                });
+
+                document.getElementById('settingsBtn').addEventListener('click', () => {
+                    this.showProfileModal();
+                });
+
+                document.getElementById('endCall').addEventListener('click', () => {
+                    this.hideVoiceCall();
+                    this.addSystemMessage('انتهت المكالمة الصوتية.');
+                });
+
+                // Invite modal
+                document.getElementById('copyInvite').addEventListener('click', () => {
+                    this.copyInviteLink();
+                });
+
+                document.getElementById('closeInvite').addEventListener('click', () => {
+                    this.hideInviteModal();
+                });
+
+                // Servers
+                document.querySelectorAll('.server').forEach(server => {
+                    server.addEventListener('click', (e) => {
+                        if (server.id === 'addServer') {
+                            this.addNewServer();
+                            return;
+                        }
+                        
+                        document.querySelectorAll('.server').forEach(s => s.classList.remove('active'));
+                        server.classList.add('active');
+                        
+                        const serverType = server.dataset.server;
+                        this.switchServer(serverType);
+                    });
+                });
+
+                // Channels
+                document.querySelectorAll('.channel').forEach(channel => {
+                    channel.addEventListener('click', () => {
+                        document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+                        channel.classList.add('active');
+                        
+                        const channelType = channel.dataset.channel;
+                        this.switchChannel(channelType);
+                    });
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    // Ctrl+M to toggle microphone
+                    if (e.ctrlKey && e.key === 'm') {
+                        e.preventDefault();
+                        this.toggleMicrophone();
+                    }
+                    
+                    // Ctrl+D to disconnect
+                    if (e.ctrlKey && e.key === 'd') {
+                        e.preventDefault();
+                        this.toggleVoiceCall();
+                    }
+                });
+
+                // Simulate incoming messages
+                setInterval(() => {
+                    if (Math.random() > 0.7 && this.friends.length > 0) {
+                        const randomFriend = this.friends[Math.floor(Math.random() * this.friends.length)];
+                        const messages = [
+                            'مرحباً بالجميع!',
+                            'من يريد اللعب معي؟',
+                            'كيف حالكم اليوم؟',
+                            'لقد أنهيت اللعبة للتو!',
+                            'هل يمكن أحد مساعدتي؟'
+                        ];
+                        
+                        const message = {
+                            id: this.generateId(),
+                            author: randomFriend.username,
+                            avatar: randomFriend.avatar,
+                            color: randomFriend.color,
+                            time: this.formatTime(new Date()),
+                            text: messages[Math.floor(Math.random() * messages.length)]
+                        };
+                        
+                        this.messages.push(message);
+                        this.saveMessages();
+                        this.renderMessages();
+                    }
+                }, 30000); // Every 30 seconds
+            }
+
+            toggleMicrophone() {
+                this.isMicMuted = !this.isMicMuted;
+                const micBtn = document.getElementById('micToggle');
+                const icon = micBtn.querySelector('i');
+                
+                if (this.isMicMuted) {
+                    micBtn.classList.remove('active');
                     icon.className = 'fas fa-microphone-slash';
-                }
-            });
-            
-            // تبديل حالة السماعات
-            const headphoneBtn = document.querySelector('.headphone-btn');
-            headphoneBtn.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const icon = this.querySelector('i');
-                if (this.classList.contains('active')) {
-                    icon.className = 'fas fa-headphones';
+                    this.addSystemMessage('تم إيقاف تشغيل الميكروفون.');
                 } else {
+                    micBtn.classList.add('active');
+                    icon.className = 'fas fa-microphone';
+                    this.addSystemMessage('تم تشغيل الميكروفون.');
+                }
+            }
+
+            toggleHeadphones() {
+                this.isHeadphoneMuted = !this.isHeadphoneMuted;
+                const headphoneBtn = document.getElementById('headphoneToggle');
+                const icon = headphoneBtn.querySelector('i');
+                
+                if (this.isHeadphoneMuted) {
+                    headphoneBtn.classList.remove('active');
                     icon.className = 'fas fa-headphones-slash';
+                    this.addSystemMessage('تم إيقاف تشغيل السماعات.');
+                } else {
+                    headphoneBtn.classList.add('active');
+                    icon.className = 'fas fa-headphones';
+                    this.addSystemMessage('تم تشغيل السماعات.');
                 }
-            });
-            
-            // قطع الاتصال
-            const disconnectBtn = document.querySelector('.btn-disconnect');
-            disconnectBtn.addEventListener('click', function() {
-                if (confirm('هل تريد قطع الاتصال من جميع القنوات؟')) {
-                    // في تطبيق حقيقي، هنا سيتم قطع الاتصال
-                    document.querySelector('.audio-status').textContent = 'غير متصل';
-                    document.querySelector('.btn-disconnect').innerHTML = '<i class="fas fa-phone"></i><span>الاتصال</span>';
-                    alert('تم قطع الاتصال');
+            }
+
+            toggleVoiceCall() {
+                const disconnectBtn = document.getElementById('disconnectBtn');
+                const icon = disconnectBtn.querySelector('i');
+                
+                if (disconnectBtn.classList.contains('danger')) {
+                    // Currently in call, disconnect
+                    this.hideVoiceCall();
+                    disconnectBtn.classList.remove('danger');
+                    icon.className = 'fas fa-phone';
+                    this.addSystemMessage('انتهت المكالمة الصوتية.');
+                } else {
+                    // Not in call, start call
+                    this.startVoiceCall();
+                    disconnectBtn.classList.add('danger');
+                    icon.className = 'fas fa-phone-slash';
                 }
-            });
+            }
+
+            showProfileModal() {
+                const modal = document.getElementById('profileModal');
+                const usernameInput = document.getElementById('editUsername');
+                const colorInput = document.getElementById('editColor');
+                const statusSelect = document.getElementById('editStatus');
+                
+                usernameInput.value = this.currentUser.username;
+                colorInput.value = this.currentUser.color;
+                statusSelect.value = this.currentUser.status;
+                
+                modal.style.display = 'flex';
+            }
+
+            hideProfileModal() {
+                document.getElementById('profileModal').style.display = 'none';
+            }
+
+            saveProfile() {
+                const username = document.getElementById('editUsername').value;
+                const color = document.getElementById('editColor').value;
+                const status = document.getElementById('editStatus').value;
+                
+                this.currentUser.username = username;
+                this.currentUser.color = color;
+                this.currentUser.status = status;
+                this.currentUser.avatar = username.charAt(0);
+                
+                this.saveUserData();
+                this.updateUserUI();
+                this.renderFriends(); // Update in friends list
+                this.updateOnlineCount();
+                this.hideProfileModal();
+                
+                this.addSystemMessage('تم تحديث الملف الشخصي.');
+            }
+
+            showInviteModal() {
+                document.getElementById('inviteModal').style.display = 'flex';
+            }
+
+            hideInviteModal() {
+                document.getElementById('inviteModal').style.display = 'none';
+            }
+
+            copyInviteLink() {
+                const inviteLink = document.getElementById('inviteLink');
+                inviteLink.select();
+                inviteLink.setSelectionRange(0, 99999);
+                
+                try {
+                    navigator.clipboard.writeText(inviteLink.value);
+                    this.addSystemMessage('تم نسخ رابط الدعوة.');
+                } catch (err) {
+                    // Fallback for older browsers
+                    document.execCommand('copy');
+                    this.addSystemMessage('تم نسخ رابط الدعوة.');
+                }
+            }
+
+            switchServer(serverType) {
+                const serverNames = {
+                    home: 'الرئيسية',
+                    gaming: 'الألعاب',
+                    study: 'الدراسة',
+                    music: 'الموسيقى'
+                };
+                
+                this.addSystemMessage(`تم التبديل إلى خادم ${serverNames[serverType] || serverType}`);
+            }
+
+            switchChannel(channelType) {
+                const channelNames = {
+                    general: 'عام 🔊',
+                    gaming: 'ألعاب 🎮',
+                    chat: 'دردشة 💬',
+                    'general-text': 'نصي عام',
+                    help: 'مساعدة'
+                };
+                
+                document.querySelector('.chat-header h2').textContent = 
+                    channelNames[channelType] || channelType;
+                
+                this.addSystemMessage(`تم التبديل إلى قناة ${channelNames[channelType] || channelType}`);
+            }
+
+            addNewServer() {
+                const serverName = prompt('أدخل اسم الخادم الجديد:');
+                if (serverName) {
+                    const serversContainer = document.querySelector('.servers');
+                    const newServer = document.createElement('div');
+                    newServer.className = 'server';
+                    newServer.dataset.server = serverName.toLowerCase();
+                    newServer.innerHTML = `<i class="fas fa-hashtag"></i>`;
+                    
+                    // Add before the add button
+                    serversContainer.insertBefore(newServer, document.getElementById('addServer'));
+                    
+                    this.addSystemMessage(`تم إنشاء خادم جديد: ${serverName}`);
+                }
+            }
         }
 
-        // وظائف الأزرار
-        function callFriend(friendId) {
-            const friend = friendsData.find(f => f.id === friendId);
-            alert(`جاري الاتصال بـ ${friend.name}...`);
-        }
-
-        function messageFriend(friendId) {
-            const friend = friendsData.find(f => f.id === friendId);
-            alert(`فتح محادثة مع ${friend.name}`);
-        }
-
-        function joinGame(friendId) {
-            const friend = friendsData.find(f => f.id === friendId);
-            alert(`الانضمام إلى لعبة ${friend.game} مع ${friend.name}`);
-        }
+        // Initialize the app
+        window.addEventListener('DOMContentLoaded', () => {
+            window.voiceChatApp = new VoiceChatApp();
+        });
     </script>
 </body>
-                        </html>
+</html>
