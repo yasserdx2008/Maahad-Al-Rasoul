@@ -3,1393 +3,2209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoiceChat - تواصل صوتي مباشر</title>
+    <title>YRoyal Store - خدمات التواصل الاجتماعي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        royal: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary: #5865F2;
-            --primary-dark: #4752C4;
-            --secondary: #4F545C;
-            --dark: #2F3136;
-            --darker: #202225;
-            --text: #FFFFFF;
-            --text-secondary: #B9BBBE;
-            --success: #3BA55D;
-            --danger: #ED4245;
-            --warning: #FAA81A;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2F3136 0%, #202225 100%);
-            color: var(--text);
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .app-container {
-            display: grid;
-            grid-template-columns: 72px 240px 1fr 320px;
-            grid-template-rows: 48px 1fr 52px;
-            height: 100vh;
-            gap: 1px;
-            background: var(--darker);
-        }
-
-        /* Header */
-        .header {
-            grid-column: 1 / 5;
-            background: var(--darker);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            border-bottom: 1px solid rgba(0,0,0,0.2);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo i {
-            color: var(--primary);
-            font-size: 24px;
-        }
-
-        .logo h1 {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--dark);
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            position: relative;
-        }
-
-        .status-indicator {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--success);
-            border: 2px solid var(--dark);
-        }
-
-        /* Servers Sidebar */
-        .servers {
-            background: var(--darker);
-            padding: 12px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            overflow-y: auto;
-        }
-
-        .server {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .server:hover {
-            background: var(--primary);
-            border-radius: 16px;
-        }
-
-        .server.active {
-            background: var(--primary);
-            border-radius: 16px;
-        }
-
-        .server-add {
-            background: var(--success);
-            color: white;
-        }
-
-        /* Channels Sidebar */
-        .channels {
-            background: var(--dark);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .channel-category {
-            padding: 16px 16px 8px;
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .channel {
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            margin: 0 8px;
-            border-radius: 4px;
-        }
-
-        .channel:hover {
-            background: rgba(79, 84, 92, 0.3);
-            color: var(--text);
-        }
-
-        .channel.active {
-            background: rgba(79, 84, 92, 0.6);
-            color: var(--text);
-        }
-
-        .channel i {
-            font-size: 14px;
-        }
-
-        .channel-text i {
-            color: var(--text-secondary);
-        }
-
-        .channel-voice i {
-            color: var(--success);
-        }
-
-        /* Chat Area */
-        .chat {
-            background: var(--dark);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 16px;
-            border-bottom: 1px solid rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .chat-header i {
-            color: var(--success);
-        }
-
-        .messages {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .message {
-            display: flex;
-            gap: 12px;
-            padding: 4px 0;
-        }
-
-        .message:hover {
-            background: rgba(79, 84, 92, 0.1);
-        }
-
-        .message-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .message-content {
-            flex: 1;
-        }
-
-        .message-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
-
-        .message-author {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .message-time {
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-
-        .message-text {
-            color: var(--text);
-            line-height: 1.4;
-        }
-
-        /* Voice Controls */
-        .voice-controls {
-            position: absolute;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--darker);
-            padding: 16px;
-            border-radius: 8px;
-            display: flex;
-            gap: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            z-index: 100;
-        }
-
-        .control-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: none;
-            background: var(--secondary);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .control-btn:hover {
-            background: var(--primary);
-        }
-
-        .control-btn.active {
-            background: var(--success);
-        }
-
-        .control-btn.danger {
-            background: var(--danger);
-        }
-
-        .control-btn.danger:hover {
-            background: #c03537;
-        }
-
-        /* Members List */
-        .members {
-            background: var(--dark);
-            padding: 16px;
-            overflow-y: auto;
-        }
-
-        .members-header {
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .member {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .member:hover {
-            background: rgba(79, 84, 92, 0.3);
-        }
-
-        .member-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            position: relative;
-        }
-
-        .member-status {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: 2px solid var(--dark);
-        }
-
-        .member-name {
-            flex: 1;
-            font-size: 14px;
-        }
-
-        .member-game {
-            color: var(--text-secondary);
-            font-size: 12px;
-        }
-
-        /* Voice Call Interface */
-        .voice-call {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--darker);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-        }
-
-        .call-header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .call-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .call-participants {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .participant {
-            background: var(--dark);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            gap: 12px;
-            position: relative;
-        }
-
-        .participant-speaking {
-            box-shadow: 0 0 0 3px var(--success);
-        }
-
-        .participant-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .participant-name {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .participant-status {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .volume-indicator {
-            width: 100%;
-            height: 4px;
-            background: var(--secondary);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        .volume-level {
-            height: 100%;
-            background: var(--success);
-            width: 30%;
-            transition: width 0.2s;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .modal-content {
-            background: var(--dark);
-            border-radius: 8px;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .modal-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--text);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            background: var(--darker);
-            border: 1px solid var(--secondary);
-            border-radius: 4px;
-            color: var(--text);
-            font-size: 16px;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 30px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5d6269;
-        }
-
-        /* Scrollbar */
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f9fafb;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #6b21a8 0%, #9333ea 100%);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .dashboard-card:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
-
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: #f1f1f1;
         }
-
         ::-webkit-scrollbar-thumb {
-            background: var(--secondary);
+            background: #a855f7;
             border-radius: 4px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
-            background: #5d6269;
+            background: #7e22ce;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        /* Tab styles */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
-<body>
-    <div class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <i class="fas fa-headset"></i>
-                <h1>VoiceChat</h1>
-            </div>
-            <div class="user-profile" id="userProfile">
-                <div class="avatar" id="userAvatar">م</div>
-                <div class="user-info">
-                    <div class="username" id="username">محمد</div>
-                    <div class="user-status">#1234</div>
+<body class="text-gray-800">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <a href="#" class="flex items-center space-x-2 space-x-reverse">
+                        <i class="fas fa-crown text-2xl text-yellow-300"></i>
+                        <span class="text-xl font-bold">YRoyal Store</span>
+                    </a>
                 </div>
-            </div>
-        </header>
-
-        <!-- Servers Sidebar -->
-        <nav class="servers">
-            <div class="server active" data-server="home">
-                <i class="fas fa-home"></i>
-            </div>
-            <div class="server" data-server="gaming">
-                <i class="fas fa-gamepad"></i>
-            </div>
-            <div class="server" data-server="study">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="server" data-server="music">
-                <i class="fas fa-music"></i>
-            </div>
-            <div class="server server-add" id="addServer">
-                <i class="fas fa-plus"></i>
-            </div>
-        </nav>
-
-        <!-- Channels Sidebar -->
-        <aside class="channels">
-            <div class="channel-category">القنوات الصوتية</div>
-            <div class="channel channel-voice active" data-channel="general">
-                <i class="fas fa-volume-up"></i>
-                <span>عام 🔊</span>
-            </div>
-            <div class="channel channel-voice" data-channel="gaming">
-                <i class="fas fa-volume-up"></i>
-                <span>ألعاب 🎮</span>
-            </div>
-            <div class="channel channel-voice" data-channel="chat">
-                <i class="fas fa-volume-up"></i>
-                <span>دردشة 💬</span>
-            </div>
-
-            <div class="channel-category">القنوات النصية</div>
-            <div class="channel channel-text" data-channel="general-text">
-                <i class="fas fa-hashtag"></i>
-                <span>عام</span>
-            </div>
-            <div class="channel channel-text" data-channel="help">
-                <i class="fas fa-hashtag"></i>
-                <span>مساعدة</span>
-            </div>
-        </aside>
-
-        <!-- Main Chat Area -->
-        <main class="chat">
-            <div class="chat-header">
-                <i class="fas fa-volume-up"></i>
-                <h2>عام 🔊</h2>
-                <span class="online-count" id="onlineCount">0 متصل</span>
-            </div>
-
-            <div class="messages" id="messages">
-                <!-- Messages will be loaded here -->
-            </div>
-
-            <!-- Voice Controls -->
-            <div class="voice-controls" id="voiceControls">
-                <button class="control-btn" id="micToggle">
-                    <i class="fas fa-microphone"></i>
-                </button>
-                <button class="control-btn" id="headphoneToggle">
-                    <i class="fas fa-headphones"></i>
-                </button>
-                <button class="control-btn danger" id="disconnectBtn">
-                    <i class="fas fa-phone-slash"></i>
-                </button>
-                <button class="control-btn" id="inviteBtn">
-                    <i class="fas fa-user-plus"></i>
-                </button>
-                <button class="control-btn" id="settingsBtn">
-                    <i class="fas fa-cog"></i>
-                </button>
-            </div>
-        </main>
-
-        <!-- Members List -->
-        <aside class="members">
-            <div class="members-header">الأعضاء المتصلون</div>
-            <div class="members-list" id="membersList">
-                <!-- Members will be loaded here -->
-            </div>
-        </aside>
-
-        <!-- Voice Call Interface -->
-        <div class="voice-call" id="voiceCall">
-            <div class="call-header">
-                <div class="call-title">
-                    <i class="fas fa-volume-up"></i>
-                    <span>مكالمة صوتية نشطة</span>
+                
+                <div class="hidden md:flex items-center space-x-6 space-x-reverse">
+                    <a href="#" class="nav-link px-3 py-2 rounded-lg transition">الرئيسية</a>
+                    <a href="#services" class="nav-link px-3 py-2 rounded-lg transition">الخدمات</a>
+                    <a href="#dashboard" class="nav-link px-3 py-2 rounded-lg transition">لوحة التحكم</a>
+                    <a href="#how-it-works" class="nav-link px-3 py-2 rounded-lg transition">كيفية العمل</a>
+                    <a href="#pricing" class="nav-link px-3 py-2 rounded-lg transition">الأسعار</a>
+                    <a href="#blog" class="nav-link px-3 py-2 rounded-lg transition">المدونة</a>
+                    <a href="#contact" class="nav-link px-3 py-2 rounded-lg transition">اتصل بنا</a>
                 </div>
-                <button class="control-btn danger" id="endCall">
-                    <i class="fas fa-phone-slash"></i>
-                </button>
-            </div>
-            <div class="call-participants" id="callParticipants">
-                <!-- Participants will be added here -->
-            </div>
-        </div>
-
-        <!-- Modals -->
-        <div class="modal" id="profileModal">
-            <div class="modal-content">
-                <h2 class="modal-title">تعديل الملف الشخصي</h2>
-                <div class="form-group">
-                    <label class="form-label">اسم المستخدم</label>
-                    <input type="text" class="form-input" id="editUsername" value="محمد">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">اللون</label>
-                    <input type="color" class="form-input" id="editColor" value="#5865F2">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">الحالة</label>
-                    <select class="form-input" id="editStatus">
-                        <option value="online">متصل</option>
-                        <option value="idle">مشغول</option>
-                        <option value="dnd">عدم الإزعاج</option>
-                        <option value="offline">غير متصل</option>
-                    </select>
-                </div>
-                <div class="form-actions">
-                    <button class="btn btn-secondary" id="cancelEdit">إلغاء</button>
-                    <button class="btn btn-primary" id="saveProfile">حفظ</button>
+                
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <button id="languageBtn" class="flex items-center space-x-1 space-x-reverse text-white">
+                            <i class="fas fa-globe"></i>
+                            <span>العربية</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="languageDropdown" class="absolute hidden mt-2 bg-white text-gray-800 rounded-lg shadow-lg w-32">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">العربية</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">English</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <div class="relative">
+                        <button id="notificationBtn" class="relative p-2">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <div id="notificationDropdown" class="absolute hidden mt-2 bg-white text-gray-800 rounded-lg shadow-lg w-64 right-0">
+                            <div class="p-4 border-b">
+                                <h3 class="font-bold">الإشعارات</h3>
+                            </div>
+                            <div class="max-h-64 overflow-y-auto">
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-100 border-b">
+                                    <div class="text-sm font-medium">طلب جديد مكتمل</div>
+                                    <div class="text-xs text-gray-500">قبل 5 دقائق</div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-100 border-b">
+                                    <div class="text-sm font-medium">تم إضافة نقاط جديدة</div>
+                                    <div class="text-xs text-gray-500">قبل ساعة</div>
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-100">
+                                    <div class="text-sm font-medium">خصم خاص على خدمات التيك توك</div>
+                                    <div class="text-xs text-gray-500">قبل يوم</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 space-x-reverse">
+                            <div class="w-8 h-8 bg-royal-100 rounded-full flex items-center justify-center">
+                                <span class="text-royal-600 font-bold">م</span>
+                            </div>
+                            <span class="hidden md:inline text-white">محمد أحمد</span>
+                            <i class="fas fa-chevron-down text-xs text-white"></i>
+                        </button>
+                        <div id="userMenuDropdown" class="absolute hidden mt-2 bg-white text-gray-800 rounded-lg shadow-lg w-48 right-0">
+                            <a href="#dashboard" class="block px-4 py-3 hover:bg-gray-100 border-b">
+                                <i class="fas fa-tachometer-alt mr-2"></i>
+                                لوحة التحكم
+                            </a>
+                            <a href="#orders" class="block px-4 py-3 hover:bg-gray-100 border-b">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                طلباتي
+                            </a>
+                            <a href="#settings" class="block px-4 py-3 hover:bg-gray-100 border-b">
+                                <i class="fas fa-cog mr-2"></i>
+                                الإعدادات
+                            </a>
+                            <a href="#referral" class="block px-4 py-3 hover:bg-gray-100 border-b">
+                                <i class="fas fa-user-friends mr-2"></i>
+                                نظام الإحالة
+                            </a>
+                            <a href="#" class="block px-4 py-3 hover:bg-gray-100 text-red-600">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                تسجيل الخروج
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden text-white focus:outline-none" id="mobileMenuBtn">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <div class="modal" id="inviteModal">
-            <div class="modal-content">
-                <h2 class="modal-title">دعوة صديق</h2>
-                <div class="form-group">
-                    <label class="form-label">رابط الدعوة</label>
-                    <input type="text" class="form-input" id="inviteLink" value="https://voicechat.com/invite/abc123" readonly>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-50 p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h3 class="text-xl font-bold text-royal-800">القائمة</h3>
+            <button id="closeMobileMenu" class="text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div class="space-y-4">
+            <a href="#" class="block py-3 px-4 rounded-lg hover:bg-royal-50 text-gray-700">الرئيسية</a>
+            <a href="#services" class="block py-3 px-4 rounded-lg hover:bg-royal-50 text-gray-700">الخدمات</a>
+            <a href="#dashboard" class="block py-3 px-4 rounded-lg hover:bg-royal-50 text-gray-700">لوحة التحكم</a>
+            <a href="#how-it-works" class="block py-3 px-4 rounded-lg hover:bg-royal-50 text-gray-700">كيفية العمل</a>
+            <a href="#pricing" class="block py-3 px-4 rounded-lg hover:bg-royal-50 text-gray-700">الأسعار</a>
+            <a href="#blog" class="block py-3 px-4 rounded-lg hover:bg-royal-50 text-gray-700">المدونة</a>
+            <a href="#contact" class="block py-3 px-4 rounded-lg hover:bg-royal-50 text-gray-700">اتصل بنا</a>
+        </div>
+        
+        <div class="mt-8 pt-8 border-t">
+            <div class="flex items-center space-x-3 space-x-reverse mb-4">
+                <div class="w-10 h-10 bg-royal-100 rounded-full flex items-center justify-center">
+                    <span class="text-royal-600 font-bold">م</span>
                 </div>
-                <p style="color: var(--text-secondary); margin: 20px 0; font-size: 14px;">
-                    شارك هذا الرابط مع أصدقائك للانضمام إلى هذه القناة.
-                </p>
-                <div class="form-actions">
-                    <button class="btn btn-primary" id="copyInvite">نسخ الرابط</button>
-                    <button class="btn btn-secondary" id="closeInvite">إغلاق</button>
+                <div>
+                    <div class="font-medium">محمد أحمد</div>
+                    <div class="text-sm text-gray-500">1,500 نقطة</div>
+                </div>
+            </div>
+            
+            <a href="#" class="block py-2 text-center bg-royal-600 text-white rounded-lg hover:bg-royal-700">تسجيل الخروج</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-16">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-10 md:mb-0">
+                        <h1 class="text-4xl md:text-5xl font-bold mb-6">احصل على متابعين حقيقيين لجميع منصاتك</h1>
+                        <p class="text-xl mb-8">YRoyal Store تقدم لك أفضل خدمات زيادة المتابعين، الإعجابات والمشاهدات بأسعار تنافسية وجودة عالية.</p>
+                        <div class="flex space-x-4 space-x-reverse">
+                            <a href="#services" class="bg-white text-royal-700 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition">تصفح الخدمات</a>
+                            <a href="#how-it-works" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-bold hover:bg-white hover:text-royal-700 transition">كيفية العمل</a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 flex justify-center">
+                        <div class="relative w-full max-w-md">
+                            <div class="absolute -top-6 -right-6 w-32 h-32 bg-yellow-300 rounded-full opacity-20"></div>
+                            <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-pink-400 rounded-full opacity-20"></div>
+                            <div class="relative bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-white border-opacity-20">
+                                <div class="flex items-center mb-6">
+                                    <div class="bg-royal-600 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-coins text-yellow-300 text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-xl">نظام النقاط</h3>
+                                        <p class="text-gray-200">اشترِ النقاط واستخدمها للحصول على الخدمات</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center mb-6">
+                                    <div class="bg-royal-600 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-bolt text-yellow-300 text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-xl">توصيل سريع</h3>
+                                        <p class="text-gray-200">يبدأ التوصيل خلال دقائق من الطلب</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-royal-600 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-shield-alt text-yellow-300 text-2xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-xl">ضمان استعادة النقاط</h3>
+                                        <p class="text-gray-200">في حال وجود أي مشكلة في الخدمة</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-royal-800 mb-4">لوحة التحكم</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">إدارة حسابك وطلباتك ومعلوماتك الشخصية</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <!-- Stats Cards -->
+                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-royal-100 rounded-lg">
+                                <i class="fas fa-coins text-royal-600 text-2xl"></i>
+                            </div>
+                            <span class="text-sm text-gray-500">الرصيد الحالي</span>
+                        </div>
+                        <div class="text-2xl font-bold text-royal-700 mb-1">1,500 نقطة</div>
+                        <div class="text-sm text-gray-600">≈ $15.00</div>
+                    </div>
+                    
+                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-green-100 rounded-lg">
+                                <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                            </div>
+                            <span class="text-sm text-gray-500">طلبات مكتملة</span>
+                        </div>
+                        <div class="text-2xl font-bold text-royal-700 mb-1">24</div>
+                        <div class="text-sm text-gray-600">+3 هذا الشهر</div>
+                    </div>
+                    
+                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-blue-100 rounded-lg">
+                                <i class="fas fa-spinner text-blue-600 text-2xl"></i>
+                            </div>
+                            <span class="text-sm text-gray-500">طلبات قيد المعالجة</span>
+                        </div>
+                        <div class="text-2xl font-bold text-royal-700 mb-1">2</div>
+                        <div class="text-sm text-gray-600">قيد التنفيذ</div>
+                    </div>
+                    
+                    <div class="dashboard-card bg-white rounded-xl shadow-md p-6 transition duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-purple-100 rounded-lg">
+                                <i class="fas fa-user-friends text-purple-600 text-2xl"></i>
+                            </div>
+                            <span class="text-sm text-gray-500">الإحالات</span>
+                        </div>
+                        <div class="text-2xl font-bold text-royal-700 mb-1">5</div>
+                        <div class="text-sm text-gray-600">+250 نقطة مكافأة</div>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Tabs -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="border-b">
+                        <div class="flex overflow-x-auto">
+                            <button class="tab-btn px-6 py-4 font-medium border-b-2 border-transparent hover:bg-gray-50" data-tab="orders">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                طلباتي
+                            </button>
+                            <button class="tab-btn px-6 py-4 font-medium border-b-2 border-transparent hover:bg-gray-50" data-tab="transactions">
+                                <i class="fas fa-exchange-alt mr-2"></i>
+                                المعاملات
+                            </button>
+                            <button class="tab-btn px-6 py-4 font-medium border-b-2 border-transparent hover:bg-gray-50" data-tab="referral">
+                                <i class="fas fa-user-friends mr-2"></i>
+                                نظام الإحالة
+                            </button>
+                            <button class="tab-btn px-6 py-4 font-medium border-b-2 border-transparent hover:bg-gray-50" data-tab="settings">
+                                <i class="fas fa-cog mr-2"></i>
+                                الإعدادات
+                            </button>
+                            <button class="tab-btn px-6 py-4 font-medium border-b-2 border-transparent hover:bg-gray-50" data-tab="api">
+                                <i class="fas fa-code mr-2"></i>
+                                API
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <!-- Orders Tab -->
+                        <div id="orders-tab" class="tab-content active">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6">طلباتي الأخيرة</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-right">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="py-3 px-4 font-medium">رقم الطلب</th>
+                                            <th class="py-3 px-4 font-medium">الخدمة</th>
+                                            <th class="py-3 px-4 font-medium">الحالة</th>
+                                            <th class="py-3 px-4 font-medium">التكلفة</th>
+                                            <th class="py-3 px-4 font-medium">التاريخ</th>
+                                            <th class="py-3 px-4 font-medium">إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="py-3 px-4">#ORD-7842</td>
+                                            <td class="py-3 px-4">متابعين انستجرام (500)</td>
+                                            <td class="py-3 px-4">
+                                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">مكتمل</span>
+                                            </td>
+                                            <td class="py-3 px-4">250 نقطة</td>
+                                            <td class="py-3 px-4">2024-03-15</td>
+                                            <td class="py-3 px-4">
+                                                <button class="text-royal-600 hover:text-royal-800">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="py-3 px-4">#ORD-7841</td>
+                                            <td class="py-3 px-4">إعجابات تيك توك (1000)</td>
+                                            <td class="py-3 px-4">
+                                                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">قيد المعالجة</span>
+                                            </td>
+                                            <td class="py-3 px-4">120 نقطة</td>
+                                            <td class="py-3 px-4">2024-03-14</td>
+                                            <td class="py-3 px-4">
+                                                <button class="text-royal-600 hover:text-royal-800">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-3 px-4">#ORD-7840</td>
+                                            <td class="py-3 px-4">مشاهدات يوتيوب (5000)</td>
+                                            <td class="py-3 px-4">
+                                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">معلق</span>
+                                            </td>
+                                            <td class="py-3 px-4">300 نقطة</td>
+                                            <td class="py-3 px-4">2024-03-13</td>
+                                            <td class="py-3 px-4">
+                                                <button class="text-royal-600 hover:text-royal-800">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Transactions Tab -->
+                        <div id="transactions-tab" class="tab-content">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6">سجل المعاملات</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <div class="p-3 bg-green-100 rounded-lg mr-4">
+                                            <i class="fas fa-plus text-green-600"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium">شراء نقاط</div>
+                                            <div class="text-sm text-gray-500">بواسطة PayPal</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-medium text-green-600">+2,000 نقطة</div>
+                                        <div class="text-sm text-gray-500">2024-03-15</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <div class="p-3 bg-red-100 rounded-lg mr-4">
+                                            <i class="fas fa-minus text-red-600"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium">طلب خدمة</div>
+                                            <div class="text-sm text-gray-500">متابعين انستجرام</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-medium text-red-600">-250 نقطة</div>
+                                        <div class="text-sm text-gray-500">2024-03-15</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <div class="p-3 bg-blue-100 rounded-lg mr-4">
+                                            <i class="fas fa-gift text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium">مكافأة إحالة</div>
+                                            <div class="text-sm text-gray-500">من أحمد محمد</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-medium text-blue-600">+50 نقطة</div>
+                                        <div class="text-sm text-gray-500">2024-03-14</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Referral Tab -->
+                        <div id="referral-tab" class="tab-content">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                                <h3 class="text-xl font-bold text-gray-800">نظام الإحالة</h3>
+                                <div class="mt-4 md:mt-0">
+                                    <span class="text-gray-600">كود الإحالة الخاص بك:</span>
+                                    <div class="flex items-center mt-2">
+                                        <code class="bg-gray-100 px-4 py-2 rounded-lg font-mono" id="referralCode">YROYAL-7A8B9C</code>
+                                        <button onclick="copyReferralCode()" class="mr-2 px-3 py-2 bg-royal-600 text-white rounded-lg hover:bg-royal-700">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                                <div class="bg-royal-50 p-6 rounded-xl">
+                                    <div class="text-3xl font-bold text-royal-700 mb-2">5</div>
+                                    <div class="text-gray-600">عدد الإحالات</div>
+                                </div>
+                                <div class="bg-green-50 p-6 rounded-xl">
+                                    <div class="text-3xl font-bold text-green-700 mb-2">250</div>
+                                    <div class="text-gray-600">نقاط المكافأة</div>
+                                </div>
+                                <div class="bg-purple-50 p-6 rounded-xl">
+                                    <div class="text-3xl font-bold text-purple-700 mb-2">$12.50</div>
+                                    <div class="text-gray-600">إجمالي العمولات</div>
+                                </div>
+                            </div>
+                            
+                            <h4 class="text-lg font-bold text-gray-800 mb-4">كيف يعمل نظام الإحالة؟</h4>
+                            <ul class="space-y-3 text-gray-600 mb-6">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>احصل على كود إحالة فريد وشاركه مع أصدقائك</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>عند تسجيل صديق باستخدام كودك، يحصل على 100 نقطة مجانية</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>تحصل أنت على 50 نقطة مكافأة لكل إحالة ناجحة</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span>تحصل على 10% من مشتريات صديقك لمدة 3 أشهر</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Settings Tab -->
+                        <div id="settings-tab" class="tab-content">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6">الإعدادات الشخصية</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <!-- Security Settings -->
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-4">الأمان</h4>
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="font-medium">المصادقة الثنائية (2FA)</div>
+                                                <div class="text-sm text-gray-500">طبقة أمان إضافية لحسابك</div>
+                                            </div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" class="sr-only peer">
+                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-royal-600"></div>
+                                            </label>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="font-medium mb-2">تغيير كلمة المرور</div>
+                                            <button class="px-4 py-2 border border-royal-600 text-royal-600 rounded-lg hover:bg-royal-50">
+                                                تغيير كلمة المرور
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Notification Settings -->
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-4">الإشعارات</h4>
+                                    <div class="space-y-4">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="font-medium">إشعارات البريد الإلكتروني</div>
+                                                <div class="text-sm text-gray-500">تحديثات الطلبات والعروض</div>
+                                            </div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" checked class="sr-only peer">
+                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-royal-600"></div>
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="font-medium">إشعارات WhatsApp</div>
+                                                <div class="text-sm text-gray-500">تحديثات فورية للطلبات</div>
+                                            </div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" class="sr-only peer">
+                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-royal-600"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- API Tab -->
+                        <div id="api-tab" class="tab-content">
+                            <h3 class="text-xl font-bold text-gray-800 mb-6">واجهة برمجة التطبيقات (API)</h3>
+                            
+                            <div class="bg-gray-50 p-6 rounded-xl mb-6">
+                                <p class="text-gray-600 mb-4">استخدم واجهة برمجة التطبيقات (API) لدمج خدمات YRoyal Store مع أنظمتك الأخرى تلقائيًا.</p>
+                                
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <div class="font-medium">مفتاح API الخاص بك</div>
+                                        <div class="text-sm text-gray-500">استخدم هذا المفتاح للتوثيق</div>
+                                    </div>
+                                    <button class="px-4 py-2 bg-royal-600 text-white rounded-lg hover:bg-royal-700">
+                                        إنشاء مفتاح جديد
+                                    </button>
+                                </div>
+                                
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <code class="text-sm">yroyal_sk_live_7a8b9c0d1e2f3g4h5i6j7k8l9m0n1o2p</code>
+                                </div>
+                            </div>
+                            
+                            <h4 class="font-bold text-gray-800 mb-4">نقاط النهاية المتاحة</h4>
+                            <div class="space-y-4">
+                                <div class="border rounded-lg overflow-hidden">
+                                    <div class="bg-gray-800 text-white p-3 font-mono text-sm">
+                                        <span class="text-green-400">POST</span> /api/v1/orders/create
+                                    </div>
+                                    <div class="p-4">
+                                        <p class="text-gray-600 mb-2">إنشاء طلب جديد</p>
+                                        <code class="text-sm bg-gray-100 p-2 rounded block">{
+  "service_id": "insta_followers_1000",
+  "quantity": 1,
+  "target_url": "https://instagram.com/username"
+}</code>
+                                    </div>
+                                </div>
+                                
+                                <div class="border rounded-lg overflow-hidden">
+                                    <div class="bg-gray-800 text-white p-3 font-mono text-sm">
+                                        <span class="text-blue-400">GET</span> /api/v1/balance
+                                    </div>
+                                    <div class="p-4">
+                                        <p class="text-gray-600">الحصول على رصيد النقاط الحالي</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="bg-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                    <div class="p-6 rounded-xl border border-gray-200">
+                        <div class="text-4xl font-bold text-royal-600 mb-2">1,250+</div>
+                        <div class="text-gray-600">عملاء راضون</div>
+                    </div>
+                    <div class="p-6 rounded-xl border border-gray-200">
+                        <div class="text-4xl font-bold text-royal-600 mb-2">25,000+</div>
+                        <div class="text-gray-600">طلبات مكتملة</div>
+                    </div>
+                    <div class="p-6 rounded-xl border border-gray-200">
+                        <div class="text-4xl font-bold text-royal-600 mb-2">98%</div>
+                        <div class="text-gray-600">رضا العملاء</div>
+                    </div>
+                    <div class="p-6 rounded-xl border border-gray-200">
+                        <div class="text-4xl font-bold text-royal-600 mb-2">24/7</div>
+                        <div class="text-gray-600">دعم فني</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-royal-800 mb-4">خدماتنا المميزة</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">نقدم مجموعة واسعة من الخدمات لجميع منصات التواصل الاجتماعي بجودة عالية وسرعة في التوصيل</p>
+                </div>
+                
+                <!-- Service Filters -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="px-4 py-2 bg-royal-600 text-white rounded-lg font-medium">الكل</button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg font-medium hover:bg-gray-50">انستجرام</button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg font-medium hover:bg-gray-50">تيك توك</button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg font-medium hover:bg-gray-50">يوتيوب</button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg font-medium hover:bg-gray-50">تويتر</button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg font-medium hover:bg-gray-50">فيسبوك</button>
+                </div>
+                
+                <!-- Services Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Instagram Service -->
+                    <div class="service-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                            <i class="fab fa-instagram text-white text-7xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold text-gray-800">متابعين انستجرام</h3>
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                    <span class="text-gray-600 text-sm mr-1">4.8</span>
+                                    <span class="text-gray-400 text-sm">(124)</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">احصل على متابعين حقيقيين ونشطين لحسابك</p>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">100 متابع</span>
+                                    <span class="font-medium text-royal-600">50 نقطة</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">500 متابع</span>
+                                    <span class="font-medium text-royal-600">200 نقطة</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">1,000 متابع</span>
+                                    <span class="font-medium text-royal-600">350 نقطة</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2 space-x-reverse">
+                                <button class="flex-1 bg-royal-600 text-white py-2 rounded-lg font-medium hover:bg-royal-700 transition">اطلب الآن</button>
+                                <button class="px-4 py-2 border border-royal-600 text-royal-600 rounded-lg font-medium hover:bg-royal-50">التفاصيل</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- TikTok Service -->
+                    <div class="service-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                            <i class="fab fa-tiktok text-white text-7xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold text-gray-800">إعجابات تيك توك</h3>
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                    <span class="text-gray-600 text-sm mr-1">4.9</span>
+                                    <span class="text-gray-400 text-sm">(98)</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">زيادة إعجابات فيديوهات تيك توك بسرعة</p>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">500 إعجاب</span>
+                                    <span class="font-medium text-royal-600">40 نقطة</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">1,000 إعجاب</span>
+                                    <span class="font-medium text-royal-600">70 نقطة</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">5,000 إعجاب</span>
+                                    <span class="font-medium text-royal-600">300 نقطة</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2 space-x-reverse">
+                                <button class="flex-1 bg-royal-600 text-white py-2 rounded-lg font-medium hover:bg-royal-700 transition">اطلب الآن</button>
+                                <button class="px-4 py-2 border border-royal-600 text-royal-600 rounded-lg font-medium hover:bg-royal-50">التفاصيل</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- YouTube Service -->
+                    <div class="service-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                        <div class="h-48 bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center">
+                            <i class="fab fa-youtube text-white text-7xl"></i>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-xl font-bold text-gray-800">مشاهدات يوتيوب</h3>
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                    <span class="text-gray-600 text-sm mr-1">4.7</span>
+                                    <span class="text-gray-400 text-sm">(156)</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">زيادة مشاهدات فيديوهات يوتيوب عالية الجودة</p>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">1,000 مشاهدة</span>
+                                    <span class="font-medium text-royal-600">60 نقطة</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">5,000 مشاهدة</span>
+                                    <span class="font-medium text-royal-600">250 نقطة</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">10,000 مشاهدة</span>
+                                    <span class="font-medium text-royal-600">450 نقطة</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2 space-x-reverse">
+                                <button class="flex-1 bg-royal-600 text-white py-2 rounded-lg font-medium hover:bg-royal-700 transition">اطلب الآن</button>
+                                <button class="px-4 py-2 border border-royal-600 text-royal-600 rounded-lg font-medium hover:bg-royal-50">التفاصيل</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Order System -->
+                <div class="mt-16">
+                    <div class="bg-white rounded-xl shadow-md p-8">
+                        <h3 class="text-2xl font-bold text-royal-800 mb-6 text-center">نظام طلبات متقدم</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="text-center p-6 border rounded-lg">
+                                <div class="w-16 h-16 bg-royal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-mouse-pointer text-royal-600 text-2xl"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 mb-2">اختر الخدمة</h4>
+                                <p class="text-gray-600 text-sm">اختر من بين 50+ خدمة مختلفة لجميع المنصات</p>
+                            </div>
+                            
+                            <div class="text-center p-6 border rounded-lg">
+                                <div class="w-16 h-16 bg-royal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-sliders-h text-royal-600 text-2xl"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 mb-2">خصّص طلبك</h4>
+                                <p class="text-gray-600 text-sm">اختر الكمية، السرعة، الجودة، والإعدادات المتقدمة</p>
+                            </div>
+                            
+                            <div class="text-center p-6 border rounded-lg">
+                                <div class="w-16 h-16 bg-royal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-rocket text-royal-600 text-2xl"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-800 mb-2">تتبع الطلب</h4>
+                                <p class="text-gray-600 text-sm">تابع حالة طلبك لحظة بلحظة مع تحديثات مباشرة</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Form -->
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <h4 class="font-bold text-gray-800 mb-4">نموذج طلب جديد</h4>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">المنصة</label>
+                                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent">
+                                        <option value="instagram">انستجرام</option>
+                                        <option value="tiktok">تيك توك</option>
+                                        <option value="youtube">يوتيوب</option>
+                                        <option value="twitter">تويتر</option>
+                                        <option value="facebook">فيسبوك</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">نوع الخدمة</label>
+                                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent">
+                                        <option value="followers">متابعين</option>
+                                        <option value="likes">إعجابات</option>
+                                        <option value="views">مشاهدات</option>
+                                        <option value="comments">تعليقات</option>
+                                        <option value="shares">مشاركات</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">الكمية</label>
+                                    <div class="flex items-center">
+                                        <button class="px-3 py-2 border border-gray-300 rounded-r-lg">-</button>
+                                        <input type="number" value="100" class="flex-1 px-4 py-2 border-t border-b border-gray-300 text-center">
+                                        <button class="px-3 py-2 border border-gray-300 rounded-l-lg">+</button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">الرابط المستهدف</label>
+                                    <input type="url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent" placeholder="https://instagram.com/username">
+                                </div>
+                            </div>
+                            
+                            <!-- Advanced Options -->
+                            <div class="mt-6">
+                                <button class="flex items-center text-royal-600 font-medium" id="toggleAdvancedOptions">
+                                    <i class="fas fa-cog mr-2"></i>
+                                    خيارات متقدمة
+                                    <i class="fas fa-chevron-down mr-2 text-sm"></i>
+                                </button>
+                                
+                                <div id="advancedOptions" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">سرعة التسليم</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                            <option value="slow">بطيئة (3-7 أيام)</option>
+                                            <option value="normal">عادية (24-48 ساعة)</option>
+                                            <option value="fast">سريعة (2-12 ساعة)</option>
+                                            <option value="instant">فورية (دقائق)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">جودة الحسابات</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                            <option value="basic">أساسية (متابعين عاديين)</option>
+                                            <option value="premium">مميزة (متابعين نشطين)</option>
+                                            <option value="elite">نخبة (متابعين حقيقيين)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">بدء التسليم</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                            <option value="now">الآن</option>
+                                            <option value="1h">بعد ساعة</option>
+                                            <option value="3h">بعد 3 ساعات</option>
+                                            <option value="6h">بعد 6 ساعات</option>
+                                            <option value="12h">بعد 12 ساعة</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Summary -->
+                            <div class="mt-8 p-4 bg-white border rounded-lg">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h5 class="font-bold text-gray-800">ملخص الطلب</h5>
+                                    <div class="text-2xl font-bold text-royal-600">250 نقطة</div>
+                                </div>
+                                
+                                <div class="space-y-2 text-sm text-gray-600">
+                                    <div class="flex justify-between">
+                                        <span>500 متابع انستجرام</span>
+                                        <span>200 نقطة</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>تسليم سريع (+20%)</span>
+                                        <span>+40 نقطة</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>جودة مميزة (+10%)</span>
+                                        <span>+10 نقطة</span>
+                                    </div>
+                                    <div class="flex justify-between border-t pt-2 mt-2">
+                                        <span>رصيد النقاط المتاح</span>
+                                        <span class="font-medium">1,500 نقطة</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="w-full mt-4 bg-royal-600 text-white py-3 rounded-lg font-bold hover:bg-royal-700 transition">
+                                    تأكيد الطلب (250 نقطة)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#" class="inline-block bg-royal-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-royal-700 transition">عرض جميع الخدمات <i class="fas fa-arrow-left mr-1"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-royal-800 mb-4">كيفية العمل</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">3 خطوات بسيطة للحصول على الخدمة التي تريدها</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center p-6">
+                        <div class="w-20 h-20 bg-royal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span class="text-royal-600 text-2xl font-bold">1</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">إنشاء حساب</h3>
+                        <p class="text-gray-600">سجل في الموقع وقم بتسجيل الدخول إلى حسابك الشخصي</p>
+                    </div>
+                    
+                    <div class="text-center p-6">
+                        <div class="w-20 h-20 bg-royal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span class="text-royal-600 text-2xl font-bold">2</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">شراء النقاط</h3>
+                        <p class="text-gray-600">اشترِ النقاط عبر نظام الدفع الذي تفضله</p>
+                    </div>
+                    
+                    <div class="text-center p-6">
+                        <div class="w-20 h-20 bg-royal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span class="text-royal-600 text-2xl font-bold">3</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">طلب الخدمة</h3>
+                        <p class="text-gray-600">اختر الخدمة المطلوبة وادخل الرابط الخاص بك</p>
+                    </div>
+                </div>
+                
+                <!-- Payment Methods -->
+                <div class="mt-16">
+                    <div class="bg-royal-50 rounded-xl p-8">
+                        <h3 class="text-2xl font-bold text-royal-800 mb-6 text-center">طرق الدفع المتاحة</h3>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+                            <div class="bg-white p-4 rounded-lg shadow-sm flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" class="h-8">
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" class="h-8">
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm flex items-center justify-center">
+                                <i class="fab fa-cc-visa text-3xl text-blue-600"></i>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm flex items-center justify-center">
+                                <i class="fab fa-cc-mastercard text-3xl text-red-600"></i>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm flex items-center justify-center">
+                                <i class="fab fa-bitcoin text-3xl text-orange-500"></i>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm flex items-center justify-center">
+                                <span class="font-bold text-gray-700">Wish Money</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Points Calculator -->
+                        <div class="flex flex-col md:flex-row items-center">
+                            <div class="md:w-1/2 mb-6 md:mb-0">
+                                <h4 class="text-xl font-bold text-royal-800 mb-4">حاسبة النقاط</h4>
+                                <p class="text-gray-700 mb-4">نظام النقاط هو العملة الرقمية التي تستخدمها لشراء الخدمات في متجرنا. كل خدمة لها سعر معين بعدد من النقاط.</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>1 دولار = 100 نقطة</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>خصم على الشراء بالجملة</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check text-green-500 mr-2"></i>
+                                        <span>النقاط صالحة لمدة سنة</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="md:w-1/2">
+                                <div class="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
+                                    <h4 class="font-bold text-lg text-royal-700 mb-4">حاسبة النقاط</h4>
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">المبلغ ($)</label>
+                                        <input type="number" id="amountInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent" placeholder="أدخل المبلغ" value="10">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">عدد النقاط</label>
+                                        <input type="text" id="pointsOutput" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100" value="1,000 نقطة" readonly>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">الطريقة المفضلة</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                            <option value="paypal">PayPal</option>
+                                            <option value="stripe">بطاقة ائتمان</option>
+                                            <option value="crypto">عملات رقمية</option>
+                                            <option value="wish">Wish Money</option>
+                                        </select>
+                                    </div>
+                                    <button class="w-full bg-royal-600 text-white py-2 rounded-lg font-medium hover:bg-royal-700 transition">شراء النقاط</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-royal-800 mb-4">باقات النقاط</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">اختر الباقة المناسبة لك واستمتع بخصومات على الكميات الكبيرة</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="bg-royal-100 py-6 px-8">
+                            <h3 class="text-xl font-bold text-royal-800 text-center">الباقة الأساسية</h3>
+                        </div>
+                        <div class="p-8">
+                            <div class="text-center mb-6">
+                                <span class="text-5xl font-bold text-royal-600">1,000</span>
+                                <span class="text-gray-600">نقطة</span>
+                            </div>
+                            <ul class="space-y-3 mb-8">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    تكفي لـ 20 خدمة أساسية
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    صالحة لمدة 3 أشهر
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    دعم فني 24/7
+                                </li>
+                            </ul>
+                            <div class="text-center">
+                                <span class="block text-2xl font-bold text-gray-800 mb-2">$10.00</span>
+                                <a href="#" class="inline-block bg-royal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-royal-700 transition">اختيار الباقة</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform scale-105 relative">
+                        <div class="absolute top-0 right-0 bg-yellow-400 text-yellow-800 text-xs font-bold px-3 py-1 rounded-bl-lg">الأكثر مبيعاً</div>
+                        <div class="bg-royal-600 py-6 px-8">
+                            <h3 class="text-xl font-bold text-white text-center">الباقة المميزة</h3>
+                        </div>
+                        <div class="p-8">
+                            <div class="text-center mb-6">
+                                <span class="text-5xl font-bold text-royal-600">3,000</span>
+                                <span class="text-gray-600">نقطة</span>
+                            </div>
+                            <ul class="space-y-3 mb-8">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    تكفي لـ 60 خدمة أساسية
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    صالحة لمدة 6 أشهر
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    دعم فني 24/7
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    خصم 10% على الطلبات الكبيرة
+                                </li>
+                            </ul>
+                            <div class="text-center">
+                                <span class="block text-2xl font-bold text-gray-800 mb-2">$25.00</span>
+                                <span class="block text-sm text-gray-500 line-through mb-1">$30.00</span>
+                                <a href="#" class="inline-block bg-royal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-royal-700 transition">اختيار الباقة</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="bg-royal-100 py-6 px-8">
+                            <h3 class="text-xl font-bold text-royal-800 text-center">الباقة الذهبية</h3>
+                        </div>
+                        <div class="p-8">
+                            <div class="text-center mb-6">
+                                <span class="text-5xl font-bold text-royal-600">10,000</span>
+                                <span class="text-gray-600">نقطة</span>
+                            </div>
+                            <ul class="space-y-3 mb-8">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    تكفي لـ 200 خدمة أساسية
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    صالحة لمدة سنة كاملة
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    دعم فني 24/7
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    خصم 20% على جميع الخدمات
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    دعم فني مخصص
+                                </li>
+                            </ul>
+                            <div class="text-center">
+                                <span class="block text-2xl font-bold text-gray-800 mb-2">$80.00</span>
+                                <span class="block text-sm text-gray-500 line-through mb-1">$100.00</span>
+                                <a href="#" class="inline-block bg-royal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-royal-700 transition">اختيار الباقة</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Discounts Section -->
+                <div class="mt-16">
+                    <div class="bg-white rounded-xl shadow-md p-8">
+                        <h3 class="text-2xl font-bold text-royal-800 mb-6 text-center">خصومات وعروض خاصة</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Discount Codes -->
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-4">أكواد الخصم</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <div class="font-medium text-royal-700">WELCOME10</div>
+                                            <div class="text-sm text-gray-500">خصم 10% على أول طلب</div>
+                                        </div>
+                                        <button class="px-3 py-1 bg-royal-600 text-white rounded text-sm hover:bg-royal-700">
+                                            نسخ
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <div class="font-medium text-royal-700">INSTA20</div>
+                                            <div class="text-sm text-gray-500">خصم 20% على خدمات انستجرام</div>
+                                        </div>
+                                        <button class="px-3 py-1 bg-royal-600 text-white rounded text-sm hover:bg-royal-700">
+                                            نسخ
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <div class="font-medium text-royal-700">SUMMER25</div>
+                                            <div class="text-sm text-gray-500">خصم 25% على جميع الخدمات</div>
+                                        </div>
+                                        <div class="text-sm text-red-600">ينتهي في 30 يوم</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Loyalty Program -->
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-4">برنامج الولاء</h4>
+                                <div class="bg-royal-50 p-6 rounded-xl">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <div class="font-medium">مستواك الحالي: <span class="text-royal-700">فضي</span></div>
+                                            <div class="text-sm text-gray-600">أنت على بعد 2,500 نقطة من المستوى الذهبي</div>
+                                        </div>
+                                        <div class="text-2xl font-bold text-royal-700">5%</div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                            <span>فضي (5,000 نقطة)</span>
+                                            <span>ذهبي (10,000 نقطة)</span>
+                                        </div>
+                                        <div class="progress-bar bg-gray-200">
+                                            <div class="progress-fill bg-royal-600" style="width: 50%"></div>
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1">7,500 / 10,000 نقطة</div>
+                                    </div>
+                                    
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-crown text-yellow-500 mr-2"></i>
+                                            <span>المستوى الذهبي: خصم 10% على جميع الطلبات</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-gift text-purple-500 mr-2"></i>
+                                            <span>هدية شهرية: 100 نقطة مجانية</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-headset text-green-500 mr-2"></i>
+                                            <span>دعم فني مخصص 24/7</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section id="blog" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-royal-800 mb-4">مدونة ومركز المساعدة</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">تعلم واستفد من مقالاتنا ونصائحنا في التسويق الرقمي</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <!-- Blog Post 1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="h-48 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-2">تسويق</span>
+                                <span>مارس 15, 2024</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">كيف تزيد متابعيك على انستجرام طبيعياً</h3>
+                            <p class="text-gray-600 mb-4">10 استراتيجيات مثبتة لزيادة التفاعل والمتابعين على انستجرام بدون خدمات مدفوعة.</p>
+                            <a href="#" class="text-royal-600 font-medium hover:text-royal-800">
+                                اقرأ المقال <i class="fas fa-arrow-left mr-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Blog Post 2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="h-48 bg-gradient-to-r from-purple-400 to-purple-600"></div>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-2">تيك توك</span>
+                                <span>مارس 10, 2024</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">أسرار نجاح الفيديوهات على تيك توك</h3>
+                            <p class="text-gray-600 mb-4">تعلم كيف تنشئ محتوى فيرال على تيك توك يصل إلى ملايين المشاهدات.</p>
+                            <a href="#" class="text-royal-600 font-medium hover:text-royal-800">
+                                اقرأ المقال <i class="fas fa-arrow-left mr-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Blog Post 3 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="h-48 bg-gradient-to-r from-green-400 to-green-600"></div>
+                        <div class="p-6">
+                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs mr-2">يوتيوب</span>
+                                <span>مارس 5, 2024</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">تحليل خوارزمية يوتيوب 2024</h3>
+                            <p class="text-gray-600 mb-4">كل ما تحتاج معرفته عن خوارزمية يوتيوب الجديدة وكيفية تحسين ظهور قناتك.</p>
+                            <a href="#" class="text-royal-600 font-medium hover:text-royal-800">
+                                اقرأ المقال <i class="fas fa-arrow-left mr-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ Section -->
+                <div class="bg-gray-50 rounded-xl p-8">
+                    <h3 class="text-2xl font-bold text-royal-800 mb-6 text-center">الأسئلة الشائعة</h3>
+                    
+                    <div class="space-y-4 max-w-3xl mx-auto">
+                        <div class="bg-white border rounded-lg overflow-hidden">
+                            <button class="faq-question w-full px-6 py-4 text-right font-medium text-gray-800 hover:bg-gray-50 flex justify-between items-center">
+                                <span>هل المتابعون والإعجابات حقيقية؟</span>
+                                <i class="fas fa-chevron-down text-gray-500"></i>
+                            </button>
+                            <div class="faq-answer px-6 py-4 border-t hidden">
+                                <p class="text-gray-600">نعم، نقدم متابعين وإعجابات من حسابات حقيقية ونشطة. نحن لا نستخدم بوتات أو حسابات وهمية. جودة الخدمة هي أولويتنا القصوى.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white border rounded-lg overflow-hidden">
+                            <button class="faq-question w-full px-6 py-4 text-right font-medium text-gray-800 hover:bg-gray-50 flex justify-between items-center">
+                                <span>كم من الوقت تستغرق الخدمة؟</span>
+                                <i class="fas fa-chevron-down text-gray-500"></i>
+                            </button>
+                            <div class="faq-answer px-6 py-4 border-t hidden">
+                                <p class="text-gray-600">معظم الخدمات تبدأ خلال دقائق من الطلب وتنتهي خلال 24-48 ساعة. بعض الخدمات ذات الجودة العالية قد تستغرق حتى 72 ساعة.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white border rounded-lg overflow-hidden">
+                            <button class="faq-question w-full px-6 py-4 text-right font-medium text-gray-800 hover:bg-gray-50 flex justify-between items-center">
+                                <span>هل حسابي في خطر عند استخدام الخدمة؟</span>
+                                <i class="fas fa-chevron-down text-gray-500"></i>
+                            </button>
+                            <div class="faq-answer px-6 py-4 border-t hidden">
+                                <p class="text-gray-600">لا، خدماتنا آمنة تماماً ولا تؤدي إلى حظر الحسابات. نستخدم طرقاً طبيعية وآمنة تلتزم بشروط منصات التواصل الاجتماعي.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white border rounded-lg overflow-hidden">
+                            <button class="faq-question w-full px-6 py-4 text-right font-medium text-gray-800 hover:bg-gray-50 flex justify-between items-center">
+                                <span>ماذا لو لم أتلق الخدمة كاملة؟</span>
+                                <i class="fas fa-chevron-down text-gray-500"></i>
+                            </button>
+                            <div class="faq-answer px-6 py-4 border-t hidden">
+                                <p class="text-gray-600">نقدم ضمان استعادة النقاط. إذا لم تتلق الخدمة كاملة خلال 72 ساعة، يمكنك فتح تذكرة دعم وسنقوم باسترجاع نقاطك أو إكمال الخدمة.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Free Tools -->
+                <div class="mt-16">
+                    <h3 class="text-2xl font-bold text-royal-800 mb-6 text-center">أدوات مجانية</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-800 mb-2">حاسبة نمو المتابعين</h4>
+                            <p class="text-gray-600 mb-4">احسب معدل نمو متابعيك وتوقعات النمو المستقبلية.</p>
+                            <a href="#" class="text-blue-600 font-medium hover:text-blue-800">استخدم الأداة</a>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-xl">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-users text-green-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-800 mb-2">تحليل المنافسين</h4>
+                            <p class="text-gray-600 mb-4">حلل أداء منافسيك واستراتيجياتهم الناجحة.</p>
+                            <a href="#" class="text-green-600 font-medium hover:text-green-800">استخدم الأداة</a>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-xl">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                                <i class="fas fa-calendar-alt text-purple-600 text-xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-800 mb-2">مخطط المحتوى</h4>
+                            <p class="text-gray-600 mb-4">خطط محتوى أسبوعي لجميع منصات التواصل الاجتماعي.</p>
+                            <a href="#" class="text-purple-600 font-medium hover:text-purple-800">استخدم الأداة</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-royal-800 mb-4">آراء عملائنا</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">ما يقوله عملاؤنا عن خدماتنا</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-royal-100 flex items-center justify-center mr-4">
+                                <span class="text-royal-600 font-bold">أ</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">أحمد محمد</h4>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600">"خدمة ممتازة وسريعة، حصلت على 1000 متابع خلال ساعة فقط، شكراً لكم على الجودة العالية."</p>
+                        <div class="mt-4 text-sm text-gray-500">
+                            <i class="fas fa-shopping-cart mr-1"></i>
+                            خدمة: متابعين انستجرام
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-royal-100 flex items-center justify-center mr-4">
+                                <span class="text-royal-600 font-bold">س</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">سارة عبدالله</h4>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600">"استخدمت الخدمة لأول مرة وكنت مترددة، ولكن النتائج كانت ممتازة، المتابعون حقيقيون ويتفاعلون مع المحتوى."</p>
+                        <div class="mt-4 text-sm text-gray-500">
+                            <i class="fas fa-shopping-cart mr-1"></i>
+                            خدمة: إعجابات تيك توك
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-royal-100 flex items-center justify-center mr-4">
+                                <span class="text-royal-600 font-bold">خ</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">خالد فيصل</h4>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600">"التعامل مع الدعم الفني كان ممتازاً، ساعدوني في حل مشكلة طلب بسرعة كبيرة، أنصح بالتعامل معهم."</p>
+                        <div class="mt-4 text-sm text-gray-500">
+                            <i class="fas fa-shopping-cart mr-1"></i>
+                            خدمة: مشاهدات يوتيوب
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Review System -->
+                <div class="mt-16 bg-white rounded-xl shadow-md p-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-royal-800 mb-2">تقييمات الخدمات</h3>
+                            <div class="flex items-center">
+                                <div class="text-3xl font-bold text-gray-800 mr-2">4.8</div>
+                                <div>
+                                    <div class="flex text-yellow-400">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <div class="text-sm text-gray-600">بناءً على 1,247 تقييم</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="mt-4 md:mt-0 px-6 py-3 bg-royal-600 text-white rounded-lg font-medium hover:bg-royal-700">
+                            <i class="fas fa-edit mr-2"></i>
+                            أضف تقييمك
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="border-b pb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="font-medium">متابعين انستجرام</div>
+                                <div class="flex items-center">
+                                    <div class="flex text-yellow-400 text-sm">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-sm mr-2">4.9 (324)</span>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-600">"أفضل خدمة استخدمتها على الإطلاق، المتابعون حقيقيون ويتفاعلون" - نورهان</div>
+                        </div>
+                        
+                        <div class="border-b pb-6">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="font-medium">إعجابات تيك توك</div>
+                                <div class="flex items-center">
+                                    <div class="flex text-yellow-400 text-sm">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-sm mr-2">4.7 (198)</span>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-600">"السرعة في التوصيل مذهلة، حصلت على الإعجابات خلال 10 دقائق فقط" - محمد</div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="font-medium">مشاهدات يوتيوب</div>
+                                <div class="flex items-center">
+                                    <div class="flex text-yellow-400 text-sm">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-gray-600 text-sm mr-2">4.8 (156)</span>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-600">"المشاهدات مستمرة في الزيادة حتى بعد انتهاء الخدمة، رائع!" - خالد</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="gradient-bg text-white py-16">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">جاهز لزيادة متابعيك ومشاهداتك؟</h2>
+                <p class="text-xl mb-8 max-w-2xl mx-auto">سجل الآن واحصل على 100 نقطة مجانية عند إنشاء حسابك الجديد</p>
+                <a href="#" class="inline-block bg-white text-royal-700 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition">إنشاء حساب جديد <i class="fas fa-arrow-left mr-1"></i></a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-royal-800 mb-4">اتصل بنا</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">لديك استفسار أو تحتاج إلى مساعدة؟ فريق الدعم الفني جاهز لمساعدتك</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto">
+                    <div class="md:w-1/2">
+                        <div class="bg-gray-50 rounded-xl p-8 h-full">
+                            <h3 class="text-xl font-bold text-royal-700 mb-6">معلومات التواصل</h3>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-start">
+                                    <div class="bg-royal-100 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-envelope text-royal-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">البريد الإلكتروني</h4>
+                                        <p class="text-gray-600">support@yroyal.store</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-royal-100 p-3 rounded-lg mr-4">
+                                        <i class="fab fa-whatsapp text-royal-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">واتساب</h4>
+                                        <a href="https://wa.me/12152155055" target="_blank" class="text-gray-600 hover:text-royal-600">+1 215 215 5055</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-royal-100 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-clock text-royal-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">ساعات العمل</h4>
+                                        <p class="text-gray-600">24/7 طوال أيام الأسبوع</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Support Tickets -->
+                            <div class="mt-8">
+                                <h4 class="font-bold text-gray-800 mb-4">نظام تذاكر الدعم</h4>
+                                <p class="text-gray-600 mb-4">يمكنك فتح تذكرة دعم فني للاستفسارات والمشكلات الفنية.</p>
+                                <a href="#" class="inline-block bg-royal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-royal-700">
+                                    <i class="fas fa-ticket-alt mr-2"></i>
+                                    فتح تذكرة جديدة
+                                </a>
+                            </div>
+                            
+                            <!-- Social Media -->
+                            <div class="mt-8">
+                                <h4 class="font-bold text-gray-800 mb-4">تابعنا على</h4>
+                                <div class="flex space-x-4 space-x-reverse">
+                                    <a href="#" class="w-10 h-10 bg-royal-100 rounded-full flex items-center justify-center text-royal-600 hover:bg-royal-200 transition">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="#" class="w-10 h-10 bg-royal-100 rounded-full flex items-center justify-center text-royal-600 hover:bg-royal-200 transition">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" class="w-10 h-10 bg-royal-100 rounded-full flex items-center justify-center text-royal-600 hover:bg-royal-200 transition">
+                                        <i class="fab fa-telegram"></i>
+                                    </a>
+                                    <a href="#" class="w-10 h-10 bg-royal-100 rounded-full flex items-center justify-center text-royal-600 hover:bg-royal-200 transition">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/2">
+                        <div class="bg-white rounded-xl shadow-md p-8 border border-gray-200">
+                            <h3 class="text-xl font-bold text-royal-700 mb-6">أرسل رسالة</h3>
+                            
+                            <form id="contactForm">
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 mb-2">الاسم الكامل</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent" placeholder="أدخل اسمك" required>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 mb-2">البريد الإلكتروني</label>
+                                    <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent" placeholder="email@example.com" required>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 mb-2">نوع الاستفسار</label>
+                                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent">
+                                        <option value="general">استفسار عام</option>
+                                        <option value="technical">دعم فني</option>
+                                        <option value="billing">استفسار مالي</option>
+                                        <option value="service">استفسار عن خدمة</option>
+                                        <option value="other">آخر</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 mb-2">الرسالة</label>
+                                    <textarea rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent" placeholder="اكتب رسالتك هنا..." required></textarea>
+                                </div>
+                                
+                                <button type="submit" class="w-full bg-royal-600 text-white py-3 rounded-lg font-bold hover:bg-royal-700 transition">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    إرسال الرسالة
+                                </button>
+                            </form>
+                            
+                            <!-- Live Chat -->
+                            <div class="mt-8 pt-8 border-t">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">الدردشة المباشرة</h4>
+                                        <p class="text-sm text-gray-600">تواصل معنا مباشرة عبر الدردشة</p>
+                                    </div>
+                                    <button id="openChatBtn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                                        <i class="fas fa-comment-dots mr-2"></i>
+                                        ابدأ الدردشة
+                                    </button>
+                                </div>
+                                
+                                <!-- Chat Status -->
+                                <div class="mt-4 flex items-center text-sm">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                    <span class="text-gray-600">فريق الدعم متاح الآن</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-2 space-x-reverse mb-4">
+                        <i class="fas fa-crown text-2xl text-yellow-300"></i>
+                        <span class="text-xl font-bold">YRoyal Store</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">أفضل منصة لخدمات زيادة المتابعين والإعجابات على وسائل التواصل الاجتماعي.</p>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">روابط سريعة</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">الرئيسية</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white">الخدمات</a></li>
+                        <li><a href="#dashboard" class="text-gray-400 hover:text-white">لوحة التحكم</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-white">الأسعار</a></li>
+                        <li><a href="#blog" class="text-gray-400 hover:text-white">المدونة</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Legal -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">قانوني</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">شروط الاستخدام</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">سياسة الخصوصية</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">سياسة الاسترجاع</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">إخلاء المسؤولية</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">النشرة البريدية</h4>
+                    <p class="text-gray-400 mb-4">اشترك لتصلك آخر العروض والتحديثات.</p>
+                    <form class="flex">
+                        <input type="email" class="flex-1 px-4 py-2 rounded-r-lg text-gray-800" placeholder="بريدك الإلكتروني">
+                        <button type="submit" class="px-4 py-2 bg-royal-600 rounded-l-lg hover:bg-royal-700">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+                <p>© 2024 YRoyal Store. جميع الحقوق محفوظة.</p>
+                <p class="mt-2 text-sm">هذا الموقع لأغراض تعليمية وتوضيحية فقط.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="fixed bottom-6 left-6 z-40">
+        <button id="chatToggle" class="w-14 h-14 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition flex items-center justify-center">
+            <i class="fas fa-comment-dots text-xl"></i>
+            <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+        </button>
+        
+        <div id="chatWidget" class="absolute bottom-16 left-0 w-80 bg-white rounded-lg shadow-xl hidden">
+            <div class="bg-royal-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+                <div>
+                    <div class="font-bold">الدردشة المباشرة</div>
+                    <div class="text-xs opacity-80">فريق الدعم متاح الآن</div>
+                </div>
+                <button id="closeChat" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 h-64 overflow-y-auto">
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                            <i class="fas fa-user text-gray-600 text-sm"></i>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded-lg max-w-[80%]">
+                            <div class="text-sm">مرحباً! كيف يمكنني مساعدتك اليوم؟</div>
+                            <div class="text-xs text-gray-500 mt-1">فريق الدعم • الآن</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start justify-end">
+                        <div class="bg-royal-100 p-3 rounded-lg max-w-[80%]">
+                            <div class="text-sm">أريد الاستفسار عن خدمة متابعين انستجرام</div>
+                            <div class="text-xs text-gray-500 mt-1 text-right">أنت • الآن</div>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-royal-100 flex items-center justify-center mr-2">
+                            <i class="fas fa-user text-royal-600 text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t">
+                <div class="flex">
+                    <input type="text" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-royal-500" placeholder="اكتب رسالتك...">
+                    <button class="mr-2 px-4 bg-royal-600 text-white rounded-lg hover:bg-royal-700">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Order Success Modal -->
+    <div id="orderModal" class="modal">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">تم تأكيد طلبك!</h3>
+                <p class="text-gray-600">رقم طلبك: <span class="font-bold">#ORD-7843</span></p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">الخدمة:</span>
+                    <span class="font-medium">500 متابع انستجرام</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">الحالة:</span>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">قيد المعالجة</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">التكلفة:</span>
+                    <span class="font-medium text-royal-600">200 نقطة</span>
+                </div>
+            </div>
+            
+            <p class="text-center text-gray-600 mb-6">سيبدأ التسليم خلال 5-10 دقائق. يمكنك تتبع حالة الطلب من لوحة التحكم.</p>
+            
+            <div class="flex space-x-3 space-x-reverse">
+                <button onclick="closeModal('orderModal')" class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">إغلاق</button>
+                <a href="#dashboard" class="flex-1 px-4 py-3 bg-royal-600 text-white rounded-lg font-medium hover:bg-royal-700 text-center">تتبع الطلب</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">تسجيل الدخول</h3>
+                <p class="text-gray-600">أدخل بياناتك للوصول إلى حسابك</p>
+            </div>
+            
+            <form>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">البريد الإلكتروني</label>
+                    <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent" placeholder="email@example.com" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">كلمة المرور</label>
+                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-royal-500 focus:border-transparent" placeholder="********" required>
+                </div>
+                
+                <div class="flex items-center justify-between mb-6">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="rounded text-royal-600">
+                        <span class="text-gray-600 mr-2">تذكرني</span>
+                    </label>
+                    <a href="#" class="text-royal-600 hover:text-royal-800 text-sm">نسيت كلمة المرور؟</a>
+                </div>
+                
+                <button type="submit" class="w-full bg-royal-600 text-white py-3 rounded-lg font-bold hover:bg-royal-700 mb-4">
+                    تسجيل الدخول
+                </button>
+                
+                <div class="text-center">
+                    <span class="text-gray-600">ليس لديك حساب؟ </span>
+                    <a href="#" class="text-royal-600 hover:text-royal-800 font-medium">سجل الآن</a>
+                </div>
+                
+                <!-- Social Login -->
+                <div class="mt-6 pt-6 border-t">
+                    <p class="text-center text-gray-600 mb-4">أو سجل الدخول باستخدام</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fab fa-google text-red-500 mr-2"></i>
+                            <span>Google</span>
+                        </button>
+                        <button class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fab fa-twitter text-blue-400 mr-2"></i>
+                            <span>Twitter</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
-        // بيانات التطبيق
-        class VoiceChatApp {
-            constructor() {
-                this.currentUser = null;
-                this.friends = [];
-                this.messages = [];
-                this.voiceCall = null;
-                this.localStream = null;
-                this.peerConnections = {};
-                this.dataChannel = null;
-                this.isMicMuted = false;
-                this.isHeadphoneMuted = false;
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+        
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+        
+        // Dropdown Menus
+        const languageBtn = document.getElementById('languageBtn');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenuDropdown = document.getElementById('userMenuDropdown');
+        
+        // Toggle dropdowns
+        [languageBtn, notificationBtn, userMenuBtn].forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 
-                this.init();
-            }
-
-            init() {
-                this.loadUserData();
-                this.setupEventListeners();
-                this.loadFriends();
-                this.loadMessages();
-                this.updateOnlineCount();
-                this.setupAudioVisualizer();
-            }
-
-            loadUserData() {
-                const savedUser = localStorage.getItem('voiceChat_user');
-                if (savedUser) {
-                    this.currentUser = JSON.parse(savedUser);
-                } else {
-                    this.currentUser = {
-                        id: this.generateId(),
-                        username: 'محمد',
-                        color: '#5865F2',
-                        status: 'online',
-                        avatar: 'م'
-                    };
-                    this.saveUserData();
-                }
-                this.updateUserUI();
-            }
-
-            saveUserData() {
-                localStorage.setItem('voiceChat_user', JSON.stringify(this.currentUser));
-            }
-
-            generateId() {
-                return Math.random().toString(36).substr(2, 9);
-            }
-
-            updateUserUI() {
-                document.getElementById('username').textContent = this.currentUser.username;
-                document.getElementById('userAvatar').textContent = this.currentUser.avatar;
-                document.getElementById('userAvatar').style.backgroundColor = this.currentUser.color;
-                
-                const statusIndicator = document.querySelector('.status-indicator');
-                if (statusIndicator) {
-                    statusIndicator.style.backgroundColor = this.getStatusColor(this.currentUser.status);
-                }
-            }
-
-            getStatusColor(status) {
-                const colors = {
-                    online: '#3BA55D',
-                    idle: '#FAA81A',
-                    dnd: '#ED4245',
-                    offline: '#747F8D'
-                };
-                return colors[status] || colors.online;
-            }
-
-            loadFriends() {
-                const savedFriends = localStorage.getItem('voiceChat_friends');
-                if (savedFriends) {
-                    this.friends = JSON.parse(savedFriends);
-                } else {
-                    this.friends = this.generateDefaultFriends();
-                    this.saveFriends();
-                }
-                this.renderFriends();
-            }
-
-            generateDefaultFriends() {
-                return [
-                    {
-                        id: this.generateId(),
-                        username: 'أحمد',
-                        status: 'online',
-                        color: '#ED4245',
-                        avatar: 'أ',
-                        game: 'فورتنايت'
-                    },
-                    {
-                        id: this.generateId(),
-                        username: 'سارة',
-                        status: 'online',
-                        color: '#FAA81A',
-                        avatar: 'س',
-                        game: 'فالورانت'
-                    },
-                    {
-                        id: this.generateId(),
-                        username: 'خالد',
-                        status: 'idle',
-                        color: '#3BA55D',
-                        avatar: 'خ'
-                    },
-                    {
-                        id: this.generateId(),
-                        username: 'فاطمة',
-                        status: 'dnd',
-                        color: '#5865F2',
-                        avatar: 'ف',
-                        game: 'ماينكرافت'
-                    }
-                ];
-            }
-
-            saveFriends() {
-                localStorage.setItem('voiceChat_friends', JSON.stringify(this.friends));
-            }
-
-            renderFriends() {
-                const membersList = document.getElementById('membersList');
-                membersList.innerHTML = '';
-
-                // Add current user first
-                const currentUserElement = this.createMemberElement(this.currentUser);
-                membersList.appendChild(currentUserElement);
-
-                // Add friends
-                this.friends.forEach(friend => {
-                    const friendElement = this.createMemberElement(friend);
-                    membersList.appendChild(friendElement);
-                });
-            }
-
-            createMemberElement(user) {
-                const div = document.createElement('div');
-                div.className = 'member';
-                div.innerHTML = `
-                    <div class="member-avatar" style="background-color: ${user.color};">
-                        ${user.avatar}
-                        <div class="member-status" style="background-color: ${this.getStatusColor(user.status)};"></div>
-                    </div>
-                    <div class="member-name">${user.username}</div>
-                    ${user.game ? `<div class="member-game">${user.game}</div>` : ''}
-                `;
-                return div;
-            }
-
-            loadMessages() {
-                const savedMessages = localStorage.getItem('voiceChat_messages');
-                if (savedMessages) {
-                    this.messages = JSON.parse(savedMessages);
-                } else {
-                    this.messages = this.generateDefaultMessages();
-                    this.saveMessages();
-                }
-                this.renderMessages();
-            }
-
-            generateDefaultMessages() {
-                return [
-                    {
-                        id: this.generateId(),
-                        author: 'النظام',
-                        avatar: '⚙️',
-                        color: '#5865F2',
-                        time: this.formatTime(new Date()),
-                        text: 'مرحباً بك في VoiceChat! يمكنك البدء بالتحدث مع أصدقائك الآن.'
-                    },
-                    {
-                        id: this.generateId(),
-                        author: 'أحمد',
-                        avatar: 'أ',
-                        color: '#ED4245',
-                        time: this.formatTime(new Date(Date.now() - 300000)),
-                        text: 'هل هناك أحد يلعب فورتنايت؟'
-                    },
-                    {
-                        id: this.generateId(),
-                        author: 'سارة',
-                        avatar: 'س',
-                        color: '#FAA81A',
-                        time: this.formatTime(new Date(Date.now() - 180000)),
-                        text: 'نعم! أنا مستعدة للعب 😊'
-                    }
-                ];
-            }
-
-            saveMessages() {
-                localStorage.setItem('voiceChat_messages', JSON.stringify(this.messages));
-            }
-
-            renderMessages() {
-                const messagesContainer = document.getElementById('messages');
-                messagesContainer.innerHTML = '';
-
-                this.messages.forEach(message => {
-                    const messageElement = this.createMessageElement(message);
-                    messagesContainer.appendChild(messageElement);
-                });
-
-                // Scroll to bottom
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-
-            createMessageElement(message) {
-                const div = document.createElement('div');
-                div.className = 'message';
-                div.innerHTML = `
-                    <div class="message-avatar" style="background-color: ${message.color};">${message.avatar}</div>
-                    <div class="message-content">
-                        <div class="message-header">
-                            <span class="message-author">${message.author}</span>
-                            <span class="message-time">${message.time}</span>
-                        </div>
-                        <div class="message-text">${message.text}</div>
-                    </div>
-                `;
-                return div;
-            }
-
-            formatTime(date) {
-                return date.toLocaleTimeString('ar-EG', { 
-                    hour: '2-digit', 
-                    minute: '2-digit',
-                    hour12: true 
-                });
-            }
-
-            updateOnlineCount() {
-                const onlineCount = this.friends.filter(f => f.status === 'online').length + 1;
-                document.getElementById('onlineCount').textContent = `${onlineCount} متصل`;
-            }
-
-            setupAudioVisualizer() {
-                // Create audio context for visualizer
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.analyser = this.audioContext.createAnalyser();
-                this.analyser.fftSize = 256;
-                
-                // Create volume indicator for participants
-                setInterval(() => {
-                    this.updateVolumeIndicators();
-                }, 100);
-            }
-
-            updateVolumeIndicators() {
-                const participants = document.querySelectorAll('.participant');
-                participants.forEach(participant => {
-                    const volumeLevel = participant.querySelector('.volume-level');
-                    if (volumeLevel) {
-                        // Simulate random volume changes for demo
-                        const randomVolume = Math.random() * 100;
-                        volumeLevel.style.width = `${randomVolume}%`;
-                        
-                        // Add speaking effect
-                        if (randomVolume > 50) {
-                            participant.classList.add('participant-speaking');
-                        } else {
-                            participant.classList.remove('participant-speaking');
-                        }
+                // Close all other dropdowns
+                [languageDropdown, notificationDropdown, userMenuDropdown].forEach(dropdown => {
+                    if (dropdown !== btn.nextElementSibling) {
+                        dropdown.classList.add('hidden');
                     }
                 });
-            }
-
-            async startVoiceCall() {
-                try {
-                    // Request microphone access
-                    this.localStream = await navigator.mediaDevices.getUserMedia({
-                        audio: {
-                            echoCancellation: true,
-                            noiseSuppression: true,
-                            autoGainControl: true
-                        }
-                    });
-
-                    // Connect to audio context
-                    const source = this.audioContext.createMediaStreamSource(this.localStream);
-                    source.connect(this.analyser);
-
-                    // Show voice call interface
-                    this.showVoiceCall();
-
-                    // Add current user to participants
-                    this.addParticipant(this.currentUser);
-
-                    // Simulate adding friends to call
-                    this.friends
-                        .filter(friend => friend.status === 'online')
-                        .forEach(friend => {
-                            setTimeout(() => {
-                                this.addParticipant(friend);
-                            }, Math.random() * 1000);
-                        });
-
-                    // Show success message
-                    this.addSystemMessage('بدأت المكالمة الصوتية. يمكنك الآن التحدث مع الأصدقاء.');
-
-                } catch (error) {
-                    console.error('Error accessing microphone:', error);
-                    this.addSystemMessage('تعذر الوصول إلى الميكروفون. يرجى التحقق من الأذونات.');
-                }
-            }
-
-            showVoiceCall() {
-                const voiceCall = document.getElementById('voiceCall');
-                voiceCall.style.display = 'flex';
                 
-                // Hide voice controls
-                document.getElementById('voiceControls').style.display = 'none';
-            }
-
-            hideVoiceCall() {
-                const voiceCall = document.getElementById('voiceCall');
-                voiceCall.style.display = 'none';
+                // Toggle current dropdown
+                const dropdown = btn.nextElementSibling;
+                dropdown.classList.toggle('hidden');
+            });
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            [languageDropdown, notificationDropdown, userMenuDropdown].forEach(dropdown => {
+                dropdown.classList.add('hidden');
+            });
+        });
+        
+        // Dashboard Tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
                 
-                // Show voice controls
-                document.getElementById('voiceControls').style.display = 'flex';
+                // Update active tab button
+                tabBtns.forEach(b => b.classList.remove('border-royal-600', 'text-royal-600'));
+                btn.classList.add('border-royal-600', 'text-royal-600');
                 
-                // Stop all tracks
-                if (this.localStream) {
-                    this.localStream.getTracks().forEach(track => track.stop());
-                    this.localStream = null;
-                }
-            }
-
-            addParticipant(user) {
-                const participantsContainer = document.getElementById('callParticipants');
-                const participant = document.createElement('div');
-                participant.className = 'participant';
-                participant.innerHTML = `
-                    <div class="participant-avatar" style="background-color: ${user.color};">${user.avatar}</div>
-                    <div class="participant-name">${user.username}</div>
-                    <div class="participant-status">${user.game ? `يلعب ${user.game}` : 'يتحدث'}</div>
-                    <div class="volume-indicator">
-                        <div class="volume-level"></div>
-                    </div>
-                `;
-                participantsContainer.appendChild(participant);
-            }
-
-            addSystemMessage(text) {
-                const message = {
-                    id: this.generateId(),
-                    author: 'النظام',
-                    avatar: '⚙️',
-                    color: '#5865F2',
-                    time: this.formatTime(new Date()),
-                    text: text
-                };
-                
-                this.messages.push(message);
-                this.saveMessages();
-                this.renderMessages();
-            }
-
-            sendMessage(text) {
-                if (!text.trim()) return;
-
-                const message = {
-                    id: this.generateId(),
-                    author: this.currentUser.username,
-                    avatar: this.currentUser.avatar,
-                    color: this.currentUser.color,
-                    time: this.formatTime(new Date()),
-                    text: text
-                };
-
-                this.messages.push(message);
-                this.saveMessages();
-                this.renderMessages();
-            }
-
-            setupEventListeners() {
-                // Profile modal
-                document.getElementById('userProfile').addEventListener('click', () => {
-                    this.showProfileModal();
-                });
-
-                document.getElementById('saveProfile').addEventListener('click', () => {
-                    this.saveProfile();
-                });
-
-                document.getElementById('cancelEdit').addEventListener('click', () => {
-                    this.hideProfileModal();
-                });
-
-                // Voice controls
-                document.getElementById('micToggle').addEventListener('click', () => {
-                    this.toggleMicrophone();
-                });
-
-                document.getElementById('headphoneToggle').addEventListener('click', () => {
-                    this.toggleHeadphones();
-                });
-
-                document.getElementById('disconnectBtn').addEventListener('click', () => {
-                    this.toggleVoiceCall();
-                });
-
-                document.getElementById('inviteBtn').addEventListener('click', () => {
-                    this.showInviteModal();
-                });
-
-                document.getElementById('settingsBtn').addEventListener('click', () => {
-                    this.showProfileModal();
-                });
-
-                document.getElementById('endCall').addEventListener('click', () => {
-                    this.hideVoiceCall();
-                    this.addSystemMessage('انتهت المكالمة الصوتية.');
-                });
-
-                // Invite modal
-                document.getElementById('copyInvite').addEventListener('click', () => {
-                    this.copyInviteLink();
-                });
-
-                document.getElementById('closeInvite').addEventListener('click', () => {
-                    this.hideInviteModal();
-                });
-
-                // Servers
-                document.querySelectorAll('.server').forEach(server => {
-                    server.addEventListener('click', (e) => {
-                        if (server.id === 'addServer') {
-                            this.addNewServer();
-                            return;
-                        }
-                        
-                        document.querySelectorAll('.server').forEach(s => s.classList.remove('active'));
-                        server.classList.add('active');
-                        
-                        const serverType = server.dataset.server;
-                        this.switchServer(serverType);
-                    });
-                });
-
-                // Channels
-                document.querySelectorAll('.channel').forEach(channel => {
-                    channel.addEventListener('click', () => {
-                        document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
-                        channel.classList.add('active');
-                        
-                        const channelType = channel.dataset.channel;
-                        this.switchChannel(channelType);
-                    });
-                });
-
-                // Keyboard shortcuts
-                document.addEventListener('keydown', (e) => {
-                    // Ctrl+M to toggle microphone
-                    if (e.ctrlKey && e.key === 'm') {
-                        e.preventDefault();
-                        this.toggleMicrophone();
-                    }
-                    
-                    // Ctrl+D to disconnect
-                    if (e.ctrlKey && e.key === 'd') {
-                        e.preventDefault();
-                        this.toggleVoiceCall();
+                // Show active tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}-tab`) {
+                        content.classList.add('active');
                     }
                 });
-
-                // Simulate incoming messages
-                setInterval(() => {
-                    if (Math.random() > 0.7 && this.friends.length > 0) {
-                        const randomFriend = this.friends[Math.floor(Math.random() * this.friends.length)];
-                        const messages = [
-                            'مرحباً بالجميع!',
-                            'من يريد اللعب معي؟',
-                            'كيف حالكم اليوم؟',
-                            'لقد أنهيت اللعبة للتو!',
-                            'هل يمكن أحد مساعدتي؟'
-                        ];
-                        
-                        const message = {
-                            id: this.generateId(),
-                            author: randomFriend.username,
-                            avatar: randomFriend.avatar,
-                            color: randomFriend.color,
-                            time: this.formatTime(new Date()),
-                            text: messages[Math.floor(Math.random() * messages.length)]
-                        };
-                        
-                        this.messages.push(message);
-                        this.saveMessages();
-                        this.renderMessages();
-                    }
-                }, 30000); // Every 30 seconds
-            }
-
-            toggleMicrophone() {
-                this.isMicMuted = !this.isMicMuted;
-                const micBtn = document.getElementById('micToggle');
-                const icon = micBtn.querySelector('i');
+            });
+        });
+        
+        // FAQ Accordion
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('i');
                 
-                if (this.isMicMuted) {
-                    micBtn.classList.remove('active');
-                    icon.className = 'fas fa-microphone-slash';
-                    this.addSystemMessage('تم إيقاف تشغيل الميكروفون.');
-                } else {
-                    micBtn.classList.add('active');
-                    icon.className = 'fas fa-microphone';
-                    this.addSystemMessage('تم تشغيل الميكروفون.');
-                }
-            }
-
-            toggleHeadphones() {
-                this.isHeadphoneMuted = !this.isHeadphoneMuted;
-                const headphoneBtn = document.getElementById('headphoneToggle');
-                const icon = headphoneBtn.querySelector('i');
+                // Toggle answer
+                answer.classList.toggle('hidden');
                 
-                if (this.isHeadphoneMuted) {
-                    headphoneBtn.classList.remove('active');
-                    icon.className = 'fas fa-headphones-slash';
-                    this.addSystemMessage('تم إيقاف تشغيل السماعات.');
-                } else {
-                    headphoneBtn.classList.add('active');
-                    icon.className = 'fas fa-headphones';
-                    this.addSystemMessage('تم تشغيل السماعات.');
-                }
-            }
-
-            toggleVoiceCall() {
-                const disconnectBtn = document.getElementById('disconnectBtn');
-                const icon = disconnectBtn.querySelector('i');
-                
-                if (disconnectBtn.classList.contains('danger')) {
-                    // Currently in call, disconnect
-                    this.hideVoiceCall();
-                    disconnectBtn.classList.remove('danger');
-                    icon.className = 'fas fa-phone';
-                    this.addSystemMessage('انتهت المكالمة الصوتية.');
-                } else {
-                    // Not in call, start call
-                    this.startVoiceCall();
-                    disconnectBtn.classList.add('danger');
-                    icon.className = 'fas fa-phone-slash';
-                }
-            }
-
-            showProfileModal() {
-                const modal = document.getElementById('profileModal');
-                const usernameInput = document.getElementById('editUsername');
-                const colorInput = document.getElementById('editColor');
-                const statusSelect = document.getElementById('editStatus');
-                
-                usernameInput.value = this.currentUser.username;
-                colorInput.value = this.currentUser.color;
-                statusSelect.value = this.currentUser.status;
-                
-                modal.style.display = 'flex';
-            }
-
-            hideProfileModal() {
-                document.getElementById('profileModal').style.display = 'none';
-            }
-
-            saveProfile() {
-                const username = document.getElementById('editUsername').value;
-                const color = document.getElementById('editColor').value;
-                const status = document.getElementById('editStatus').value;
-                
-                this.currentUser.username = username;
-                this.currentUser.color = color;
-                this.currentUser.status = status;
-                this.currentUser.avatar = username.charAt(0);
-                
-                this.saveUserData();
-                this.updateUserUI();
-                this.renderFriends(); // Update in friends list
-                this.updateOnlineCount();
-                this.hideProfileModal();
-                
-                this.addSystemMessage('تم تحديث الملف الشخصي.');
-            }
-
-            showInviteModal() {
-                document.getElementById('inviteModal').style.display = 'flex';
-            }
-
-            hideInviteModal() {
-                document.getElementById('inviteModal').style.display = 'none';
-            }
-
-            copyInviteLink() {
-                const inviteLink = document.getElementById('inviteLink');
-                inviteLink.select();
-                inviteLink.setSelectionRange(0, 99999);
-                
-                try {
-                    navigator.clipboard.writeText(inviteLink.value);
-                    this.addSystemMessage('تم نسخ رابط الدعوة.');
-                } catch (err) {
-                    // Fallback for older browsers
-                    document.execCommand('copy');
-                    this.addSystemMessage('تم نسخ رابط الدعوة.');
-                }
-            }
-
-            switchServer(serverType) {
-                const serverNames = {
-                    home: 'الرئيسية',
-                    gaming: 'الألعاب',
-                    study: 'الدراسة',
-                    music: 'الموسيقى'
-                };
-                
-                this.addSystemMessage(`تم التبديل إلى خادم ${serverNames[serverType] || serverType}`);
-            }
-
-            switchChannel(channelType) {
-                const channelNames = {
-                    general: 'عام 🔊',
-                    gaming: 'ألعاب 🎮',
-                    chat: 'دردشة 💬',
-                    'general-text': 'نصي عام',
-                    help: 'مساعدة'
-                };
-                
-                document.querySelector('.chat-header h2').textContent = 
-                    channelNames[channelType] || channelType;
-                
-                this.addSystemMessage(`تم التبديل إلى قناة ${channelNames[channelType] || channelType}`);
-            }
-
-            addNewServer() {
-                const serverName = prompt('أدخل اسم الخادم الجديد:');
-                if (serverName) {
-                    const serversContainer = document.querySelector('.servers');
-                    const newServer = document.createElement('div');
-                    newServer.className = 'server';
-                    newServer.dataset.server = serverName.toLowerCase();
-                    newServer.innerHTML = `<i class="fas fa-hashtag"></i>`;
-                    
-                    // Add before the add button
-                    serversContainer.insertBefore(newServer, document.getElementById('addServer'));
-                    
-                    this.addSystemMessage(`تم إنشاء خادم جديد: ${serverName}`);
-                }
-            }
+                // Rotate icon
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+        });
+        
+        // Points Calculator
+        const amountInput = document.getElementById('amountInput');
+        const pointsOutput = document.getElementById('pointsOutput');
+        
+        amountInput.addEventListener('input', () => {
+            const amount = parseFloat(amountInput.value) || 0;
+            const points = Math.floor(amount * 100);
+            pointsOutput.value = points.toLocaleString() + ' نقطة';
+        });
+        
+        // Advanced Options Toggle
+        const toggleAdvancedOptions = document.getElementById('toggleAdvancedOptions');
+        const advancedOptions = document.getElementById('advancedOptions');
+        
+        toggleAdvancedOptions.addEventListener('click', () => {
+            advancedOptions.classList.toggle('hidden');
+            const icon = toggleAdvancedOptions.querySelector('.fa-chevron-down');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        });
+        
+        // Chat Widget
+        const chatToggle = document.getElementById('chatToggle');
+        const closeChat = document.getElementById('closeChat');
+        const chatWidget = document.getElementById('chatWidget');
+        const openChatBtn = document.getElementById('openChatBtn');
+        
+        chatToggle.addEventListener('click', () => {
+            chatWidget.classList.toggle('hidden');
+        });
+        
+        closeChat.addEventListener('click', () => {
+            chatWidget.classList.add('hidden');
+        });
+        
+        openChatBtn.addEventListener('click', () => {
+            chatWidget.classList.remove('hidden');
+        });
+        
+        // Modal Functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
         }
-
-        // Initialize the app
-        window.addEventListener('DOMContentLoaded', () => {
-            window.voiceChatApp = new VoiceChatApp();
+        
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+        }
+        
+        // Order Now buttons - simulate order
+        document.querySelectorAll('button:contains("اطلب الآن"), button:contains("تأكيد الطلب")').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (!btn.closest('#orderModal')) {
+                    e.preventDefault();
+                    openModal('orderModal');
+                }
+            });
+        });
+        
+        // Copy Referral Code
+        function copyReferralCode() {
+            const code = document.getElementById('referralCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('تم نسخ كود الإحالة: ' + code);
+            });
+        }
+        
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        });
+        
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('شكراً لك! تم إرسال رسالتك وسيتم الرد عليك خلال 24 ساعة.');
+            e.target.reset();
+        });
+        
+        // Initialize active tab
+        tabBtns[0].click();
+        
+        // Update stats (simulated)
+        function updateStats() {
+            const stats = document.querySelectorAll('.stats-animate');
+            stats.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(current).toLocaleString();
+                }, 30);
+            });
+        }
+        
+        // Run on page load
+        window.addEventListener('load', () => {
+            updateStats();
         });
     </script>
 </body>
