@@ -34,7 +34,7 @@
             color: var(--dark);
             line-height: 1.6;
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 20px;
         }
         
         .container {
@@ -419,6 +419,17 @@
             text-align: center;
             text-transform: uppercase;
             font-weight: bold;
+            transition: var(--transition);
+        }
+        
+        .scramble-input.correct {
+            border-color: var(--primary);
+            background-color: rgba(88, 204, 2, 0.1);
+        }
+        
+        .scramble-input.incorrect {
+            border-color: var(--danger);
+            background-color: rgba(255, 75, 75, 0.1);
         }
         
         .scramble-input:focus {
@@ -446,6 +457,8 @@
             font-weight: bold;
             cursor: pointer;
             transition: var(--transition);
+            position: relative;
+            user-select: none;
         }
         
         .scramble-letter:hover {
@@ -454,10 +467,23 @@
             transform: translateY(-3px);
         }
         
+        .scramble-letter.selected {
+            background-color: var(--primary);
+            color: white;
+        }
+        
         .scramble-letter.used {
             background-color: var(--gray);
             color: white;
             cursor: not-allowed;
+        }
+        
+        .letter-count {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.8);
         }
         
         /* Result Screen */
@@ -546,49 +572,6 @@
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--dark);
-        }
-        
-        /* Footer */
-        .app-footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 30px 0;
-            margin-top: 60px;
-            text-align: center;
-        }
-        
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
-        
-        .footer-links {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .footer-link {
-            color: var(--light-gray);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .footer-link:hover {
-            color: var(--primary);
-        }
-        
-        .copyright {
-            color: var(--gray);
-            font-size: 0.9rem;
         }
         
         /* Responsive */
@@ -712,7 +695,7 @@
                 <div class="game-content">
                     <div class="question-container">
                         <div class="question-text" id="questionText">Choose the correct form of the verb: She _____ to school every day.</div>
-                        <div class="options-container" id="optionsContainer">
+                        <div class="optionsContainer" id="optionsContainer">
                             <!-- Options will be inserted here by JavaScript -->
                         </div>
                     </div>
@@ -833,16 +816,6 @@
             </div>
         </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="app-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">EnglishMaster</div>
-                <div class="copyright">© 2023 EnglishMaster. All rights reserved. Learn English the fun way!</div>
-            </div>
-        </div>
-    </footer>
 
     <script>
         // Application state
@@ -1368,6 +1341,12 @@
         const lessonsCompleted = document.getElementById('lessonsCompleted');
         const correctAnswers = document.getElementById('correctAnswers');
 
+        // Track selected letters for scramble game
+        let selectedLetters = [];
+
+        // Store used letters with their positions
+        let letterInstances = {};
+
         // Initialize the application
         function initApp() {
             loadUserData();
@@ -1634,43 +1613,46 @@
             // Update session time
             updateSessionTime();
             
-            // Calculate XP earned (base 50 + 10 per correct answer)
-            const xpGained = 50 + (appState.score * 10);
+            // Calculate accuracy
             const accuracy = Math.round((appState.score / appState.totalQuestions) * 100);
             
-            // Update user data
-            appState.userData.xp += xpGained;
-            appState.userData.lessonsCompleted++;
-            
-            // Mark this level as completed
-            const gameType = appState.currentGame;
-            const userLevel = appState.userData[`${gameType}Level`];
-            const levelKey = `level${userLevel}`;
-            appState.userData.completedLevels[gameType][levelKey] = true;
-            
-            // Update game-specific progress
-            if (gameType === 'grammar') {
-                appState.userData.grammarCompleted++;
-                if (appState.userData.grammarCompleted >= 5) {
-                    appState.userData.grammarLevel++;
-                    appState.userData.grammarCompleted = 0;
+            // Only give XP if user got at least one correct answer
+            let xpGained = 0;
+            if (appState.score > 0) {
+                // Calculate XP earned (base 50 + 10 per correct answer)
+                xpGained = 50 + (appState.score * 10);
+                
+                // Update user data
+                appState.userData.xp += xpGained;
+                appState.userData.lessonsCompleted++;
+                
+                // Mark this level as completed
+                const gameType = appState.currentGame;
+                const userLevel = appState.userData[`${gameType}Level`];
+                const levelKey = `level${userLevel}`;
+                appState.userData.completedLevels[gameType][levelKey] = true;
+                
+                // Update game-specific progress
+                if (gameType === 'grammar') {
+                    appState.userData.grammarCompleted++;
+                    if (appState.userData.grammarCompleted >= 5) {
+                        appState.userData.grammarLevel++;
+                        appState.userData.grammarCompleted = 0;
+                    }
+                } else if (gameType === 'vocabulary') {
+                    appState.userData.vocabularyCompleted++;
+                    if (appState.userData.vocabularyCompleted >= 6) {
+                        appState.userData.vocabularyLevel++;
+                        appState.userData.vocabularyCompleted = 0;
+                    }
                 }
-            } else if (gameType === 'vocabulary') {
-                appState.userData.vocabularyCompleted++;
-                if (appState.userData.vocabularyCompleted >= 6) {
-                    appState.userData.vocabularyLevel++;
-                    appState.userData.vocabularyCompleted = 0;
+                
+                // Check for level up
+                if (appState.userData.xp >= appState.userData.nextLevelXP) {
+                    appState.userData.level++;
+                    appState.userData.nextLevelXP = Math.floor(appState.userData.nextLevelXP * 1.5);
                 }
             }
-            
-            // Check for level up
-            if (appState.userData.xp >= appState.userData.nextLevelXP) {
-                appState.userData.level++;
-                appState.userData.nextLevelXP = Math.floor(appState.userData.nextLevelXP * 1.5);
-            }
-            
-            // Update streak
-            appState.userData.streakDays++;
             
             // Save updated data
             saveUserData();
@@ -1686,11 +1668,17 @@
                 resultMessage.textContent = "Great job! You're making excellent progress in your English learning journey.";
             } else if (accuracy >= 60) {
                 resultMessage.textContent = "Good work! You're getting better. Keep practicing to improve your skills.";
-            } else {
+            } else if (accuracy > 0) {
                 resultMessage.textContent = "Keep practicing! Learning a language takes time and consistency. You'll improve with more practice.";
+            } else {
+                resultMessage.textContent = "You didn't get any answers correct this time. Don't give up! Try again and use the hints to help you learn.";
             }
             
-            xpEarned.textContent = `+${xpGained} XP Earned!`;
+            if (xpGained > 0) {
+                xpEarned.textContent = `+${xpGained} XP Earned!`;
+            } else {
+                xpEarned.textContent = "No XP earned - try to get at least one correct answer next time!";
+            }
             
             // Show results screen
             gameArea.classList.remove('active');
@@ -1722,6 +1710,8 @@
             
             appState.currentScrambleLevel = userLevel;
             appState.currentScrambleWord = 0;
+            selectedLetters = [];
+            letterInstances = {};
             
             // Update UI
             scrambleCurrentLevel.textContent = userLevel;
@@ -1747,7 +1737,10 @@
             scrambleHint.textContent = `Hint: ${wordData.hint}`;
             scrambleCurrentWord.textContent = `${appState.currentScrambleWord + 1}/${levelData.words.length}`;
             scrambleInput.value = '';
+            scrambleInput.classList.remove('correct', 'incorrect');
             scrambleInput.focus();
+            selectedLetters = [];
+            letterInstances = {};
             
             // Reset buttons
             nextScramble.disabled = true;
@@ -1755,17 +1748,49 @@
             // Create letter buttons
             scrambleLetters.innerHTML = '';
             const letters = wordData.scrambled.split('');
-            letters.forEach(letter => {
+            
+            // Create a unique ID for each letter instance
+            letters.forEach((letter, index) => {
                 const letterBtn = document.createElement('div');
                 letterBtn.className = 'scramble-letter';
                 letterBtn.textContent = letter;
-                letterBtn.addEventListener('click', () => {
-                    scrambleInput.value += letter;
-                    letterBtn.classList.add('used');
-                    letterBtn.style.pointerEvents = 'none';
-                });
+                letterBtn.dataset.letter = letter;
+                letterBtn.dataset.id = `${letter}_${index}`; // Unique ID for each instance
+                letterBtn.dataset.used = 'false';
+                
+                // Add click event
+                letterBtn.addEventListener('click', () => toggleLetter(letterBtn));
                 scrambleLetters.appendChild(letterBtn);
             });
+        }
+
+        // Toggle letter selection
+        function toggleLetter(letterBtn) {
+            const letterId = letterBtn.dataset.id;
+            const isUsed = letterBtn.dataset.used === 'true';
+            
+            if (!isUsed) {
+                // Add letter
+                selectedLetters.push(letterBtn.dataset.letter);
+                letterBtn.dataset.used = 'true';
+                letterBtn.classList.add('selected');
+                letterInstances[letterId] = true;
+                
+                // Update input
+                scrambleInput.value = selectedLetters.join('');
+            } else {
+                // Remove this specific letter instance
+                const letterIndex = selectedLetters.lastIndexOf(letterBtn.dataset.letter);
+                if (letterIndex !== -1) {
+                    selectedLetters.splice(letterIndex, 1);
+                    letterBtn.dataset.used = 'false';
+                    letterBtn.classList.remove('selected');
+                    delete letterInstances[letterId];
+                    
+                    // Update input
+                    scrambleInput.value = selectedLetters.join('');
+                }
+            }
         }
 
         // Check scramble answer
@@ -1774,11 +1799,13 @@
             const wordData = levelData.words[appState.currentScrambleWord];
             const userAnswer = scrambleInput.value.trim().toUpperCase();
             
+            // Remove previous color classes
+            scrambleInput.classList.remove('correct', 'incorrect');
+            
             if (userAnswer === wordData.answer) {
                 // Correct answer
                 appState.score++;
                 scrambleInput.classList.add('correct');
-                scrambleInput.classList.remove('incorrect');
                 nextScramble.disabled = false;
                 
                 // Disable all letter buttons
@@ -1789,10 +1816,6 @@
             } else {
                 // Incorrect answer
                 scrambleInput.classList.add('incorrect');
-                scrambleInput.classList.remove('correct');
-                setTimeout(() => {
-                    scrambleInput.classList.remove('incorrect');
-                }, 1000);
             }
         }
 
@@ -1830,33 +1853,35 @@
             const levelData = gameData.scramble.levels[appState.currentScrambleLevel];
             const totalWords = levelData.words.length;
             const accuracy = Math.round((appState.score / totalWords) * 100);
-            const xpGained = 50 + (appState.score * 10);
             
-            // Update user data
-            appState.userData.xp += xpGained;
-            appState.userData.lessonsCompleted++;
-            appState.userData.totalQuestionsAnswered += totalWords;
-            appState.userData.totalCorrectAnswers += appState.score;
-            
-            // Mark this level as completed
-            const levelKey = `level${appState.currentScrambleLevel}`;
-            appState.userData.completedLevels.scramble[levelKey] = true;
-            
-            // Update scramble progress
-            appState.userData.scrambleCompleted++;
-            if (appState.userData.scrambleCompleted >= 5) {
-                appState.userData.scrambleLevel++;
-                appState.userData.scrambleCompleted = 0;
+            // Only give XP if user got at least one correct answer
+            let xpGained = 0;
+            if (appState.score > 0) {
+                xpGained = 50 + (appState.score * 10);
+                
+                // Update user data
+                appState.userData.xp += xpGained;
+                appState.userData.lessonsCompleted++;
+                appState.userData.totalQuestionsAnswered += totalWords;
+                appState.userData.totalCorrectAnswers += appState.score;
+                
+                // Mark this level as completed
+                const levelKey = `level${appState.currentScrambleLevel}`;
+                appState.userData.completedLevels.scramble[levelKey] = true;
+                
+                // Update scramble progress
+                appState.userData.scrambleCompleted++;
+                if (appState.userData.scrambleCompleted >= 5) {
+                    appState.userData.scrambleLevel++;
+                    appState.userData.scrambleCompleted = 0;
+                }
+                
+                // Check for level up
+                if (appState.userData.xp >= appState.userData.nextLevelXP) {
+                    appState.userData.level++;
+                    appState.userData.nextLevelXP = Math.floor(appState.userData.nextLevelXP * 1.5);
+                }
             }
-            
-            // Check for level up
-            if (appState.userData.xp >= appState.userData.nextLevelXP) {
-                appState.userData.level++;
-                appState.userData.nextLevelXP = Math.floor(appState.userData.nextLevelXP * 1.5);
-            }
-            
-            // Update streak
-            appState.userData.streakDays++;
             
             // Save updated data
             saveUserData();
@@ -1866,8 +1891,21 @@
                 ? "Perfect Score!" 
                 : "Level Complete!";
             
-            resultMessage.textContent = `You unscrambled ${appState.score} out of ${totalWords} technology words correctly!`;
-            xpEarned.textContent = `+${xpGained} XP Earned!`;
+            if (accuracy === 100) {
+                resultMessage.textContent = `Perfect! You unscrambled all ${totalWords} technology words correctly!`;
+            } else if (accuracy >= 60) {
+                resultMessage.textContent = `Great job! You unscrambled ${appState.score} out of ${totalWords} technology words correctly.`;
+            } else if (accuracy > 0) {
+                resultMessage.textContent = `You unscrambled ${appState.score} out of ${totalWords} technology words. Keep practicing!`;
+            } else {
+                resultMessage.textContent = `You didn't unscramble any words correctly this time. Don't give up! Try again and use the hints to help you.`;
+            }
+            
+            if (xpGained > 0) {
+                xpEarned.textContent = `+${xpGained} XP Earned!`;
+            } else {
+                xpEarned.textContent = "No XP earned - try to unscramble at least one word next time!";
+            }
             
             // Show results screen
             scrambleArea.classList.remove('active');
